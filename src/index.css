@@ -1,0 +1,40 @@
+html {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", "BIZ UDPMincho", "MS PMincho", serif;
+  background:
+    radial-gradient(circle at top, rgba(204, 177, 130, 0.13), transparent 30%),
+    radial-gradient(circle at 20% 80%, rgba(159, 102, 82, 0.12), transparent 28%),
+    linear-gradient(180deg, #0b0b0d, #070709 42%, #050507);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at center, black, transparent 78%);
+}
+
+button,
+select {
+  font-family: inherit;
+}
+
+#root {
+  isolation: isolate;
+}

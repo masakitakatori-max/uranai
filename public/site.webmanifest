@@ -1,0 +1,18 @@
+{
+  "name": "Divination Workspace",
+  "short_name": "Divination",
+  "description": "六壬神課・金口訣・断易を扱える東洋占術Webアプリ",
+  "lang": "ja",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#081120",
+  "theme_color": "#101828",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

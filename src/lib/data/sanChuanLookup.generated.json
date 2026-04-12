@@ -1,0 +1,4303 @@
+{
+  "甲子": {
+    "子": {
+      "initial": "戊",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "子",
+      "middle": "亥",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "寅",
+      "middle": "巳",
+      "final": "申",
+      "lessonType": "伏吟"
+    },
+    "卯": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "辰",
+      "middle": "午",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "申",
+      "middle": "亥",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "辰",
+      "middle": "申",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "寅",
+      "middle": "酉",
+      "final": "辰",
+      "lessonType": "知一"
+    },
+    "戌": {
+      "initial": "戌",
+      "middle": "午",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "亥": {
+      "initial": "午",
+      "middle": "卯",
+      "final": "子",
+      "lessonType": "元首"
+    }
+  },
+  "乙丑": {
+    "子": {
+      "initial": "巳",
+      "middle": "丑",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "丑",
+      "middle": "戌",
+      "final": "未",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "亥",
+      "middle": "酉",
+      "final": "未",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "亥",
+      "final": "戌",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "辰",
+      "middle": "丑",
+      "final": "戌",
+      "lessonType": "伏吟"
+    },
+    "巳": {
+      "initial": "寅",
+      "middle": "卯",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "戌",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "未": {
+      "initial": "未",
+      "middle": "戌",
+      "final": "丑",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "酉",
+      "middle": "丑",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "酉": {
+      "initial": "寅",
+      "middle": "未",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "戌": {
+      "initial": "戌",
+      "middle": "辰",
+      "final": "戌",
+      "lessonType": "返吟"
+    },
+    "亥": {
+      "initial": "卯",
+      "middle": "戌",
+      "final": "巳",
+      "lessonType": "比用"
+    }
+  },
+  "丙寅": {
+    "子": {
+      "initial": "子",
+      "middle": "未",
+      "final": "寅",
+      "lessonType": "知一"
+    },
+    "丑": {
+      "initial": "戌",
+      "middle": "午",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "亥",
+      "middle": "申",
+      "final": "巳",
+      "lessonType": "遥剋"
+    },
+    "卯": {
+      "initial": "丑",
+      "middle": "亥",
+      "final": "酉",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "子",
+      "middle": "亥",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "巳": {
+      "initial": "巳",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "伏吟"
+    },
+    "午": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "未": {
+      "initial": "辰",
+      "middle": "午",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "亥",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "丑",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "戌": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "亥": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    }
+  },
+  "丁卯": {
+    "子": {
+      "initial": "巳",
+      "middle": "戌",
+      "final": "卯",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "戌",
+      "middle": "巳",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "卯",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "辰": {
+      "initial": "子",
+      "middle": "酉",
+      "final": "午",
+      "lessonType": "遥剋"
+    },
+    "巳": {
+      "initial": "亥",
+      "middle": "酉",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "午": {
+      "initial": "丑",
+      "middle": "子",
+      "final": "亥",
+      "lessonType": "重審"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "午",
+      "lessonType": "伏吟"
+    },
+    "申": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "亥",
+      "final": "丑",
+      "lessonType": "重審"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "子",
+      "final": "卯",
+      "lessonType": "重審"
+    },
+    "亥": {
+      "initial": "未",
+      "middle": "亥",
+      "final": "卯",
+      "lessonType": "渉害"
+    }
+  },
+  "戊辰": {
+    "子": {
+      "initial": "子",
+      "middle": "子",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "子",
+      "middle": "申",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "午",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "辰": {
+      "initial": "午",
+      "middle": "未",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "伏吟"
+    },
+    "午": {
+      "initial": "亥",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "辰",
+      "middle": "亥",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "巳",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "己巳": {
+    "子": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "酉",
+      "lessonType": "返吟"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "卯",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "卯",
+      "final": "丑",
+      "lessonType": "八専"
+    },
+    "辰": {
+      "initial": "酉",
+      "middle": "子",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "午",
+      "lessonType": "八専"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "亥",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "八専"
+    },
+    "酉": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "庚午": {
+    "子": {
+      "initial": "辰",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "辰",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "子",
+      "final": "午",
+      "lessonType": "比用"
+    },
+    "巳": {
+      "initial": "子",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "卯",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "辛未": {
+    "子": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "未",
+      "middle": "辰",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "未",
+      "middle": "亥",
+      "final": "午",
+      "lessonType": "遥剋"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "子",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "返吟"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "壬申": {
+    "子": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "丑",
+      "lessonType": "八専"
+    },
+    "辰": {
+      "initial": "寅",
+      "middle": "子",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "巳": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "午": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "未": {
+      "initial": "巳",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "癸酉": {
+    "子": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "返吟"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "丑",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "遥剋"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "卯",
+      "final": "午",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "戊",
+      "final": "午",
+      "lessonType": "返吟"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "甲戌": {
+    "子": {
+      "initial": "丑",
+      "middle": "酉",
+      "final": "卯",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "午",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "丑",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "巳",
+      "middle": "未",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "午",
+      "middle": "午",
+      "final": "卯",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "午",
+      "middle": "辰",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "乙亥": {
+    "子": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "未",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "寅": {
+      "initial": "未",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "午",
+      "middle": "辰",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丙子": {
+    "子": {
+      "initial": "申",
+      "middle": "申",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "酉",
+      "middle": "未",
+      "final": "丑",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "酉",
+      "middle": "丑",
+      "final": "卯",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "卯",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "子",
+      "middle": "申",
+      "final": "亥",
+      "lessonType": "遥剋"
+    },
+    "午": {
+      "initial": "亥",
+      "middle": "酉",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "未": {
+      "initial": "未",
+      "middle": "子",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丁丑": {
+    "子": {
+      "initial": "子",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "亥",
+      "middle": "未",
+      "final": "申",
+      "lessonType": "伏吟"
+    },
+    "辰": {
+      "initial": "亥",
+      "middle": "申",
+      "final": "未",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "亥",
+      "middle": "申",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "子",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "戊寅": {
+    "子": {
+      "initial": "卯",
+      "middle": "亥",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "子",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "知一"
+    },
+    "申": {
+      "initial": "午",
+      "middle": "辰",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "己卯": {
+    "子": {
+      "initial": "卯",
+      "middle": "卯",
+      "final": "子",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "申",
+      "middle": "卯",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "午",
+      "middle": "戌",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "亥",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "申": {
+      "initial": "午",
+      "middle": "辰",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "庚辰": {
+    "子": {
+      "initial": "巳",
+      "middle": "子",
+      "final": "戌",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "子",
+      "middle": "丑",
+      "final": "戌",
+      "lessonType": "伏吟"
+    },
+    "寅": {
+      "initial": "申",
+      "middle": "申",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "亥",
+      "middle": "亥",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "丑",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "辰",
+      "middle": "戌",
+      "final": "卯",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "午",
+      "final": "子",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "戌",
+      "middle": "午",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "辛巳": {
+    "子": {
+      "initial": "辰",
+      "middle": "午",
+      "final": "未",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "伏吟"
+    },
+    "寅": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "亥",
+      "middle": "亥",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "巳",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "未",
+      "middle": "戌",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "辰",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "八専"
+    },
+    "未": {
+      "initial": "申",
+      "middle": "戌",
+      "final": "戌",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "壬午": {
+    "子": {
+      "initial": "亥",
+      "middle": "戌",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "丑",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "未",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "子",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "伏吟"
+    },
+    "午": {
+      "initial": "亥",
+      "middle": "未",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "未": {
+      "initial": "亥",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "伏吟"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "癸未": {
+    "子": {
+      "initial": "寅",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "寅",
+      "middle": "未",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "子",
+      "middle": "未",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "巳": {
+      "initial": "子",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "午": {
+      "initial": "酉",
+      "middle": "午",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "八専"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "甲申": {
+    "子": {
+      "initial": "午",
+      "middle": "午",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "申",
+      "middle": "亥",
+      "final": "寅",
+      "lessonType": "渉害"
+    },
+    "寅": {
+      "initial": "辰",
+      "middle": "申",
+      "final": "子",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "戌",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "寅",
+      "middle": "午",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "戌",
+      "middle": "午",
+      "final": "寅",
+      "lessonType": "別責"
+    },
+    "未": {
+      "initial": "巳",
+      "middle": "午",
+      "final": "子",
+      "lessonType": "別責"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "乙酉": {
+    "子": {
+      "initial": "午",
+      "middle": "丑",
+      "final": "戌",
+      "lessonType": "伏吟"
+    },
+    "丑": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "申",
+      "middle": "戌",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "戌",
+      "final": "丑",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "巳",
+      "middle": "丑",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "未",
+      "middle": "午",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "辰",
+      "middle": "辰",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "戌",
+      "middle": "午",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丙戌": {
+    "子": {
+      "initial": "卯",
+      "middle": "亥",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "辰",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "辰",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丁亥": {
+    "子": {
+      "initial": "子",
+      "middle": "未",
+      "final": "辰",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "寅",
+      "middle": "卯",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "申",
+      "middle": "子",
+      "final": "寅",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "午",
+      "middle": "戌",
+      "final": "戌",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "午",
+      "middle": "丑",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "亥",
+      "middle": "亥",
+      "final": "丑",
+      "lessonType": "渉害"
+    },
+    "午": {
+      "initial": "子",
+      "middle": "亥",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "酉",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "戊子": {
+    "子": {
+      "initial": "午",
+      "middle": "辰",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "申",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "辰",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "子",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "辰": {
+      "initial": "辰",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "寅",
+      "middle": "丑",
+      "final": "辰",
+      "lessonType": "知一"
+    },
+    "午": {
+      "initial": "戌",
+      "middle": "戌",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "未": {
+      "initial": "午",
+      "middle": "午",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "己丑": {
+    "子": {
+      "initial": "辰",
+      "middle": "丑",
+      "final": "戌",
+      "lessonType": "伏吟"
+    },
+    "丑": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "辰",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "戌",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "戌",
+      "final": "丑",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "戌",
+      "final": "戌",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "戌",
+      "middle": "未",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "庚寅": {
+    "子": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "戌",
+      "final": "戌",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "丑",
+      "middle": "巳",
+      "final": "酉",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "寅",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "申",
+      "middle": "子",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "未",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "遥剋"
+    },
+    "未": {
+      "initial": "未",
+      "middle": "申",
+      "final": "子",
+      "lessonType": "遥剋"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "辛卯": {
+    "子": {
+      "initial": "辰",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "子",
+      "middle": "亥",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "午",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "丑",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "知一"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "亥",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "壬辰": {
+    "子": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "未",
+      "middle": "未",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "戌",
+      "middle": "戌",
+      "final": "卯",
+      "lessonType": "八専"
+    },
+    "卯": {
+      "initial": "巳",
+      "middle": "申",
+      "final": "巳",
+      "lessonType": "遥剋"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "丑",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "巳": {
+      "initial": "戌",
+      "middle": "未",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "酉",
+      "final": "寅",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "巳",
+      "middle": "辰",
+      "final": "亥",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "辰",
+      "middle": "辰",
+      "final": "辰",
+      "lessonType": "重審"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "癸巳": {
+    "子": {
+      "initial": "午",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "戌",
+      "middle": "戌",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "卯",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "卯": {
+      "initial": "戌",
+      "middle": "戌",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "未",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "巳": {
+      "initial": "申",
+      "middle": "未",
+      "final": "子",
+      "lessonType": "遥剋"
+    },
+    "午": {
+      "initial": "亥",
+      "middle": "亥",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "子",
+      "final": "亥",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "辰",
+      "middle": "辰",
+      "final": "辰",
+      "lessonType": "重審"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "甲午": {
+    "子": {
+      "initial": "酉",
+      "middle": "未",
+      "final": "申",
+      "lessonType": "八専"
+    },
+    "丑": {
+      "initial": "酉",
+      "middle": "午",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "寅": {
+      "initial": "辰",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "辰",
+      "middle": "亥",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "辰": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "八専"
+    },
+    "巳": {
+      "initial": "辰",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "八専"
+    },
+    "未": {
+      "initial": "寅",
+      "middle": "午",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "申": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "乙未": {
+    "子": {
+      "initial": "午",
+      "middle": "子",
+      "final": "卯",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "午",
+      "middle": "子",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "亥",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "辰": {
+      "initial": "丑",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "巳": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "卯",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "午",
+      "lessonType": "遥剋"
+    },
+    "未": {
+      "initial": "寅",
+      "middle": "午",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丙申": {
+    "子": {
+      "initial": "未",
+      "middle": "亥",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "申",
+      "lessonType": "伏吟"
+    },
+    "寅": {
+      "initial": "巳",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "午",
+      "middle": "酉",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "午",
+      "middle": "亥",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "申",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "八専"
+    },
+    "午": {
+      "initial": "巳",
+      "middle": "午",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "午",
+      "middle": "丑",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丁酉": {
+    "子": {
+      "initial": "未",
+      "middle": "子",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "亥",
+      "middle": "午",
+      "final": "丑",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "巳",
+      "middle": "丑",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "辰": {
+      "initial": "午",
+      "middle": "卯",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "巳": {
+      "initial": "丑",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "別責"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "未",
+      "final": "午",
+      "lessonType": "遥剋"
+    },
+    "未": {
+      "initial": "酉",
+      "middle": "未",
+      "final": "丑",
+      "lessonType": "伏吟"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "子",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "戊戌": {
+    "子": {
+      "initial": "辰",
+      "middle": "子",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "八専"
+    },
+    "寅": {
+      "initial": "寅",
+      "middle": "子",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "辰": {
+      "initial": "子",
+      "middle": "申",
+      "final": "辰",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "巳",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "寅",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "酉",
+      "middle": "卯",
+      "final": "子",
+      "lessonType": "八専"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "卯",
+      "final": "卯",
+      "lessonType": "伏吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "己亥": {
+    "子": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "卯",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "午",
+      "lessonType": "遥剋"
+    },
+    "寅": {
+      "initial": "未",
+      "middle": "子",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "子",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "亥",
+      "middle": "丑",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "巳",
+      "middle": "未",
+      "final": "子",
+      "lessonType": "知一"
+    },
+    "未": {
+      "initial": "午",
+      "middle": "卯",
+      "final": "卯",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "伏吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "庚子": {
+    "子": {
+      "initial": "寅",
+      "middle": "丑",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "丑": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "子",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "子",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "巳": {
+      "initial": "午",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "酉",
+      "middle": "卯",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "未": {
+      "initial": "酉",
+      "middle": "亥",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "辛丑": {
+    "子": {
+      "initial": "未",
+      "middle": "酉",
+      "final": "午",
+      "lessonType": "遥剋"
+    },
+    "丑": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "子",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "酉",
+      "lessonType": "返吟"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "卯",
+      "final": "酉",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "知一"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "卯",
+      "final": "卯",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "午",
+      "middle": "午",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "甲辰": {
+    "子": {
+      "initial": "子",
+      "middle": "卯",
+      "final": "辰",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "巳",
+      "middle": "卯",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "卯",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "午",
+      "middle": "未",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "午",
+      "middle": "未",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "巳": {
+      "initial": "午",
+      "middle": "未",
+      "final": "午",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "未",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "未": {
+      "initial": "午",
+      "middle": "卯",
+      "final": "未",
+      "lessonType": "返吟"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "乙巳": {
+    "子": {
+      "initial": "酉",
+      "middle": "辰",
+      "final": "辰",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "酉",
+      "middle": "巳",
+      "final": "子",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "酉",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "酉",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "知一"
+    },
+    "辰": {
+      "initial": "酉",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "比用"
+    },
+    "巳": {
+      "initial": "酉",
+      "middle": "巳",
+      "final": "丑",
+      "lessonType": "渉害"
+    },
+    "午": {
+      "initial": "酉",
+      "middle": "未",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "酉",
+      "middle": "申",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "申": {
+      "initial": "酉",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丙午": {
+    "子": {
+      "initial": "午",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "申",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "子",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "巳",
+      "middle": "未",
+      "final": "卯",
+      "lessonType": "比用"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "亥",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "巳": {
+      "initial": "午",
+      "middle": "丑",
+      "final": "酉",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "午",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "未": {
+      "initial": "午",
+      "middle": "午",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丁未": {
+    "子": {
+      "initial": "亥",
+      "middle": "亥",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "寅": {
+      "initial": "未",
+      "middle": "未",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "卯",
+      "final": "戌",
+      "lessonType": "返吟"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "子",
+      "final": "寅",
+      "lessonType": "知一"
+    },
+    "巳": {
+      "initial": "午",
+      "middle": "戌",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "申",
+      "final": "巳",
+      "lessonType": "遥剋"
+    },
+    "未": {
+      "initial": "亥",
+      "middle": "丑",
+      "final": "酉",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "寅",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "戊申": {
+    "子": {
+      "initial": "未",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "午",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "午",
+      "middle": "未",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "辰": {
+      "initial": "戌",
+      "middle": "子",
+      "final": "戌",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "遥剋"
+    },
+    "未": {
+      "initial": "酉",
+      "middle": "子",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "己酉": {
+    "子": {
+      "initial": "子",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "辰",
+      "middle": "卯",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "辰",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "八専"
+    },
+    "辰": {
+      "initial": "寅",
+      "middle": "卯",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "巳": {
+      "initial": "子",
+      "middle": "未",
+      "final": "午",
+      "lessonType": "比用"
+    },
+    "午": {
+      "initial": "子",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "重審"
+    },
+    "未": {
+      "initial": "巳",
+      "middle": "丑",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "丑",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "庚戌": {
+    "子": {
+      "initial": "亥",
+      "middle": "亥",
+      "final": "寅",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "申",
+      "middle": "亥",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "未",
+      "final": "巳",
+      "lessonType": "比用"
+    },
+    "卯": {
+      "initial": "巳",
+      "middle": "未",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "辰": {
+      "initial": "午",
+      "middle": "午",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "午",
+      "middle": "午",
+      "final": "戌",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "午",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "申",
+      "final": "戌",
+      "lessonType": "重審"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "辛亥": {
+    "子": {
+      "initial": "未",
+      "middle": "申",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "申",
+      "middle": "辰",
+      "final": "子",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "子",
+      "final": "戌",
+      "lessonType": "知一"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "戌",
+      "final": "寅",
+      "lessonType": "知一"
+    },
+    "辰": {
+      "initial": "午",
+      "middle": "午",
+      "final": "酉",
+      "lessonType": "遥剋"
+    },
+    "巳": {
+      "initial": "丑",
+      "middle": "午",
+      "final": "酉",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "子",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "未",
+      "middle": "丑",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "壬子": {
+    "子": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "亥",
+      "lessonType": "返吟"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "亥",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "子",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "癸丑": {
+    "子": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "寅": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "午",
+      "final": "未",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "未": {
+      "initial": "未",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "渉害"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "甲寅": {
+    "子": {
+      "initial": "戊",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "子",
+      "middle": "亥",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "寅",
+      "middle": "巳",
+      "final": "申",
+      "lessonType": "伏吟"
+    },
+    "卯": {
+      "initial": "辰",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "辰",
+      "middle": "午",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "申",
+      "middle": "亥",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "八専"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "乙卯": {
+    "子": {
+      "initial": "申",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "未",
+      "middle": "亥",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "寅",
+      "middle": "卯",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "卯": {
+      "initial": "申",
+      "middle": "辰",
+      "final": "丑",
+      "lessonType": "比用"
+    },
+    "辰": {
+      "initial": "丑",
+      "middle": "辰",
+      "final": "酉",
+      "lessonType": "知一"
+    },
+    "巳": {
+      "initial": "午",
+      "middle": "午",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "丑",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "未",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丙辰": {
+    "子": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "寅": {
+      "initial": "未",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "返吟"
+    },
+    "辰": {
+      "initial": "未",
+      "middle": "巳",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "卯",
+      "middle": "申",
+      "final": "巳",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "卯",
+      "middle": "巳",
+      "final": "子",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "卯",
+      "middle": "子",
+      "final": "巳",
+      "lessonType": "知一"
+    },
+    "申": {
+      "initial": "寅",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "丁巳": {
+    "子": {
+      "initial": "寅",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "渉害"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "未",
+      "final": "午",
+      "lessonType": "返吟"
+    },
+    "寅": {
+      "initial": "巳",
+      "middle": "未",
+      "final": "寅",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "申",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "卯",
+      "lessonType": "渉害"
+    },
+    "巳": {
+      "initial": "亥",
+      "middle": "丑",
+      "final": "未",
+      "lessonType": "返吟"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "戊",
+      "final": "申",
+      "lessonType": "返吟"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "子",
+      "final": "亥",
+      "lessonType": "渉害"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "戊午": {
+    "子": {
+      "initial": "申",
+      "middle": "辰",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "丑": {
+      "initial": "巳",
+      "middle": "巳",
+      "final": "申",
+      "lessonType": "伏吟"
+    },
+    "寅": {
+      "initial": "戊",
+      "middle": "巳",
+      "final": "戌",
+      "lessonType": "伏吟"
+    },
+    "卯": {
+      "initial": "午",
+      "middle": "亥",
+      "final": "申",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "申",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "申",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "八専"
+    },
+    "午": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "未",
+      "final": "申",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "子",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "己未": {
+    "子": {
+      "initial": "辰",
+      "middle": "辰",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "巳",
+      "middle": "巳",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "寅": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "卯": {
+      "initial": "戌",
+      "middle": "寅",
+      "final": "子",
+      "lessonType": "知一"
+    },
+    "辰": {
+      "initial": "戌",
+      "middle": "午",
+      "final": "寅",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "丑",
+      "middle": "卯",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "未",
+      "middle": "卯",
+      "final": "午",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "子",
+      "middle": "巳",
+      "final": "戌",
+      "lessonType": "比用"
+    },
+    "申": {
+      "initial": "子",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "庚申": {
+    "子": {
+      "initial": "辰",
+      "middle": "申",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "丑",
+      "final": "丑",
+      "lessonType": "八専"
+    },
+    "寅": {
+      "initial": "寅",
+      "middle": "申",
+      "final": "寅",
+      "lessonType": "返吟"
+    },
+    "卯": {
+      "initial": "戌",
+      "middle": "巳",
+      "final": "子",
+      "lessonType": "比用"
+    },
+    "辰": {
+      "initial": "子",
+      "middle": "申",
+      "final": "辰",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "巳",
+      "middle": "寅",
+      "final": "亥",
+      "lessonType": "元首"
+    },
+    "午": {
+      "initial": "午",
+      "middle": "辰",
+      "final": "寅",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "酉",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "八専"
+    },
+    "申": {
+      "initial": "申",
+      "middle": "寅",
+      "final": "巳",
+      "lessonType": "伏吟"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "辛酉": {
+    "子": {
+      "initial": "丑",
+      "middle": "卯",
+      "final": "巳",
+      "lessonType": "元首"
+    },
+    "丑": {
+      "initial": "卯",
+      "middle": "午",
+      "final": "酉",
+      "lessonType": "遥剋"
+    },
+    "寅": {
+      "initial": "寅",
+      "middle": "午",
+      "final": "戌",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "子",
+      "final": "巳",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "卯",
+      "middle": "酉",
+      "final": "卯",
+      "lessonType": "返吟"
+    },
+    "巳": {
+      "initial": "亥",
+      "middle": "午",
+      "final": "丑",
+      "lessonType": "重審"
+    },
+    "午": {
+      "initial": "巳",
+      "middle": "丑",
+      "final": "酉",
+      "lessonType": "知一"
+    },
+    "未": {
+      "initial": "午",
+      "middle": "卯",
+      "final": "子",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "午",
+      "middle": "辰",
+      "final": "寅",
+      "lessonType": "元首"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "壬戌": {
+    "子": {
+      "initial": "子",
+      "middle": "酉",
+      "final": "卯",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "午",
+      "middle": "申",
+      "final": "子",
+      "lessonType": "渉害"
+    },
+    "寅": {
+      "initial": "子",
+      "middle": "未",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "卯": {
+      "initial": "子",
+      "middle": "申",
+      "final": "卯",
+      "lessonType": "重審"
+    },
+    "辰": {
+      "initial": "申",
+      "middle": "申",
+      "final": "亥",
+      "lessonType": "重審"
+    },
+    "巳": {
+      "initial": "未",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "比用"
+    },
+    "午": {
+      "initial": "酉",
+      "middle": "未",
+      "final": "亥",
+      "lessonType": "遥剋"
+    },
+    "未": {
+      "initial": "巳",
+      "middle": "巳",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "午",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "癸亥": {
+    "子": {
+      "initial": "子",
+      "middle": "子",
+      "final": "子",
+      "lessonType": "重審"
+    },
+    "丑": {
+      "initial": "未",
+      "middle": "未",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "寅": {
+      "initial": "未",
+      "middle": "午",
+      "final": "申",
+      "lessonType": "渉害"
+    },
+    "卯": {
+      "initial": "未",
+      "middle": "申",
+      "final": "午",
+      "lessonType": "渉害"
+    },
+    "辰": {
+      "initial": "申",
+      "middle": "申",
+      "final": "申",
+      "lessonType": "元首"
+    },
+    "巳": {
+      "initial": "未",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "比用"
+    },
+    "午": {
+      "initial": "申",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "未": {
+      "initial": "未",
+      "middle": "未",
+      "final": "未",
+      "lessonType": "元首"
+    },
+    "申": {
+      "initial": "午",
+      "middle": "午",
+      "final": "午",
+      "lessonType": "重審"
+    },
+    "酉": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "戌": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    },
+    "亥": {
+      "initial": "酉",
+      "middle": "酉",
+      "final": "酉",
+      "lessonType": "元首"
+    }
+  },
+  "壬寅": {},
+  "癸卯": {
+    "辰": {
+      "initial": "酉",
+      "middle": "子",
+      "final": "卯",
+      "lessonType": "重審"
+    }
+  }
+}

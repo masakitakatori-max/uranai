@@ -1,0 +1,28 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#081120"/>
+  <circle cx="1040" cy="126" r="220" fill="#153E75" fill-opacity="0.28"/>
+  <circle cx="172" cy="520" r="240" fill="#0EA5E9" fill-opacity="0.18"/>
+  <rect x="72" y="72" width="1056" height="486" rx="28" fill="url(#panel)" stroke="#334155" stroke-width="2"/>
+  <text x="104" y="170" fill="#94A3B8" font-size="28" font-family="'Segoe UI', 'Hiragino Sans', sans-serif" letter-spacing="4">
+    DIVINATION WORKSPACE
+  </text>
+  <text x="104" y="272" fill="#F8FAFC" font-size="68" font-weight="700" font-family="'Yu Gothic UI', 'Hiragino Sans', sans-serif">
+    六壬神課・金口訣・断易
+  </text>
+  <text x="104" y="344" fill="#CBD5E1" font-size="34" font-family="'Yu Gothic UI', 'Hiragino Sans', sans-serif">
+    相談文の入力から盤面表示、解説、解釈まで
+  </text>
+  <text x="104" y="406" fill="#CBD5E1" font-size="34" font-family="'Yu Gothic UI', 'Hiragino Sans', sans-serif">
+    1つのWebアプリで整理できる東洋占術ツール
+  </text>
+  <rect x="104" y="458" width="246" height="58" rx="29" fill="#0EA5E9"/>
+  <text x="142" y="497" fill="#081120" font-size="26" font-weight="700" font-family="'Segoe UI', sans-serif">
+    LIUREN / DANNEKI
+  </text>
+  <defs>
+    <linearGradient id="panel" x1="72" y1="72" x2="1128" y2="558" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+</svg>
