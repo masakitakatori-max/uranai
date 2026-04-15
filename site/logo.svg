@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Uranai.mozule logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4d6bff"/>
+      <stop offset="100%" stop-color="#6d79ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" rx="40" fill="url(#g)"/>
+  <path d="M88 32c4.4 0 8 3.6 8 8v30l20-20 14 14L110 84h30c4.4 0 8 3.6 8 8s-3.6 8-8 8H98l16.6 16.6-14 14L96 110.9V144c0 4.4-3.6 8-8 8s-8-3.6-8-8v-33.1L61.4 137 47.4 123 64 106.4 34 106.4c-4.4 0-8-3.6-8-8s3.6-8 8-8h30l-20-20 14-14 20 20V40c0-4.4 3.6-8 8-8" fill="#fff"/>
+</svg>
