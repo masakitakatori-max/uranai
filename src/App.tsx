@@ -77,6 +77,29 @@ const MODE_LEADS: Record<AppMode, string> = {
   danneki: "占いたい事象を定性的に入力し、解釈軸を自動補強しながら、本卦・之卦・動爻をもとに読み筋を返す断易の試作モードです。",
 };
 
+const FEATURED_COLUMNS = [
+  {
+    href: "/uranai-guide/",
+    title: "占い入門ガイド",
+    summary: "占いの使い方と、結果の受け止め方を最初に整理したい人向け。",
+  },
+  {
+    href: "/tarot-beginner/",
+    title: "タロット初心者向け解説",
+    summary: "他の占術との違いと、読み進め方の基本を短く確認できます。",
+  },
+  {
+    href: "/reliability-check/",
+    title: "占いの信頼性チェック",
+    summary: "結果を過信しないための見方と、判断軸の置き方をまとめています。",
+  },
+  {
+    href: "/about/author/",
+    title: "著者・監修者プロフィール",
+    summary: "記事とアプリの監修方針、運営情報、公開ポリシーを確認できます。",
+  },
+] as const;
+
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month, 0).getDate();
 }
@@ -145,6 +168,22 @@ function App() {
             断易
           </button>
         </div>
+        {mode === "liuren" ? (
+          <section className="column-rail" aria-label="関連コラム">
+            <div className="column-rail-heading">
+              <span>Related Reading</span>
+              <strong>六壬神課アプリとあわせて読みたいコラム</strong>
+            </div>
+            <div className="column-link-grid">
+              {FEATURED_COLUMNS.map((column) => (
+                <a key={column.href} className="column-link-card" href={column.href}>
+                  <strong>{column.title}</strong>
+                  <p>{column.summary}</p>
+                </a>
+              ))}
+            </div>
+          </section>
+        ) : null}
       </header>
 
       <main className="workspace-grid">
