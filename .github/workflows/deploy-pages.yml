@@ -18,6 +18,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      VITE_SITE_URL: https://uranai.mozule.co.jp
+      SEO_INDEXABLE: "true"
+      VITE_AI_FEEDBACK_MODE: disabled
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,10 +29,25 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build app
+        run: npm run build
+
+      - name: Assemble Pages site
+        run: node scripts/assemble-pages-site.mjs
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: site-build
 
   deploy:
     environment:
