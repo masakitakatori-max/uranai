@@ -100,6 +100,8 @@ const FEATURED_COLUMNS = [
   },
 ] as const;
 
+void FEATURED_COLUMNS;
+
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month, 0).getDate();
 }
@@ -175,12 +177,18 @@ function App() {
               <strong>六壬神課アプリとあわせて読みたいコラム</strong>
             </div>
             <div className="column-link-grid">
-              {FEATURED_COLUMNS.map((column) => (
-                <a key={column.href} className="column-link-card" href={column.href}>
-                  <strong>{column.title}</strong>
-                  <p>{column.summary}</p>
-                </a>
-              ))}
+              <a className="column-link-card" href="/columns/">
+                <strong>コラム一覧</strong>
+                <p>公開中の読みものを一覧で見て、気になるテーマから選べます。</p>
+              </a>
+              <a className="column-link-card" href="/uranai-guide/">
+                <strong>占い入門ガイド</strong>
+                <p>最初に押さえる前提と、占いの使い方をまとめた入口ページです。</p>
+              </a>
+              <a className="column-link-card" href="/uranai-types/">
+                <strong>占術タイプ比較</strong>
+                <p>タロット、数秘術、夢占いなどの違いを見比べるクラスタページです。</p>
+              </a>
             </div>
           </section>
         ) : null}
