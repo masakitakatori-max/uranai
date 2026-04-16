@@ -1,4 +1,5 @@
 import { PLATE_GRID_POSITIONS } from "../lib/engine";
+import { getSafeList } from "../lib/uiUtils";
 import type { LiurenChart } from "../lib/types";
 
 interface BoardViewProps {
@@ -10,6 +11,11 @@ function badgeClassName(isActive: boolean, tone: "gold" | "warning" | "accent" =
 }
 
 export function BoardView({ chart }: BoardViewProps) {
+  const plateCells = getSafeList(chart.plateCells);
+  const fourLessons = getSafeList(chart.fourLessons);
+  const threeTransmissions = getSafeList(chart.threeTransmissions);
+  const messages = getSafeList(chart.messages);
+
   return (
     <section className="panel board-panel">
       <div className="panel-heading">
@@ -44,10 +50,10 @@ export function BoardView({ chart }: BoardViewProps) {
       <div className="board-canvas">
         <div className="plate-shell">
           <div className="plate-grid">
-            {chart.plateCells.map((cell) => {
+            {plateCells.map((cell) => {
               const position = PLATE_GRID_POSITIONS[cell.earth];
               return (
-                <div className="plate-cell" key={cell.earth} style={{ gridRow: position.row, gridColumn: position.column }}>
+                <div className={cell.isVoid ? "plate-cell plate-cell-void" : "plate-cell"} key={cell.earth} style={{ gridRow: position.row, gridColumn: position.column }}>
                   <span className={badgeClassName(cell.isNobleSeat)}>{cell.general}</span>
                   <strong className={badgeClassName(cell.isMonthGeneral, "accent")}>{cell.heaven}</strong>
                   <span className={badgeClassName(cell.isVoid, "warning")}>{cell.earth}</span>
@@ -70,15 +76,15 @@ export function BoardView({ chart }: BoardViewProps) {
           <div className="lesson-block">
             <div className="section-label">四課</div>
             <div className="lesson-grid">
-              {chart.fourLessons.map((lesson) => (
+              {fourLessons.map((lesson) => (
                 <article className="lesson-card" key={lesson.index}>
                   <header>
                     <span>第{lesson.index}課</span>
                     <strong>{lesson.heavenlyGeneral}</strong>
                   </header>
                   <div className="lesson-pair">
-                    <span>{lesson.lower}</span>
-                    <span>{lesson.upper}</span>
+                    <span><small>上</small>{lesson.upper}</span>
+                    <span><small>下</small>{lesson.lower}</span>
                   </div>
                   <footer>
                     <span>{lesson.sixKin}</span>
@@ -92,11 +98,11 @@ export function BoardView({ chart }: BoardViewProps) {
           <div className="transmission-block">
             <div className="section-label">三伝</div>
             <div className="transmission-stack">
-              {chart.threeTransmissions.length ? (
-                chart.threeTransmissions.map((item) => (
+              {threeTransmissions.length ? (
+                threeTransmissions.map((item) => (
                   <article className="transmission-card" key={item.stage}>
                     <span>{item.stage}</span>
-                    <strong>{item.branch}</strong>
+                    <strong>{item.dunStem ? `${item.dunStem}${item.branch}` : item.branch}</strong>
                     <small>{item.heavenlyGeneral}</small>
                     <em>{item.sixKin}</em>
                   </article>
@@ -113,9 +119,9 @@ export function BoardView({ chart }: BoardViewProps) {
         </div>
       </div>
 
-      {chart.messages.length ? (
+      {messages.length ? (
         <div className="message-strip">
-          {chart.messages.map((message) => (
+          {messages.map((message) => (
             <p key={message}>{message}</p>
           ))}
         </div>

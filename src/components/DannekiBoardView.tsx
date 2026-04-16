@@ -1,4 +1,5 @@
 import type { DannekiChart, DannekiLine, YinYang } from "../lib/types";
+import { getDannekiLineLabel, getSafeList } from "../lib/uiUtils";
 
 interface DannekiBoardViewProps {
   chart: DannekiChart;
@@ -6,10 +7,6 @@ interface DannekiBoardViewProps {
 
 function lineClassName(value: YinYang, isMoving: boolean) {
   return `danneki-line ${value === "陽" ? "is-yang" : "is-yin"}${isMoving ? " is-moving" : ""}`;
-}
-
-function lineLabel(position: number) {
-  return ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"][position - 1] ?? `${position}爻`;
 }
 
 function renderHexagram(title: string, lines: DannekiLine[], changed = false) {
@@ -24,7 +21,7 @@ function renderHexagram(title: string, lines: DannekiLine[], changed = false) {
           .reverse()
           .map((line) => (
             <div className="danneki-line-row" key={`${title}-${line.position}`}>
-              <small>{lineLabel(line.position)}</small>
+              <small>{getDannekiLineLabel(line.position)}</small>
               <div className={lineClassName(line.original, line.isMoving)}>
                 <span />
                 {line.original === "陰" ? <span /> : null}
@@ -37,10 +34,12 @@ function renderHexagram(title: string, lines: DannekiLine[], changed = false) {
 }
 
 export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
+  const lines = getSafeList(chart.lines);
+  const messages = getSafeList(chart.messages);
   const focusLines =
     chart.basis.useDeity === "世応"
-      ? chart.lines.filter((line) => line.position === 3 || line.position === 6)
-      : chart.lines.filter((line) => line.relation === chart.basis.useDeity);
+      ? lines.filter((line) => line.role === "世" || line.role === "応")
+      : lines.filter((line) => line.relation === chart.basis.useDeity);
 
   return (
     <section className="panel board-panel">
@@ -56,6 +55,14 @@ export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
           <strong>{chart.basis.correctedDateTime}</strong>
         </div>
         <div>
+          <span>日辰</span>
+          <strong>{chart.basis.dayGanzhi}</strong>
+        </div>
+        <div>
+          <span>月建</span>
+          <strong>{chart.basis.monthBranch}</strong>
+        </div>
+        <div>
           <span>上 / 下卦</span>
           <strong>
             {chart.basis.upperTrigram.key} / {chart.basis.lowerTrigram.key}
@@ -63,11 +70,22 @@ export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
         </div>
         <div>
           <span>動爻</span>
-          <strong>{chart.basis.movingLines.length ? chart.basis.movingLines.map((value) => lineLabel(value)).join(" / ") : "なし"}</strong>
+          <strong>{chart.basis.movingLines.length ? chart.basis.movingLines.map((value) => getDannekiLineLabel(value)).join(" / ") : "なし"}</strong>
         </div>
         <div>
           <span>用神候補</span>
           <strong>{chart.basis.useDeity}</strong>
+        </div>
+        <div>
+          <span>用神決定</span>
+          <strong>{chart.basis.useGodLine ? getDannekiLineLabel(chart.basis.useGodLine) : "未確定"}</strong>
+        </div>
+        <div>
+          <span>世 / 応</span>
+          <strong>
+            {chart.basis.worldLine ? getDannekiLineLabel(chart.basis.worldLine) : "未確定"} /{" "}
+            {chart.basis.responseLine ? getDannekiLineLabel(chart.basis.responseLine) : "未確定"}
+          </strong>
         </div>
       </div>
 
@@ -75,8 +93,8 @@ export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
         <div className="plate-shell danneki-shell">
           <div className="danneki-board">
             <div className="danneki-hexagrams">
-              {renderHexagram("本卦", chart.lines)}
-              {renderHexagram("之卦", chart.lines, true)}
+              {renderHexagram("本卦", lines)}
+              {renderHexagram("之卦", lines, true)}
             </div>
 
             <div className="danneki-trigram-row">
@@ -120,9 +138,17 @@ export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
               {focusLines.length ? (
                 focusLines.map((line) => (
                   <article className="transmission-card" key={`focus-${line.position}`}>
-                    <span>{lineLabel(line.position)}</span>
-                    <strong>{line.relation}</strong>
-                    <small>{line.note}</small>
+                    <span>
+                      {getDannekiLineLabel(line.position)}
+                      {line.role ? ` (${line.role})` : ""}
+                    </span>
+                    <strong>
+                      {line.relation} / {line.seasonalState}
+                    </strong>
+                    <small>
+                      {line.note}（{line.sixSpirit} / {line.stem}
+                      {line.branch} / {line.element}{line.useGodRole ? ` / ${line.useGodRole}` : ""}）
+                    </small>
                   </article>
                 ))
               ) : (
@@ -155,9 +181,9 @@ export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
         </div>
       </div>
 
-      {chart.messages.length ? (
+      {messages.length ? (
         <div className="message-strip">
-          {chart.messages.map((message) => (
+          {messages.map((message) => (
             <p key={message}>{message}</p>
           ))}
         </div>

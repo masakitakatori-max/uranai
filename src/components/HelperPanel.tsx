@@ -1,3 +1,5 @@
+import { ChartEvidencePanel } from "./ChartEvidencePanel";
+import { getSafeList } from "../lib/uiUtils";
 import type { LiurenChart } from "../lib/types";
 
 interface HelperPanelProps {
@@ -5,6 +7,10 @@ interface HelperPanelProps {
 }
 
 export function HelperPanel({ chart }: HelperPanelProps) {
+  const helperAnnotations = getSafeList(chart.helperAnnotations);
+  const explanationSections = getSafeList(chart.explanationSections);
+  const interpretationSections = getSafeList(chart.interpretationSections);
+
   return (
     <section className="panel helper-panel">
       <div className="panel-heading">
@@ -52,8 +58,10 @@ export function HelperPanel({ chart }: HelperPanelProps) {
 
       {chart.basis.appliedOverrides.length ? <div className="override-note">手動補正中: {chart.basis.appliedOverrides.join(" / ")}</div> : null}
 
+      <ChartEvidencePanel certainty={chart.certainty} traces={chart.traces} sourceReferences={chart.sourceReferences} />
+
       <div className="annotation-list">
-        {chart.helperAnnotations.map((item) => (
+        {helperAnnotations.map((item) => (
           <article className="annotation-item" key={item.key}>
             <header>
               <span>{item.label}</span>
@@ -74,7 +82,7 @@ export function HelperPanel({ chart }: HelperPanelProps) {
       <div className="narrative-block">
         <div className="section-label">解説</div>
         <div className="narrative-list">
-          {chart.explanationSections.map((section) => (
+          {explanationSections.map((section) => (
             <article className="annotation-item" key={section.key}>
               <header>
                 <span>{section.title}</span>
@@ -90,7 +98,7 @@ export function HelperPanel({ chart }: HelperPanelProps) {
       <div className="narrative-block">
         <div className="section-label">解釈</div>
         <div className="narrative-list">
-          {chart.interpretationSections.map((section) => (
+          {interpretationSections.map((section) => (
             <article className="annotation-item" key={section.key}>
               <header>
                 <span>{section.title}</span>

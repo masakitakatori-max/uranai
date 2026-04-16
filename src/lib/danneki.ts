@@ -1,15 +1,40 @@
+import { Solar } from "lunar-typescript";
+
 import { buildConsultationParagraphs, inferTopicFromQuestion, summarizeQuestion } from "./consultation";
-import { LOCATION_OFFSETS } from "./data/core";
+import { collectSourceReferences, resolveChartCertainty } from "./chartUx";
+import {
+  DANNEKI_BOOK_CASES,
+  type DannekiBookCase,
+} from "./data/dannekiBookKnowledge";
+import {
+  TRIGRAM_ELEMENT,
+  TRIGRAM_LINES,
+  WORLD_RESPONSE_BY_VARIANT,
+  getLineNajia,
+  lookupPalace,
+  type PalaceVariant,
+} from "./data/dannekiNajia";
+import { BRANCH_WUXING, STEM_WUXING, getBranchRelations, getSeasonalState, getSixKin } from "./data/rules";
+import { resolveLocationOffset } from "./location";
 import type {
+  Branch,
+  ChartCertainty,
   DannekiBasis,
   DannekiChart,
   DannekiInput,
   DannekiLine,
+  DannekiSixSpirit,
   DannekiTopic,
   DannekiTrigram,
   DannekiUseDeity,
+  DannekiUseGodRole,
+  Ganzhi,
   NarrativeSection,
+  RuleTrace,
+  SeasonalState,
   SixKin,
+  SourceReference,
+  Stem,
   TrigramKey,
   Wuxing,
   YinYang,
@@ -27,22 +52,6 @@ const TRIGRAMS: Record<TrigramKey, DannekiTrigram> = {
   坎: { key: "坎", symbol: "☵", image: "水", element: "水", keywords: ["不安", "深掘り", "往復"], lines: ["陰", "陽", "陰"] },
   艮: { key: "艮", symbol: "☶", image: "山", element: "土", keywords: ["停止", "境界", "蓄積"], lines: ["陰", "陰", "陽"] },
   坤: { key: "坤", symbol: "☷", image: "地", element: "土", keywords: ["受容", "土台", "継続"], lines: ["陰", "陰", "陰"] },
-};
-
-const GENERATES: Record<Wuxing, Wuxing> = {
-  木: "火",
-  火: "土",
-  土: "金",
-  金: "水",
-  水: "木",
-};
-
-const OVERCOMES: Record<Wuxing, Wuxing> = {
-  木: "土",
-  火: "金",
-  土: "水",
-  金: "木",
-  水: "火",
 };
 
 const USE_DEITY_BY_TOPIC: Record<DannekiTopic, DannekiUseDeity> = {
@@ -67,9 +76,35 @@ const TOPIC_ACTION_TEXT: Record<DannekiTopic, string> = {
   天気: "天気では一点読みより、崩れる時間帯と持ち直す時間帯を分けて扱います。",
 };
 
-function getLocationOffset(locationId: string) {
-  return LOCATION_OFFSETS.find((location) => location.id === locationId) ?? LOCATION_OFFSETS.find((location) => location.id === "akashi")!;
-}
+// 六神順序 by 日干
+const SIX_SPIRIT_ORDER: Record<Stem, [DannekiSixSpirit, DannekiSixSpirit, DannekiSixSpirit, DannekiSixSpirit, DannekiSixSpirit, DannekiSixSpirit]> = {
+  甲: ["青龍", "朱雀", "勾陳", "螣蛇", "白虎", "玄武"],
+  乙: ["青龍", "朱雀", "勾陳", "螣蛇", "白虎", "玄武"],
+  丙: ["朱雀", "勾陳", "螣蛇", "白虎", "玄武", "青龍"],
+  丁: ["朱雀", "勾陳", "螣蛇", "白虎", "玄武", "青龍"],
+  戊: ["勾陳", "螣蛇", "白虎", "玄武", "青龍", "朱雀"],
+  己: ["螣蛇", "白虎", "玄武", "青龍", "朱雀", "勾陳"],
+  庚: ["白虎", "玄武", "青龍", "朱雀", "勾陳", "螣蛇"],
+  辛: ["白虎", "玄武", "青龍", "朱雀", "勾陳", "螣蛇"],
+  壬: ["玄武", "青龍", "朱雀", "勾陳", "螣蛇", "白虎"],
+  癸: ["玄武", "青龍", "朱雀", "勾陳", "螣蛇", "白虎"],
+};
+
+// useGod (用神) → (原神, 忌神, 仇神)
+const USE_GOD_ROLE_TABLE: Record<SixKin, { 原神: SixKin; 忌神: SixKin; 仇神: SixKin }> = {
+  父母: { 原神: "官鬼", 忌神: "妻財", 仇神: "子孫" },
+  兄弟: { 原神: "父母", 忌神: "官鬼", 仇神: "妻財" },
+  子孫: { 原神: "兄弟", 忌神: "父母", 仇神: "官鬼" },
+  妻財: { 原神: "子孫", 忌神: "兄弟", 仇神: "父母" },
+  官鬼: { 原神: "妻財", 忌神: "子孫", 仇神: "兄弟" },
+};
+
+const DANNEKI_SOURCE_REF: SourceReference = {
+  id: "danneki-rules",
+  label: "断易立卦規則",
+  detail: "京房納甲法 + 増删卜易",
+  chapter: "rules",
+};
 
 function toWallClockDate(input: Pick<DannekiInput, "year" | "month" | "day" | "hour" | "minute">) {
   return new Date(Date.UTC(input.year, input.month - 1, input.day, input.hour, input.minute));
@@ -109,45 +144,14 @@ function buildSeed(input: DannekiInput, correctedDate: Date, resolvedTopic: Dann
   return hashString(`${resolvedTopic}|${input.questionText}|${timeSeed}|${offsetMinutes}`) >>> 0;
 }
 
-function pickTrigram(index: number) {
-  return TRIGRAMS[TRIGRAM_ORDER[index % TRIGRAM_ORDER.length]];
-}
-
 function findTrigramByLines(lines: readonly YinYang[]) {
-  return TRIGRAMS[TRIGRAM_ORDER.find((key) => TRIGRAMS[key].lines.join("") === lines.join("")) ?? "乾"];
+  const key = lines.join("");
+  const match = TRIGRAM_ORDER.find((trigramKey) => TRIGRAM_LINES[trigramKey].join("") === key);
+  return TRIGRAMS[match ?? "乾"];
 }
 
 function flipLine(value: YinYang): YinYang {
   return value === "陽" ? "陰" : "陽";
-}
-
-function buildMovingLines(seed: number, questionLength: number) {
-  const count = questionLength > 40 ? 3 : questionLength > 0 ? 2 : 1;
-  const result = new Set<number>();
-  let cursor = seed || 1;
-
-  while (result.size < count) {
-    cursor = (Math.imul(cursor, 1103515245) + 12345) >>> 0;
-    result.add((cursor % 6) + 1);
-  }
-
-  return [...result].sort((left, right) => left - right);
-}
-
-function resolveSixKin(reference: Wuxing, target: Wuxing): SixKin {
-  if (reference === target) return "兄弟";
-  if (GENERATES[reference] === target) return "子孫";
-  if (OVERCOMES[reference] === target) return "妻財";
-  if (OVERCOMES[target] === reference) return "官鬼";
-  return "父母";
-}
-
-function describeElementRelation(outer: Wuxing, inner: Wuxing) {
-  if (outer === inner) return "内外の五行は同気で、流れを揃えやすい配置です。";
-  if (GENERATES[inner] === outer) return "内卦が外卦を生じるため、内側の努力が外へ効きやすい配置です。";
-  if (GENERATES[outer] === inner) return "外卦が内卦を生じるため、外部条件から押し上げが入りやすい配置です。";
-  if (OVERCOMES[inner] === outer) return "内卦が外卦を剋するため、こちらの打ち手で局面を動かしやすい反面、押し過ぎると摩耗します。";
-  return "外卦が内卦を剋するため、相手条件や環境圧を先に整えないと自力が削られやすい配置です。";
 }
 
 function lineLabel(position: number) {
@@ -162,6 +166,162 @@ function buildLineNote(position: number, relation: SixKin, isMoving: boolean) {
   return `${lead}として外部条件と結論側に現れます。`;
 }
 
+function valueToYinYang(value: 6 | 7 | 8 | 9): YinYang {
+  return value === 7 || value === 9 ? "陽" : "陰";
+}
+
+function valueIsMoving(value: 6 | 7 | 8 | 9) {
+  return value === 6 || value === 9;
+}
+
+function deriveAutoLineValues(seed: number, questionLength: number): Array<6 | 7 | 8 | 9> {
+  // 時刻+質問のシードから 6/7/8/9 を6本生成 (近似 = 時刻法)
+  // 動爻数: 質問文の長さで 1〜3 本
+  const movingCount = questionLength > 40 ? 3 : questionLength > 0 ? 2 : 1;
+  let cursor = seed || 1;
+  const movingPositions = new Set<number>();
+  while (movingPositions.size < movingCount) {
+    cursor = (Math.imul(cursor, 1103515245) + 12345) >>> 0;
+    movingPositions.add((cursor % 6) + 1);
+  }
+  const values: Array<6 | 7 | 8 | 9> = [];
+  for (let position = 1; position <= 6; position += 1) {
+    cursor = (Math.imul(cursor, 1103515245) + 12345) >>> 0;
+    const isYang = (cursor & 1) === 1;
+    const isMoving = movingPositions.has(position);
+    if (isMoving) {
+      values.push(isYang ? 9 : 6);
+    } else {
+      values.push(isYang ? 7 : 8);
+    }
+  }
+  return values;
+}
+
+function getMonthBranchFromLunar(date: Date): Branch {
+  const parts = getUtcParts(date);
+  const lunar = Solar.fromYmdHms(parts.year, parts.month, parts.day, parts.hour, parts.minute, 0).getLunar();
+  const monthGanzhi = lunar.getMonthInGanZhiExact();
+  return monthGanzhi.charAt(1) as Branch;
+}
+
+function getDayGanzhiAndVoid(date: Date): { dayGanzhi: Ganzhi; voidBranches: [Branch, Branch] } {
+  const parts = getUtcParts(date);
+  const lunar = Solar.fromYmdHms(parts.year, parts.month, parts.day, parts.hour, parts.minute, 0).getLunar();
+  const dayGanzhi = lunar.getDayInGanZhiExact() as Ganzhi;
+  const xunKong = lunar.getDayXunKongExact();
+  const voidBranches = xunKong.split("") as [Branch, Branch];
+  return { dayGanzhi, voidBranches };
+}
+
+const CHONG_PAIR: Record<Branch, Branch> = {
+  子: "午",
+  午: "子",
+  丑: "未",
+  未: "丑",
+  寅: "申",
+  申: "寅",
+  卯: "酉",
+  酉: "卯",
+  辰: "戌",
+  戌: "辰",
+  巳: "亥",
+  亥: "巳",
+};
+
+function isMonthBroken(lineBranch: Branch, monthBranch: Branch) {
+  return CHONG_PAIR[monthBranch] === lineBranch;
+}
+
+function getDayRelationsFor(lineBranch: Branch, dayBranch: Branch): { relations: string[]; isDayChong: boolean; isDayHe: boolean } {
+  const relations = getBranchRelations(lineBranch, dayBranch);
+  return {
+    relations,
+    isDayChong: relations.includes("冲"),
+    isDayHe: relations.some((value) => value.includes("合")),
+  };
+}
+
+function chooseUseGodLine(lines: readonly DannekiLine[], useDeity: DannekiUseDeity, worldLine: 1 | 2 | 3 | 4 | 5 | 6): { line: 1 | 2 | 3 | 4 | 5 | 6 | null; reason: string } {
+  if (useDeity === "世応") {
+    return { line: worldLine, reason: "世応用神では世爻を相談者の用神として採用。" };
+  }
+  const candidates = lines.filter((line) => line.relation === useDeity);
+  if (!candidates.length) {
+    return { line: null, reason: `用神「${useDeity}」が本卦に現れず、伏神を要追跡。` };
+  }
+  // 優先順: 月破でない > 空亡でない > 動爻 > 上の爻
+  const ranked = [...candidates].sort((left, right) => {
+    const score = (line: DannekiLine) =>
+      (line.isMonthBroken ? 0 : 8) +
+      (line.isVoid ? 0 : 4) +
+      (line.isMoving ? 2 : 0) +
+      line.position * 0.1;
+    return score(right) - score(left);
+  });
+  const top = ranked[0];
+  const reason = top.isMonthBroken
+    ? `用神候補が月破に該当するが、最も整った位置 ${lineLabel(top.position)} を採用。`
+    : `用神候補のうち、月破・空亡を避け強度の高い ${lineLabel(top.position)} を採用。`;
+  return { line: top.position, reason };
+}
+
+function assignUseGodRoles(lines: DannekiLine[], useDeity: DannekiUseDeity, useGodLine: 1 | 2 | 3 | 4 | 5 | 6 | null) {
+  if (useDeity === "世応" || !USE_GOD_ROLE_TABLE[useDeity as SixKin]) {
+    if (useGodLine !== null) {
+      const target = lines.find((line) => line.position === useGodLine);
+      if (target) target.useGodRole = "用神";
+    }
+    return;
+  }
+  const roles = USE_GOD_ROLE_TABLE[useDeity as SixKin];
+  for (const line of lines) {
+    if (line.position === useGodLine) {
+      line.useGodRole = "用神";
+    } else if (line.relation === roles.原神) {
+      line.useGodRole = "原神";
+    } else if (line.relation === roles.忌神) {
+      line.useGodRole = "忌神";
+    } else if (line.relation === roles.仇神) {
+      line.useGodRole = "仇神";
+    }
+  }
+}
+
+function tokenizeQuestion(question: string) {
+  return question.replace(/\s+/g, "");
+}
+
+function findBookCase(question: string): DannekiBookCase | null {
+  const normalized = tokenizeQuestion(question);
+  if (!normalized) return null;
+  let best: { case: DannekiBookCase; score: number } | null = null;
+  for (const bookCase of DANNEKI_BOOK_CASES) {
+    let score = 0;
+    for (const token of bookCase.matchTokens) {
+      if (normalized.includes(token.text)) {
+        score += token.weight;
+      }
+    }
+    if (score >= bookCase.matchThreshold) {
+      if (!best || score > best.score) {
+        best = { case: bookCase, score };
+      }
+    }
+  }
+  return best?.case ?? null;
+}
+
+function describeElementRelation(outer: Wuxing, inner: Wuxing) {
+  const GENERATES: Record<Wuxing, Wuxing> = { 木: "火", 火: "土", 土: "金", 金: "水", 水: "木" };
+  const OVERCOMES: Record<Wuxing, Wuxing> = { 木: "土", 火: "金", 土: "水", 金: "木", 水: "火" };
+  if (outer === inner) return "内外の五行は同気で、流れを揃えやすい配置です。";
+  if (GENERATES[inner] === outer) return "内卦が外卦を生じるため、内側の努力が外へ効きやすい配置です。";
+  if (GENERATES[outer] === inner) return "外卦が内卦を生じるため、外部条件から押し上げが入りやすい配置です。";
+  if (OVERCOMES[inner] === outer) return "内卦が外卦を剋するため、こちらの打ち手で局面を動かしやすい反面、押し過ぎると摩耗します。";
+  return "外卦が内卦を剋するため、相手条件や環境圧を先に整えないと自力が削られやすい配置です。";
+}
+
 function formatLineSet(values: number[]) {
   return values.map((value) => lineLabel(value)).join(" / ");
 }
@@ -174,7 +334,7 @@ function buildExplanationSections(
 ): NarrativeSection[] {
   const focusLines =
     basis.useDeity === "世応"
-      ? lines.filter((line) => line.position === 3 || line.position === 6)
+      ? lines.filter((line) => line.position === basis.worldLine || line.position === basis.responseLine)
       : lines.filter((line) => line.relation === basis.useDeity);
 
   return [
@@ -182,7 +342,7 @@ function buildExplanationSections(
       key: "danneki-foundation",
       title: "立卦の前提",
       paragraphs: [
-        `入力日時を ${basis.locationLabel} の地方時差 ${basis.offsetMinutes >= 0 ? "+" : ""}${basis.offsetMinutes}分で補正し、基準時刻 ${basis.correctedDateTime} を採っています。`,
+        `入力日時を ${basis.locationLabel} の地方時差 ${basis.offsetMinutes >= 0 ? "+" : ""}${basis.offsetMinutes}分で補正し、基準時刻 ${basis.correctedDateTime} を採っています。日辰は ${basis.dayGanzhi}、月建は ${basis.monthBranch}、空亡は ${basis.voidBranches.join("・")} です。`,
         input.questionText.trim()
           ? `相談文は「${summarizeQuestion(input.questionText)}」です。自由入力からは「${resolvedTopic}」の問いとして読むのが最も自然でした。`
           : `相談文が空欄のため、選択された占的「${resolvedTopic}」をそのまま読み筋の中心に置いています。`,
@@ -192,7 +352,7 @@ function buildExplanationSections(
       key: "danneki-structure",
       title: "卦象の骨格",
       paragraphs: [
-        `本卦は 上卦 ${basis.upperTrigram.key}${basis.upperTrigram.symbol} / 下卦 ${basis.lowerTrigram.key}${basis.lowerTrigram.symbol}。${basis.upperTrigram.image} は ${basis.upperTrigram.keywords.join("・")}、${basis.lowerTrigram.image} は ${basis.lowerTrigram.keywords.join("・")} を示します。`,
+        `本卦は 上卦 ${basis.upperTrigram.key}${basis.upperTrigram.symbol} / 下卦 ${basis.lowerTrigram.key}${basis.lowerTrigram.symbol}。宮は ${basis.palace ?? "未確定"} (${basis.palace ? TRIGRAM_ELEMENT[basis.palace] : "—"})、世爻は ${basis.worldLine ? lineLabel(basis.worldLine) : "未確定"}、応爻は ${basis.responseLine ? lineLabel(basis.responseLine) : "未確定"} です。`,
         `之卦は 上卦 ${basis.changedUpperTrigram.key}${basis.changedUpperTrigram.symbol} / 下卦 ${basis.changedLowerTrigram.key}${basis.changedLowerTrigram.symbol}。動いたのは ${formatLineSet(basis.movingLines)} です。`,
         describeElementRelation(basis.upperTrigram.element, basis.lowerTrigram.element),
       ],
@@ -202,8 +362,8 @@ function buildExplanationSections(
       title: "用神候補",
       paragraphs: [
         basis.useDeity === "世応"
-          ? "この相談は関係性の読みを優先し、三爻を相談者の足場、上爻を相手・外部条件の受け皿として扱います。"
-          : `今回の用神候補は ${basis.useDeity} です。該当するのは ${focusLines.length ? focusLines.map((line) => `${lineLabel(line.position)}(${line.note})`).join(" / ") : "明瞭な一点に偏らず、複数線へ分散しています。"}。`,
+          ? `この相談は関係性の読みを優先し、世爻 ${basis.worldLine ? lineLabel(basis.worldLine) : "—"} を相談者の足場、応爻 ${basis.responseLine ? lineLabel(basis.responseLine) : "—"} を相手・外部条件の受け皿として扱います。`
+          : `今回の用神候補は ${basis.useDeity} です。決定線は ${basis.useGodLine ? lineLabel(basis.useGodLine) : "未確定"}（${basis.useGodReason}）。該当するのは ${focusLines.length ? focusLines.map((line) => `${lineLabel(line.position)}`).join(" / ") : "明瞭な一点に偏らず、複数線へ分散しています。"}。`,
       ],
     },
   ];
@@ -214,13 +374,14 @@ function buildInterpretationSections(
   resolvedTopic: DannekiTopic,
   basis: DannekiBasis,
   lines: readonly DannekiLine[],
+  bookCase: DannekiBookCase | null,
 ): NarrativeSection[] {
   const sections: NarrativeSection[] = [];
   const consultationParagraphs = buildConsultationParagraphs(input.questionText, resolvedTopic);
   const movingCore = lines.filter((line) => line.isMoving);
   const focusLines =
     basis.useDeity === "世応"
-      ? lines.filter((line) => line.position === 3 || line.position === 6)
+      ? lines.filter((line) => line.position === basis.worldLine || line.position === basis.responseLine)
       : lines.filter((line) => line.relation === basis.useDeity);
 
   if (consultationParagraphs.length) {
@@ -266,41 +427,170 @@ function buildInterpretationSections(
     ],
   });
 
+  if (bookCase) {
+    sections.push({
+      key: "danneki-book-case",
+      title: `近い書籍例: ${bookCase.title}`,
+      paragraphs: [
+        `相談文「${summarizeQuestion(input.questionText)}」は書籍の「${bookCase.title}」(${bookCase.questionType}) と同質の問いです。出典: ${bookCase.sourceImage}。`,
+        bookCase.coreLesson,
+      ],
+    });
+  }
+
   return sections;
 }
 
 export function buildDannekiChart(input: DannekiInput): DannekiChart {
-  const location = getLocationOffset(input.locationId);
+  const location = resolveLocationOffset(input.locationId);
   const correctedDate = addMinutes(toWallClockDate(input), location.offsetMinutes);
   const resolvedTopic = inferTopicFromQuestion(input.questionText, input.topic);
   const seed = buildSeed(input, correctedDate, resolvedTopic, location.offsetMinutes);
-  const upperTrigram = pickTrigram(seed % 8);
-  const lowerTrigram = pickTrigram(Math.floor(seed / 8) % 8);
-  const movingLines = buildMovingLines(seed, input.questionText.trim().length);
-  const useDeity = USE_DEITY_BY_TOPIC[resolvedTopic];
-  const originalLines = [...lowerTrigram.lines, ...upperTrigram.lines] as YinYang[];
-  const changedLines = originalLines.map((line, index) => (movingLines.includes(index + 1) ? flipLine(line) : line));
-  const changedLowerTrigram = findTrigramByLines(changedLines.slice(0, 3) as YinYang[]);
-  const changedUpperTrigram = findTrigramByLines(changedLines.slice(3) as YinYang[]);
 
-  const lines: DannekiLine[] = originalLines.map((line, index) => {
+  // 立卦: manual (コイン法相当) または auto (時刻法近似)
+  let lineValues: Array<6 | 7 | 8 | 9>;
+  if (input.lineInputMode === "manual") {
+    if (!input.manualLineValues || input.manualLineValues.length !== 6) {
+      throw new Error("manualLineValues must contain exactly 6 entries when lineInputMode=manual");
+    }
+    lineValues = [...input.manualLineValues];
+  } else {
+    lineValues = deriveAutoLineValues(seed, input.questionText.trim().length);
+  }
+
+  const originalLines = lineValues.map(valueToYinYang);
+  const movingLines: number[] = [];
+  lineValues.forEach((value, index) => {
+    if (valueIsMoving(value)) movingLines.push(index + 1);
+  });
+  const changedLines = originalLines.map((line, index) => (movingLines.includes(index + 1) ? flipLine(line) : line));
+
+  const lowerTrigram = findTrigramByLines(originalLines.slice(0, 3));
+  const upperTrigram = findTrigramByLines(originalLines.slice(3, 6));
+  const changedLowerTrigram = findTrigramByLines(changedLines.slice(0, 3));
+  const changedUpperTrigram = findTrigramByLines(changedLines.slice(3, 6));
+
+  // 宮・世応
+  const palaceEntry = lookupPalace(upperTrigram.key, lowerTrigram.key);
+  const palace = palaceEntry.palace;
+  const palaceVariant: PalaceVariant = palaceEntry.variant;
+  const palaceElement = TRIGRAM_ELEMENT[palace];
+  const { world, response } = WORLD_RESPONSE_BY_VARIANT[palaceVariant];
+
+  // 日辰・月建・空亡
+  const { dayGanzhi, voidBranches } = getDayGanzhiAndVoid(correctedDate);
+  const dayStem = dayGanzhi.charAt(0) as Stem;
+  const dayBranch = dayGanzhi.charAt(1) as Branch;
+  const dayElement = STEM_WUXING[dayStem];
+  const monthBranch = getMonthBranchFromLunar(correctedDate);
+  const monthElement = BRANCH_WUXING[monthBranch];
+
+  const useDeity = USE_DEITY_BY_TOPIC[resolvedTopic];
+  const sixSpiritOrder = SIX_SPIRIT_ORDER[dayStem];
+
+  const lines: DannekiLine[] = lineValues.map((value, index) => {
     const position = (index + 1) as DannekiLine["position"];
-    const relation = resolveSixKin(lowerTrigram.element, index < 3 ? lowerTrigram.element : upperTrigram.element);
+    const najia = getLineNajia(upperTrigram.key, lowerTrigram.key, position);
+    const lineElement = BRANCH_WUXING[najia.branch];
+    const relation = getSixKin(palaceElement, lineElement);
+    const seasonalState: SeasonalState = getSeasonalState(monthElement, lineElement);
+    const dayRel = getDayRelationsFor(najia.branch, dayBranch);
+    const monthBroken = isMonthBroken(najia.branch, monthBranch);
+    const isVoid = voidBranches.includes(najia.branch);
     const isMoving = movingLines.includes(position);
+    const role: DannekiLine["role"] = position === world ? "世" : position === response ? "応" : "";
+
     return {
       position,
-      original: line,
+      value,
+      stem: najia.stem,
+      branch: najia.branch,
+      sixSpirit: sixSpiritOrder[index],
+      original: originalLines[index],
       changed: changedLines[index],
       isMoving,
       relation,
+      element: lineElement,
+      seasonalState,
+      dayRelations: dayRel.relations,
+      isVoid,
+      isDayChong: dayRel.isDayChong,
+      isDayHe: dayRel.isDayHe,
+      isMonthBroken: monthBroken,
+      useGodRole: "" as DannekiUseGodRole,
+      role,
       note: buildLineNote(position, relation, isMoving),
     };
   });
+
+  const useGodSelection = chooseUseGodLine(lines, useDeity, world);
+  assignUseGodRoles(lines, useDeity, useGodSelection.line);
+
+  const traces: RuleTrace[] = [
+    {
+      ruleId: "danneki.day-ganzhi",
+      step: "日辰算出",
+      value: dayGanzhi,
+      source: "lunar-typescript",
+      sourceRef: DANNEKI_SOURCE_REF,
+      reason: "Solar.fromYmdHms().getLunar().getDayInGanZhiExact() で立節基準の日干支を取得。",
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "danneki.month-branch",
+      step: "月建算出",
+      value: monthBranch,
+      source: "lunar-typescript",
+      sourceRef: DANNEKI_SOURCE_REF,
+      reason: "節入り基準の月干支から月支を抽出。",
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "danneki.palace",
+      step: "宮判定",
+      value: `${palace}宮 (${palaceVariant})`,
+      source: "京房八宮卦序",
+      sourceRef: DANNEKI_SOURCE_REF,
+      reason: `本卦 上${upperTrigram.key}/下${lowerTrigram.key} を八宮表で索引。`,
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "danneki.use-god",
+      step: "用神決定",
+      value: useGodSelection.line ? lineLabel(useGodSelection.line) : "未確定",
+      source: "断易立卦規則",
+      sourceRef: DANNEKI_SOURCE_REF,
+      reason: useGodSelection.reason,
+      certainty: useGodSelection.line ? "confirmed" : "unresolved",
+    },
+    {
+      ruleId: "danneki.line-mode",
+      step: "立卦法",
+      value: input.lineInputMode === "manual" ? "コイン法 (manual)" : "時刻法近似 (auto)",
+      source: input.lineInputMode === "manual" ? "増删卜易" : "梅花心易由来 近似",
+      sourceRef: DANNEKI_SOURCE_REF,
+      reason: input.lineInputMode === "manual" ? "ユーザ入力の6/7/8/9をそのまま採用。" : "時刻と相談文のハッシュから6本を導出した近似手法。",
+      certainty: input.lineInputMode === "manual" ? "confirmed" : "derived",
+    },
+  ];
 
   const basis: DannekiBasis = {
     correctedDateTime: formatUtcDateTime(correctedDate),
     locationLabel: location.label,
     offsetMinutes: location.offsetMinutes,
+    dayGanzhi,
+    dayStem,
+    dayBranch,
+    dayElement,
+    monthBranch,
+    monthElement,
+    voidBranches,
+    palace,
+    palaceOrder: TRIGRAM_ORDER.indexOf(palace),
+    worldLine: world,
+    responseLine: response,
+    useGodLine: useGodSelection.line,
+    useGodReason: useGodSelection.reason,
     upperTrigram,
     lowerTrigram,
     changedUpperTrigram,
@@ -310,8 +600,12 @@ export function buildDannekiChart(input: DannekiInput): DannekiChart {
     useDeity,
   };
 
+  const bookCase = findBookCase(input.questionText);
   const explanationSections = buildExplanationSections(input, resolvedTopic, basis, lines);
-  const interpretationSections = buildInterpretationSections(input, resolvedTopic, basis, lines);
+  const interpretationSections = buildInterpretationSections(input, resolvedTopic, basis, lines, bookCase);
+
+  const sourceReferences = collectSourceReferences(traces, [DANNEKI_SOURCE_REF]);
+  const certainty: ChartCertainty = resolveChartCertainty(traces, "derived");
 
   return {
     topic: resolvedTopic,
@@ -319,11 +613,18 @@ export function buildDannekiChart(input: DannekiInput): DannekiChart {
     questionText: input.questionText,
     basis,
     lines,
+    traces,
+    sourceReferences,
+    certainty,
     explanationSections,
     interpretationSections,
     messages: [
-      "断易モードは試作版です。相談文と日時から本卦・之卦・動爻を組み立て、論点整理用の機械解釈を返します。",
-      basis.useDeity === "世応" ? "恋愛・結婚・総合では世応読みを優先し、三爻と上爻を関係線として扱っています。" : `今回の用神候補は ${basis.useDeity} です。`,
+      input.lineInputMode === "manual"
+        ? "コイン法 (6/7/8/9) 入力を本卦・之卦・動爻の根拠として採用しました。"
+        : "時刻法近似による立卦のため、確度は derived です。可能ならコイン法での再立卦を推奨します。",
+      basis.useDeity === "世応"
+        ? `世応用神: 世爻 ${basis.worldLine ? lineLabel(basis.worldLine) : "—"} / 応爻 ${basis.responseLine ? lineLabel(basis.responseLine) : "—"}。`
+        : `用神候補は ${basis.useDeity}、決定線は ${basis.useGodLine ? lineLabel(basis.useGodLine) : "未確定"}。`,
     ],
   };
 }

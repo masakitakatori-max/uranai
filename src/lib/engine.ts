@@ -1,10 +1,13 @@
 import { Solar } from "lunar-typescript";
 
 import { buildConsultationParagraphs, inferTopicFromQuestion } from "./consultation";
+import { SAN_CHUAN_EXPECTED_ROW_COUNT, SAN_CHUAN_ROW_COUNT, getMissingSanChuanRowsForDay, isMissingSanChuanRow, SAN_CHUAN_SHARED_SCREENSHOT_GAP } from "./data/sanChuanCoverage";
+import { WUZI_DUN_START_STEM_BY_DAY_STEM } from "./data/kingoketsu";
 import {
   BRANCHES,
   EARTH_RING_SEQUENCE,
   GANZHI_CYCLE,
+  STEMS,
   JU_NUMBER_BY_EARTH_BRANCH,
   LOCATION_OFFSETS,
   MONTH_BRANCH_BY_QI_MONTH,
@@ -17,7 +20,9 @@ import {
   YEAR_RANGE,
 } from "./data/core";
 import { BRANCH_WUXING, DAY_NIGHT_NOBLE_BRANCH, GENERAL_ORDER_NAMES, STEM_WUXING, getBranchRelations, getGeneralOrderFromNobleEarth, getSeasonalState, getSixKin } from "./data/rules";
-import { SAN_CHUAN_LOOKUP } from "./data/sanChuanLookup";
+import { collectSourceReferences, resolveChartCertainty } from "./chartUx";
+import { resolveLocationOffset } from "./location";
+import { resolveSanChuanRow } from "./sanChuanResolver";
 import type {
   Branch,
   ChartBasis,
@@ -32,6 +37,8 @@ import type {
   NarrativeSection,
   NobleMode,
   PlateCell,
+  RuleTrace,
+  SourceReference,
   SeasonalState,
   SixKin,
   Stem,
@@ -43,10 +50,6 @@ const REFERENCE_CYCLE_INDEX = GANZHI_CYCLE.indexOf(REFERENCE_DAY_GANZHI);
 
 function mod(value: number, divisor: number) {
   return ((value % divisor) + divisor) % divisor;
-}
-
-function getLocationOffset(locationId: string) {
-  return LOCATION_OFFSETS.find((location) => location.id === locationId) ?? LOCATION_OFFSETS.find((location) => location.id === "akashi")!;
 }
 
 function toWallClockDate(input: Pick<LiurenInput, "year" | "month" | "day" | "hour" | "minute">) {
@@ -199,10 +202,22 @@ function createFourLessons(dayStem: Stem, dayBranch: Branch, heavenPlate: Record
   });
 }
 
+function getDunStem(dayStem: Stem, branch: Branch): Stem {
+  const startStem = WUZI_DUN_START_STEM_BY_DAY_STEM[dayStem];
+  return STEMS[mod(STEMS.indexOf(startStem) + BRANCHES.indexOf(branch), STEMS.length)];
+}
+
 function createThreeTransmissions(dayGanzhi: Ganzhi, firstUpper: Branch, dayElement: Wuxing, generalByHeavenBranch: Record<Branch, HeavenlyGeneral>, voidBranches: [Branch, Branch]) {
-  const row = SAN_CHUAN_LOOKUP[dayGanzhi]?.[firstUpper];
+  const dayStem = dayGanzhi.charAt(0) as Stem;
+  const resolution = resolveSanChuanRow(dayGanzhi, firstUpper);
+  const row = resolution.row;
   if (!row) {
-    return { items: [] as ThreeTransmission[], lessonType: null as LiurenChart["lessonType"] };
+    return {
+      items: [] as ThreeTransmission[],
+      lessonType: null as LiurenChart["lessonType"],
+      source: resolution.source,
+      trace: resolution.trace,
+    };
   }
 
   const stages: Array<["初伝" | "中伝" | "末伝", Branch]> = [
@@ -213,15 +228,79 @@ function createThreeTransmissions(dayGanzhi: Ganzhi, firstUpper: Branch, dayElem
 
   return {
     lessonType: row.lessonType,
+    source: resolution.source,
+    trace: resolution.trace,
     items: stages.map(([stage, branch]) => ({
       stage,
       branch,
-      dunStem: null,
+      dunStem: getDunStem(dayStem, branch),
       sixKin: getSixKin(dayElement, BRANCH_WUXING[branch]),
       heavenlyGeneral: generalByHeavenBranch[branch],
       isVoid: voidBranches.includes(branch),
     })),
   };
+}
+
+function getLiurenSourceReference(id: string, label: string, detail: string, chapter?: string): SourceReference {
+  return { id, label, detail, chapter };
+}
+
+function buildLiurenTraces(
+  basis: ChartBasis,
+  fourLessons: readonly FourLesson[],
+  threeTransmissions: readonly ThreeTransmission[],
+  sanChuanSource: "lookup" | "derived" | "unresolved",
+  sanChuanTrace: readonly string[],
+): RuleTrace[] {
+  const primaryTransmissionValue = threeTransmissions.length
+    ? threeTransmissions.map((item) => `${item.stage}:${item.branch}`).join(" / ")
+    : "unresolved";
+
+  return [
+    {
+      ruleId: "liuren.corrected-datetime",
+      step: "corrected datetime",
+      value: basis.correctedDateTime,
+      source: "location-offset",
+      sourceRef: getLiurenSourceReference(
+        `liuren:time:${basis.locationLabel}`,
+        "Time correction",
+        `${basis.locationLabel} / offset ${basis.offsetMinutes >= 0 ? "+" : ""}${basis.offsetMinutes}m / ju ${basis.juNumber}`,
+        "basis",
+      ),
+      reason: `location correction resolved to ${basis.correctedDateTime}`,
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "liuren.san-chuan",
+      step: "三伝",
+      value: primaryTransmissionValue,
+      source: sanChuanSource,
+      sourceRef: getLiurenSourceReference(
+        `liuren:san-chuan:${basis.dayGanzhi}:${fourLessons[0]?.upper ?? "unknown"}`,
+        sanChuanSource === "lookup" ? "三伝 lookup table" : sanChuanSource === "derived" ? "三伝 derived rules" : "三伝 unresolved",
+        sanChuanTrace.join(" / ") || "三伝表の結果を基準に構成",
+        sanChuanSource === "lookup" ? "lookup" : "resolver",
+      ),
+      reason: sanChuanTrace.join(" / ") || "三伝の参照に成功しました",
+      certainty: sanChuanSource === "lookup" ? "confirmed" : sanChuanSource === "derived" ? "derived" : "unresolved",
+      approximation: sanChuanSource === "derived" ? "lookup gap recovered from four-lesson rules" : sanChuanSource === "unresolved" ? "tri-transmission unavailable" : undefined,
+    },
+    {
+      ruleId: "liuren.topic-scope",
+      step: "占的",
+      value: basis.dayGanzhi,
+      source: "consultation",
+      sourceRef: getLiurenSourceReference(
+        `liuren:topic:${basis.dayGanzhi}`,
+        "Topic scope",
+        `resolved topic ${basis.monthGeneral}/${basis.hourBranch}`,
+        "topic inference",
+      ),
+      reason: `topic was resolved against ${basis.monthGeneral} and ${basis.hourBranch}`,
+      certainty: "derived",
+    },
+  ];
 }
 
 function getBranchPairNotes(label: string, branch: Branch, references: Array<{ label: string; branch: Branch }>) {
@@ -296,7 +375,7 @@ function describeLessonType(lessonType: LessonType | null) {
     case "八専":
       return "偏りが強く、一方向へ寄りやすい課式です。";
     default:
-      return "三伝表が未収録のため、四課中心で読みます。";
+      return "課式が未詳のため、四課までで止めて読むのが安全です。";
   }
 }
 
@@ -310,7 +389,7 @@ const SIX_KIN_CORE_TEXT: Record<SixKin, string> = {
 
 const HEAVENLY_GENERAL_TEXT: Record<HeavenlyGeneral, string> = {
   貴人: "援助や引き上げ",
-  蛇: "迷い、絡み、錯綜",
+  騰蛇: "迷い、絡み、錯綜",
   朱雀: "言葉、告知、発言",
   六合: "縁、調停、まとまり",
   勾陳: "停滞、粘着、引き延ばし",
@@ -378,7 +457,35 @@ function buildLiurenExplanationSections(
   const initial = annotationMap.get("初伝");
   const middle = annotationMap.get("中伝");
   const final = annotationMap.get("末伝");
-  const firstLesson = annotationMap.get("第1課");
+
+  if (!threeTransmissions.length) {
+    return [
+      {
+        key: "liuren-foundation",
+        title: "基礎の組み立て",
+        paragraphs: [
+          `入力日時を ${basis.locationLabel} の地方時差 ${basis.offsetMinutes >= 0 ? "+" : ""}${basis.offsetMinutes}分で補正し、基準時刻 ${basis.correctedDateTime} を採っています。日干支は ${basis.dayGanzhi}、月将は ${basis.monthGeneral}、占時は ${basis.hourBranch} です。`,
+          `月支 ${basis.monthBranch} に基づく月将で天盤を敷き、${basis.nobleMode}貴人 ${basis.nobleBranch} を起点に ${basis.generalOrder}、子の位置から ${basis.juNumber}局を定めています。${basis.appliedOverrides.length ? ` 手動補正: ${basis.appliedOverrides.join(" / ")}。` : ""}`,
+        ],
+      },
+      {
+        key: "liuren-structure",
+        title: "四課と三伝",
+        paragraphs: [
+          `第1課から第4課は ${fourLessons.map((lesson) => `${lesson.lower}/${lesson.upper}`).join(" → ")}。課式は ${lessonType ?? "未詳"} です。`,
+          "三伝を確定できないため、第1課・第2課・第4課を三伝の代わりに使った説明は行いません。",
+        ],
+      },
+      {
+        key: "liuren-judgment-core",
+        title: "今回の扱い",
+        paragraphs: [
+          `空亡は ${basis.voidBranches[0]}${basis.voidBranches[1]} です。四課までは参照できますが、三伝未確定の盤として扱います。`,
+          "入力日時、節入り、手動補正、出典の欠落を再確認してください。三伝が確定するまでは吉凶や成否を断定しません。",
+        ],
+      },
+    ];
+  }
 
   return [
     {
@@ -396,15 +503,15 @@ function buildLiurenExplanationSections(
         `第1課から第4課は ${fourLessons.map((lesson) => `${lesson.lower}/${lesson.upper}`).join(" → ")}。課式は ${lessonType ?? "未詳"} で、${describeLessonType(lessonType)}`,
         threeTransmissions.length
           ? `三伝は ${formatSignal(initial)} → ${formatSignal(middle)} → ${formatSignal(final)} の順で進みます。`
-          : `三伝 lookup が未収録のため、代表信号は第1課 ${formatSignal(firstLesson)} を仮の主軸として扱います。`,
+          : "三伝 lookup が未収録のため、代表信号は未確定です。",
       ],
     },
     {
       key: "liuren-judgment-core",
       title: "判断の芯",
       paragraphs: [
-        `空亡は ${basis.voidBranches[0]}${basis.voidBranches[1]}。三伝がある場合は初伝を主導線、四課では第1課を入口として読みます。`,
-        `${describeSignal(initial ?? firstLesson)} ${threeTransmissions.length ? describeSignal(final) : ""}`.trim(),
+        `空亡は ${basis.voidBranches[0]}${basis.voidBranches[1]}。三伝がある場合は初伝を主導線として読み、四課は構造確認に留めます。`,
+        `${describeSignal(initial)} ${threeTransmissions.length ? describeSignal(final) : ""}`.trim(),
       ],
     },
   ];
@@ -414,13 +521,60 @@ function buildLiurenInterpretationSections(
   input: LiurenInput,
   resolvedTopic: LiurenTopic,
   basis: ChartBasis,
+  threeTransmissions: readonly ThreeTransmission[],
   helperAnnotations: readonly HelperAnnotation[],
   lessonType: LessonType | null,
 ): NarrativeSection[] {
   const annotationMap = getAnnotationMap(helperAnnotations);
-  const driver = annotationMap.get("初伝") ?? annotationMap.get("第1課");
-  const support = annotationMap.get("中伝") ?? annotationMap.get("第2課");
-  const closing = annotationMap.get("末伝") ?? annotationMap.get("第4課");
+  const driver = annotationMap.get("初伝");
+  const support = annotationMap.get("中伝");
+  const closing = annotationMap.get("末伝");
+
+  if (!threeTransmissions.length) {
+    const sections: NarrativeSection[] = [
+      {
+        key: "liuren-machine-scope",
+        title: "機械解釈の範囲",
+        paragraphs: [
+          `以下は占的 ${resolvedTopic} に合わせた基礎の機械解釈です。${TOPIC_SCOPE_TEXT[resolvedTopic]}`,
+          "三伝を確定できないため、第1課・第2課・第4課を代用した断定は行いません。",
+        ],
+      },
+    ];
+
+    const consultationParagraphs = buildConsultationParagraphs(input.questionText, resolvedTopic);
+    if (consultationParagraphs.length) {
+      sections.push({
+        key: "liuren-consultation",
+        title: "相談文への返し方",
+        paragraphs: consultationParagraphs,
+      });
+    }
+
+    sections.push({
+      key: "liuren-unresolved",
+      title: "三伝未確定",
+      paragraphs: [
+        "この盤は四課までは表示しますが、三伝が未確定のため、進展順序や着地点の断定は保留します。",
+        "入力日時、節入り、手動補正、出典の欠落を再確認し、三伝が確定してから読みを進めてください。",
+      ],
+    });
+
+    return sections;
+  }
+
+  if (!(driver && support && closing)) {
+    return [
+      {
+        key: "liuren-machine-scope",
+        title: "機械解釈の守備範囲",
+        paragraphs: [
+          `今回は占題「${resolvedTopic}」に合わせた自動解釈です。${TOPIC_SCOPE_TEXT[resolvedTopic]}`,
+          "三伝注記の一部が欠けているため、初伝・中伝・末伝を揃えた判断は保留します。",
+        ],
+      },
+    ];
+  }
 
   const sections: NarrativeSection[] = [
     {
@@ -455,7 +609,7 @@ function buildLiurenInterpretationSections(
     case "仕事":
       topicParagraphs = [
         `仕事では ${formatSignal(driver)} を着手線として見ます。${driver?.sixKin === "官鬼" ? "責任、締切、上位判断が先に立つので、負荷管理を怠ると崩れやすいです。" : driver?.sixKin === "妻財" ? "成果や実利を取りに行きやすく、金額・成果物に話を寄せると通しやすいです。" : "人や情報の流れを整えるほど仕事が前に出やすい形です。"}`,
-        `${closing ? `終盤の ${formatSignal(closing)} を見ると、${closing.isVoid ? "最後に条件変更や手戻りが入りやすいです。" : "着地条件は詰めやすいです。"}` : "三伝未詳なので、第4課の変化で着地を補います。"}`,
+        `${closing ? `終盤の ${formatSignal(closing)} を見ると、${closing.isVoid ? "最後に条件変更や手戻りが入りやすいです。" : "着地条件は詰めやすいです。"}` : "三伝注記が欠けているため、着地判断は保留します。"}`,
       ];
       break;
     case "金運":
@@ -515,7 +669,7 @@ function buildLiurenInterpretationSections(
 }
 
 export function buildLiurenChart(input: LiurenInput): LiurenChart {
-  const location = getLocationOffset(input.locationId);
+  const location = resolveLocationOffset(input.locationId);
   const correctedDate = addMinutes(toWallClockDate(input), location.offsetMinutes);
   const correctedParts = getUtcParts(correctedDate);
   const qiMonthData = getQiMonthData(correctedDate);
@@ -563,14 +717,51 @@ export function buildLiurenChart(input: LiurenInput): LiurenChart {
   const sanChuan = createThreeTransmissions(dayGanzhi, fourLessons[0].upper, dayElement, generalByHeavenBranch, voidBranches);
   const helperAnnotations = buildHelperAnnotations(fourLessons, sanChuan.items, basis, monthElement);
   const explanationSections = buildLiurenExplanationSections(basis, fourLessons, sanChuan.items, helperAnnotations, sanChuan.lessonType);
-  const interpretationSections = buildLiurenInterpretationSections(input, resolvedTopic, basis, helperAnnotations, sanChuan.lessonType);
+  const interpretationSections = buildLiurenInterpretationSections(input, resolvedTopic, basis, sanChuan.items, helperAnnotations, sanChuan.lessonType);
+  const traces = buildLiurenTraces(basis, fourLessons, sanChuan.items, sanChuan.source, sanChuan.trace);
+  const sourceReferences = collectSourceReferences(traces, [
+    getLiurenSourceReference(
+      "liuren:lookup-table",
+      "三伝 lookup table",
+      `rows ${SAN_CHUAN_ROW_COUNT}/${SAN_CHUAN_EXPECTED_ROW_COUNT}`,
+      "三伝",
+    ),
+    ...(sanChuan.source === "derived"
+      ? [
+          getLiurenSourceReference(
+            "liuren:derived-rules",
+            "三伝 derived rules",
+            sanChuan.trace.join(" / "),
+            "四課規則",
+          ),
+        ]
+      : []),
+    ...(isMissingSanChuanRow(dayGanzhi, fourLessons[0].upper)
+      ? [
+          getLiurenSourceReference(
+            "liuren:screenshot-gap",
+            "Shared screenshot gap",
+            `${SAN_CHUAN_SHARED_SCREENSHOT_GAP.after} -> ${SAN_CHUAN_SHARED_SCREENSHOT_GAP.before}`,
+            "coverage",
+          ),
+        ]
+      : []),
+  ]);
+  const certainty = resolveChartCertainty(traces);
 
   const messages: string[] = [];
+  const missingSanChuanRow = isMissingSanChuanRow(dayGanzhi, fourLessons[0].upper);
   if (!sanChuan.items.length) {
     messages.push(`三伝表データが未収録です: ${dayGanzhi} / 干上神 ${fourLessons[0].upper}`);
   }
-  if (dayGanzhi === "壬寅" || dayGanzhi === "癸卯") {
-    messages.push("壬寅日・癸卯日は共有スクリーンショットが1ページ欠けており、三伝表の網羅性が未完です。");
+  if (sanChuan.source === "derived") {
+    messages.push(`三伝は四課規則から補完しました: ${dayGanzhi} / 干上神 ${fourLessons[0].upper}`);
+  }
+  if (missingSanChuanRow) {
+    const missingUpperList = getMissingSanChuanRowsForDay(dayGanzhi).map((item) => item.upper).join("");
+    messages.push(
+      `共有スクリーンショットは ${SAN_CHUAN_SHARED_SCREENSHOT_GAP.after} と ${SAN_CHUAN_SHARED_SCREENSHOT_GAP.before} の間の表ページが欠けています。${dayGanzhi}日は ${missingUpperList} 行が生表では欠落しています。`,
+    );
   }
 
   return {
@@ -585,6 +776,9 @@ export function buildLiurenChart(input: LiurenInput): LiurenChart {
     lessonType: sanChuan.lessonType,
     basis,
     helperAnnotations,
+    traces,
+    sourceReferences,
+    certainty,
     explanationSections,
     interpretationSections,
     messages,

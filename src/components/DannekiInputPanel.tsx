@@ -15,6 +15,12 @@ export function DannekiInputPanel({ input, locations, daysInMonth, years, onAppl
   const hours = Array.from({ length: 24 }, (_, index) => index);
   const minutes = Array.from({ length: 60 }, (_, index) => index);
   const topics = ["総合", "仕事", "金運", "恋愛", "結婚", "健康", "失せ物", "天気"] as const satisfies readonly DannekiTopic[];
+  const lineOptions = [
+    { value: 6, label: "6 老陰" },
+    { value: 7, label: "7 少陽" },
+    { value: 8, label: "8 少陰" },
+    { value: 9, label: "9 老陽" },
+  ] as const;
 
   const updateNumber = (key: keyof Pick<DannekiInput, "year" | "month" | "day" | "hour" | "minute">, value: string) => {
     const next = Number(value);
@@ -40,10 +46,40 @@ export function DannekiInputPanel({ input, locations, daysInMonth, years, onAppl
             今日
           </button>
         </div>
-        <p>相談文を起点に、日時と地点から本卦・之卦・動爻を立てる試作モードです。まずは論点整理と読み筋の比較に向けた土台として使えます。</p>
+        <p>相談文と日時から六爻を生成し、本卦・之卦・動爻・旺相休囚死まで一通り確認できる試作モードです。</p>
       </div>
 
       <div className="form-grid">
+        <label className="span-2">
+          <span>立卦方式</span>
+          <div className="mode-switch" role="radiogroup" aria-label="立卦方式">
+            <button
+              className={input.lineInputMode === "auto" ? "mode-button is-active" : "mode-button"}
+              onClick={() =>
+                onInputChange((draft) => ({
+                  ...draft,
+                  lineInputMode: "auto",
+                }))
+              }
+              type="button"
+            >
+              自動
+            </button>
+            <button
+              className={input.lineInputMode === "manual" ? "mode-button is-active" : "mode-button"}
+              onClick={() =>
+                onInputChange((draft) => ({
+                  ...draft,
+                  lineInputMode: "manual",
+                  manualLineValues: draft.manualLineValues ?? [8, 8, 8, 8, 8, 8],
+                }))
+              }
+              type="button"
+            >
+              手動
+            </button>
+          </div>
+        </label>
         <label>
           <span>年</span>
           <select value={input.year} onChange={(event) => updateNumber("year", event.target.value)}>
@@ -144,6 +180,36 @@ export function DannekiInputPanel({ input, locations, daysInMonth, years, onAppl
             rows={6}
           />
         </label>
+        {input.lineInputMode === "manual" ? (
+          <div className="span-2">
+            <span>爻値（下から上へ）</span>
+            <div className="manual-line-grid">
+              {(input.manualLineValues ?? [8, 8, 8, 8, 8, 8]).map((value, index) => (
+                <label key={`line-${index}`}>
+                  <span>{["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"][index]}</span>
+                  <select
+                    value={value}
+                    onChange={(event) => {
+                      const nextValue = Number(event.target.value) as 6 | 7 | 8 | 9;
+                      onInputChange((draft) => {
+                        const current = draft.manualLineValues ?? [8, 8, 8, 8, 8, 8];
+                        const next = [...current];
+                        next[index] = nextValue;
+                        return { ...draft, manualLineValues: next };
+                      });
+                    }}
+                  >
+                    {lineOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
     </section>
   );

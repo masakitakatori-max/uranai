@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "api:dev": "node server.mjs",
     "build": "tsc -b && vite build && node scripts/postbuild-seo.mjs",
     "lint": "eslint .",
+    "pareto:failures": "node scripts/failure-pareto-report.mjs",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run"

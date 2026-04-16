@@ -52,6 +52,26 @@ describe("buildKingoketsuChart", () => {
     expect(chart.basis.dayPillar.ganzhi).toBe("丙戌");
     expect(chart.basis.hourPillar.ganzhi).toBe("戊子");
   });
+  it("rejects an unknown location instead of silently falling back to akashi", () => {
+    expect(() =>
+      buildKingoketsuChart({
+        ...baseInput,
+        locationId: "unknown-location",
+      }),
+    ).toThrow(/location/i);
+  });
+
+  it("always returns render-safe narrative and trace arrays", () => {
+    const chart = buildKingoketsuChart(baseInput);
+
+    expect(Array.isArray(chart.helperSections)).toBe(true);
+    expect(Array.isArray(chart.explanationSections)).toBe(true);
+    expect(Array.isArray(chart.interpretationSections)).toBe(true);
+    expect(Array.isArray(chart.traces)).toBe(true);
+    expect(chart.explanationSections.length).toBeGreaterThan(0);
+    expect(chart.interpretationSections.length).toBeGreaterThan(0);
+    expect(chart.traces.length).toBeGreaterThan(0);
+  });
 });
 
 describe("kingoketsu helpers", () => {
@@ -73,6 +93,10 @@ describe("kingoketsu helpers", () => {
     expect(getKingoketsuFourMajorVoid("甲子")).toBe("水");
     expect(getKingoketsuFourMajorVoid("甲申")).toBe("金");
     expect(getKingoketsuFourMajorVoid("甲辰")).toBe("なし");
+  });
+
+  it("rejects an unknown xun leader instead of silently returning なし", () => {
+    expect(() => getKingoketsuFourMajorVoid("unknown-xun")).toThrow(/xun/i);
   });
 
   it("switches interpretation according to the selected topic", () => {

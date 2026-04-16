@@ -1,4 +1,6 @@
 import type { KingoketsuChart } from "../lib/types";
+import { getSafeList } from "../lib/uiUtils";
+import { WuxingPentagram } from "./WuxingPentagram";
 
 interface KingoketsuBoardViewProps {
   chart: KingoketsuChart;
@@ -11,6 +13,11 @@ function toneClassName(tone: "neutral" | "good" | "alert") {
 }
 
 export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
+  const positions = getSafeList(chart.positions);
+  const helperSections = getSafeList(chart.helperSections);
+  const relationSummary = getSafeList(chart.relationSummary);
+  const messages = getSafeList(chart.messages);
+
   return (
     <section className="panel board-panel">
       <div className="panel-heading">
@@ -64,11 +71,14 @@ export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
             </div>
 
             <div className="kingoketsu-position-list">
-              {chart.positions.map((position) => (
+              {positions.map((position) => (
                 <article className={`kingoketsu-position ${position.isUseYao ? "is-useyao" : ""}`} key={position.key}>
                   <div>
                     <span>{position.key}</span>
-                    <strong>{position.displayValue}</strong>
+                    <strong>
+                      {position.isUseYao ? <span aria-label="用爻" title="用爻">●</span> : null}
+                      {position.displayValue}
+                    </strong>
                   </div>
                   <div className="kingoketsu-position-meta">
                     <span className={toneClassName(position.titleTone)}>{position.title}</span>
@@ -86,7 +96,7 @@ export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
           <div className="transmission-block">
             <div className="section-label">要点</div>
             <div className="transmission-stack">
-              {chart.helperSections.slice(0, 4).map((section) => (
+              {helperSections.slice(0, 4).map((section) => (
                 <article className="transmission-card" key={section.title}>
                   <span>{section.title}</span>
                   <strong>{section.value}</strong>
@@ -99,7 +109,7 @@ export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
           <div className="transmission-block">
             <div className="section-label">関係</div>
             <div className="transmission-stack">
-              {chart.relationSummary.map((item) => (
+              {relationSummary.map((item) => (
                 <article className="transmission-card" key={item.key}>
                   <span>{item.label}</span>
                   <strong>{item.badges.join(" / ")}</strong>
@@ -107,12 +117,19 @@ export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
               ))}
             </div>
           </div>
+
+          <div className="transmission-block">
+            <div className="section-label">五行相関</div>
+            <WuxingPentagram
+              highlights={positions.map((position) => ({ label: position.key, element: position.wuxing }))}
+            />
+          </div>
         </div>
       </div>
 
-      {chart.messages.length ? (
+      {messages.length ? (
         <div className="message-strip">
-          {chart.messages.map((message) => (
+          {messages.map((message) => (
             <p key={message}>{message}</p>
           ))}
         </div>

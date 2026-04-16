@@ -1,0 +1,38 @@
+[
+  {
+    "category": "silent_fallback",
+    "severity": "critical",
+    "surface": "engine",
+    "message": "locationId fallback to akashi"
+  },
+  {
+    "category": "missing_guard",
+    "severity": "high",
+    "surface": "ui",
+    "message": "Cannot read properties of undefined (reading 'map')"
+  },
+  {
+    "category": "book_knowledge_gap",
+    "severity": "medium",
+    "surface": "knowledge",
+    "message": "fixture is thin and rule table is incomplete"
+  },
+  {
+    "category": "contract_mismatch",
+    "severity": "medium",
+    "surface": "api",
+    "message": "minimum length mismatch between UI and API"
+  },
+  {
+    "category": "auth_boundary",
+    "severity": "high",
+    "surface": "api",
+    "message": "localStorage token leak risk"
+  },
+  {
+    "category": "performance",
+    "severity": "low",
+    "surface": "build",
+    "message": "large static import keeps bundle heavy"
+  }
+]

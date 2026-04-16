@@ -1,16 +1,21 @@
-import type { KingoketsuChart } from "../lib/types";
+import { ChartEvidencePanel } from "./ChartEvidencePanel";
+import { getSafeList } from "../lib/uiUtils";
+import type { KingoketsuChart, KingoketsuHelperSection, KingoketsuNarrativeSection } from "../lib/types";
 
 interface KingoketsuHelperPanelProps {
   chart: KingoketsuChart;
 }
 
 export function KingoketsuHelperPanel({ chart }: KingoketsuHelperPanelProps) {
+  const helperSections = getSafeList<KingoketsuHelperSection>(chart.helperSections);
+  const explanationSections = getSafeList<KingoketsuNarrativeSection>(chart.explanationSections);
+  const interpretationSections = getSafeList<KingoketsuNarrativeSection>(chart.interpretationSections);
   return (
     <section className="panel helper-panel">
       <div className="panel-heading">
-        <p className="eyebrow">判定補助層</p>
-        <h2>参照情報</h2>
-        <p>補正の内訳、四位の旺相休囚死、干支関係、採用した作盤規則を一覧で確認できます。</p>
+        <p className="eyebrow">補助判断資料</p>
+        <h2>機械解説</h2>
+        <p>金口訣の盤面・旺相休囚死・関係性を、人間が読み下す前提で見やすくまとめています。</p>
       </div>
 
       <div className="basis-grid">
@@ -19,7 +24,7 @@ export function KingoketsuHelperPanel({ chart }: KingoketsuHelperPanelProps) {
           <strong>{chart.basis.wallClockDateTime}</strong>
         </div>
         <div>
-          <span>占的</span>
+          <span>占題</span>
           <strong>{chart.topic}</strong>
         </div>
         <div>
@@ -33,7 +38,7 @@ export function KingoketsuHelperPanel({ chart }: KingoketsuHelperPanelProps) {
           </strong>
         </div>
         <div>
-          <span>将神起点</span>
+          <span>月将起点</span>
           <strong>
             時支 {chart.basis.hourPillar.branch} / 月将 {chart.basis.monthGeneral}
           </strong>
@@ -60,14 +65,14 @@ export function KingoketsuHelperPanel({ chart }: KingoketsuHelperPanelProps) {
               <span>{position.state}</span>
               <span>{position.yinYang}</span>
               {position.convertedBranch ? <span>変換 {position.convertedBranch}</span> : null}
-              {position.isUseYao ? <span>用爻</span> : null}
+              {position.isUseYao ? <span>用神</span> : null}
             </div>
           </article>
         ))}
       </div>
 
       <div className="annotation-list helper-section-list">
-        {chart.helperSections.map((section) => (
+        {helperSections.map((section) => (
           <article className="annotation-item" key={section.title}>
             <header>
               <span>{section.title}</span>
@@ -81,7 +86,7 @@ export function KingoketsuHelperPanel({ chart }: KingoketsuHelperPanelProps) {
       <div className="narrative-block">
         <div className="section-label">解説</div>
         <div className="narrative-list">
-          {chart.explanationSections.map((section) => (
+          {explanationSections.map((section) => (
             <article className="annotation-item" key={section.key}>
               <header>
                 <span>{section.title}</span>
@@ -97,7 +102,7 @@ export function KingoketsuHelperPanel({ chart }: KingoketsuHelperPanelProps) {
       <div className="narrative-block">
         <div className="section-label">解釈</div>
         <div className="narrative-list">
-          {chart.interpretationSections.map((section) => (
+          {interpretationSections.map((section) => (
             <article className="annotation-item" key={section.key}>
               <header>
                 <span>{section.title}</span>
@@ -110,18 +115,7 @@ export function KingoketsuHelperPanel({ chart }: KingoketsuHelperPanelProps) {
         </div>
       </div>
 
-      <div className="trace-block">
-        <div className="section-label">Rule Trace</div>
-        <div className="trace-list">
-          {chart.traces.map((trace) => (
-            <article className="trace-item" key={`${trace.step}-${trace.source}`}>
-              <span>{trace.step}</span>
-              <strong>{trace.value}</strong>
-              <small>{trace.source}</small>
-            </article>
-          ))}
-        </div>
-      </div>
+      <ChartEvidencePanel certainty={chart.certainty} traces={chart.traces} sourceReferences={chart.sourceReferences} />
     </section>
   );
 }

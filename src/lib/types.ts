@@ -7,7 +7,7 @@ export type AppMode = "liuren" | "kingoketsu" | "danneki";
 export type YinYang = "陽" | "陰";
 export type HeavenlyGeneral =
   | "貴人"
-  | "蛇"
+  | "騰蛇"
   | "朱雀"
   | "六合"
   | "勾陳"
@@ -122,6 +122,16 @@ export interface NarrativeSection {
   paragraphs: string[];
 }
 
+export type ChartCertainty = "confirmed" | "derived" | "unresolved";
+
+export interface SourceReference {
+  id: string;
+  label: string;
+  detail?: string;
+  imageId?: string;
+  chapter?: string;
+}
+
 export interface LiurenChart {
   topic: LiurenTopic;
   resolvedTopic: LiurenTopic;
@@ -134,6 +144,9 @@ export interface LiurenChart {
   lessonType: LessonType | null;
   basis: ChartBasis;
   helperAnnotations: HelperAnnotation[];
+  traces: RuleTrace[];
+  sourceReferences: SourceReference[];
+  certainty: ChartCertainty;
   explanationSections: NarrativeSection[];
   interpretationSections: NarrativeSection[];
   messages: string[];
@@ -167,9 +180,14 @@ export interface KingoketsuInput {
 }
 
 export interface RuleTrace {
+  ruleId: string;
   step: string;
   value: string;
   source: string;
+  sourceRef: SourceReference;
+  reason: string;
+  certainty: ChartCertainty;
+  approximation?: string;
 }
 
 export interface KingoketsuPillar {
@@ -238,14 +256,19 @@ export interface KingoketsuChart {
   positions: KingoketsuPosition[];
   relationSummary: KingoketsuRelation[];
   helperSections: KingoketsuHelperSection[];
+  sourceReferences: SourceReference[];
   explanationSections: KingoketsuNarrativeSection[];
   interpretationSections: KingoketsuNarrativeSection[];
   traces: RuleTrace[];
+  certainty: ChartCertainty;
   messages: string[];
 }
 
 export type DannekiTopic = DivinationTopic;
 export type DannekiUseDeity = SixKin | "世応";
+export type DannekiLineInputMode = "auto" | "manual";
+export type DannekiUseGodRole = "" | "用神" | "忌神" | "原神" | "仇神";
+export type DannekiSixSpirit = "青龍" | "朱雀" | "勾陳" | "螣蛇" | "白虎" | "玄武";
 export type TrigramKey = "乾" | "兌" | "離" | "震" | "巽" | "坎" | "艮" | "坤";
 
 export interface DannekiInput {
@@ -257,6 +280,8 @@ export interface DannekiInput {
   locationId: string;
   topic: DannekiTopic;
   questionText: string;
+  lineInputMode: DannekiLineInputMode;
+  manualLineValues: Array<6 | 7 | 8 | 9> | null;
 }
 
 export interface DannekiTrigram {
@@ -270,10 +295,23 @@ export interface DannekiTrigram {
 
 export interface DannekiLine {
   position: 1 | 2 | 3 | 4 | 5 | 6;
+  value: 6 | 7 | 8 | 9;
+  stem: Stem;
+  branch: Branch;
+  sixSpirit: DannekiSixSpirit;
   original: YinYang;
   changed: YinYang;
   isMoving: boolean;
   relation: SixKin;
+  element: Wuxing;
+  seasonalState: SeasonalState;
+  dayRelations: string[];
+  isVoid: boolean;
+  isDayChong: boolean;
+  isDayHe: boolean;
+  isMonthBroken: boolean;
+  useGodRole: DannekiUseGodRole;
+  role: "" | "世" | "応";
   note: string;
 }
 
@@ -281,6 +319,19 @@ export interface DannekiBasis {
   correctedDateTime: string;
   locationLabel: string;
   offsetMinutes: number;
+  dayGanzhi: Ganzhi;
+  dayStem: Stem;
+  dayBranch: Branch;
+  dayElement: Wuxing;
+  monthBranch: Branch;
+  monthElement: Wuxing;
+  voidBranches: [Branch, Branch];
+  palace: TrigramKey | null;
+  palaceOrder: number | null;
+  worldLine: 1 | 2 | 3 | 4 | 5 | 6 | null;
+  responseLine: 1 | 2 | 3 | 4 | 5 | 6 | null;
+  useGodLine: 1 | 2 | 3 | 4 | 5 | 6 | null;
+  useGodReason: string;
   upperTrigram: DannekiTrigram;
   lowerTrigram: DannekiTrigram;
   changedUpperTrigram: DannekiTrigram;
@@ -296,6 +347,9 @@ export interface DannekiChart {
   questionText: string;
   basis: DannekiBasis;
   lines: DannekiLine[];
+  traces: RuleTrace[];
+  sourceReferences: SourceReference[];
+  certainty: ChartCertainty;
   explanationSections: NarrativeSection[];
   interpretationSections: NarrativeSection[];
   messages: string[];

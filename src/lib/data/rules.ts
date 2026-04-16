@@ -43,7 +43,7 @@ export const DAY_NIGHT_NOBLE_BRANCH: Record<Stem, Record<NobleMode, Branch>> = {
 
 export const CLOCKWISE_GENERAL_SET = new Set<Branch>(["亥", "子", "丑", "寅", "卯", "辰"]);
 
-export const GENERAL_ORDER_NAMES: readonly HeavenlyGeneral[] = ["貴人", "蛇", "朱雀", "六合", "勾陳", "青龍", "天空", "白虎", "太常", "玄武", "太陰", "天后"];
+export const GENERAL_ORDER_NAMES: readonly HeavenlyGeneral[] = ["貴人", "騰蛇", "朱雀", "六合", "勾陳", "青龍", "天空", "白虎", "太常", "玄武", "太陰", "天后"];
 
 const GENERATES: Record<Wuxing, Wuxing> = {
   木: "火",

@@ -1,7 +1,7 @@
-import { Solar } from "lunar-typescript";
+﻿import { Solar } from "lunar-typescript";
 
 import { buildConsultationParagraphs, inferTopicFromQuestion } from "./consultation";
-import { BRANCHES, LOCATION_OFFSETS, STEMS } from "./data/core";
+import { BRANCHES, STEMS } from "./data/core";
 import {
   FOUR_MAJOR_VOID_BY_XUN_LEADER,
   KINGOKETSU_FIXTURES,
@@ -15,6 +15,9 @@ import {
   WUZI_DUN_START_STEM_BY_DAY_STEM,
 } from "./data/kingoketsu";
 import { BRANCH_WUXING, STEM_WUXING, getBranchRelations, getSeasonalState } from "./data/rules";
+import { collectSourceReferences, resolveChartCertainty } from "./chartUx";
+import { resolveLocationOffset } from "./location";
+import { requireSeasonalState } from "./seasonalState";
 import type {
   Branch,
   Ganzhi,
@@ -30,6 +33,7 @@ import type {
   KingoketsuTopic,
   NobleChoice,
   RuleTrace,
+  SourceReference,
   SeasonalState,
   Stem,
   Wuxing,
@@ -90,10 +94,6 @@ const YIN_YANG_BY_BRANCH: Record<Branch, YinYang> = {
 
 function mod(value: number, divisor: number) {
   return ((value % divisor) + divisor) % divisor;
-}
-
-function getLocationOffset(locationId: string) {
-  return LOCATION_OFFSETS.find((location) => location.id === locationId) ?? LOCATION_OFFSETS.find((location) => location.id === "akashi")!;
 }
 
 function toWallClockDate(input: Pick<KingoketsuInput, "year" | "month" | "day" | "hour" | "minute">) {
@@ -220,6 +220,10 @@ function determineElementStates(elements: readonly Wuxing[]) {
   const present = [...counts.keys()];
   const stateMap = new Map<Wuxing, SeasonalState>();
 
+  if (!present.length) {
+    throw new Error("Unable to determine seasonal states from an empty element set.");
+  }
+
   if (present.length === 1) {
     stateMap.set(present[0], "旺");
     return stateMap;
@@ -268,7 +272,10 @@ function determineElementStates(elements: readonly Wuxing[]) {
       return { element, score };
     })
     .sort((left, right) => right.score - left.score);
-  const dominant = ranked[0]?.element ?? present[0];
+  const dominant = ranked[0]?.element;
+  if (!dominant) {
+    throw new Error("Unable to determine the dominant element.");
+  }
 
   stateMap.set(dominant, "旺");
   present.forEach((element) => {
@@ -397,6 +404,174 @@ function buildRelationSummary(positions: readonly KingoketsuPosition[], basis: K
   }));
 }
 
+function buildKingoketsuSourceReferences(): SourceReference[] {
+  return [
+    {
+      id: "kingoketsu:source:chapter-summary",
+      label: "Chapter summary",
+      imageId: KINGOKETSU_SOURCE_INDEX.chapterSummary,
+      chapter: "knowledge",
+    },
+    {
+      id: "kingoketsu:source:pillars",
+      label: "Pillars",
+      imageId: KINGOKETSU_SOURCE_INDEX.pillars,
+      chapter: "knowledge",
+    },
+    {
+      id: "kingoketsu:source:difen-and-month-general",
+      label: "Difen / month general",
+      imageId: KINGOKETSU_SOURCE_INDEX.difenAndMonthGeneral,
+      chapter: "knowledge",
+    },
+    {
+      id: "kingoketsu:source:noble-and-wuzi",
+      label: "Noble / Wuzi",
+      imageId: KINGOKETSU_SOURCE_INDEX.nobleAndWuzi,
+      chapter: "knowledge",
+    },
+    {
+      id: "kingoketsu:source:stem-conversion",
+      label: "Stem conversion",
+      imageId: KINGOKETSU_SOURCE_INDEX.stemConversion,
+      chapter: "knowledge",
+    },
+    {
+      id: "kingoketsu:source:use-yao-and-inner-states",
+      label: "Use yao / inner states",
+      imageId: KINGOKETSU_SOURCE_INDEX.useYaoAndInnerStates,
+      chapter: "knowledge",
+    },
+    {
+      id: "kingoketsu:source:pillar-support-and-void",
+      label: "Pillar support / void",
+      imageId: KINGOKETSU_SOURCE_INDEX.pillarSupportAndVoid,
+      chapter: "knowledge",
+    },
+    {
+      id: "kingoketsu:source:relations",
+      label: "Relations",
+      imageId: KINGOKETSU_SOURCE_INDEX.relations,
+      chapter: "knowledge",
+    },
+  ];
+}
+
+function getKingoketsuSourceReference(id: string, label: string, detail: string, chapter: string, imageId: string): SourceReference {
+  return { id, label, detail, chapter, imageId };
+}
+
+function buildKingoketsuTraces(params: {
+  basis: KingoketsuBasis;
+  yearPillar: KingoketsuPillar;
+  monthPillar: KingoketsuPillar;
+  dayPillar: KingoketsuPillar;
+  hourPillar: KingoketsuPillar;
+  monthGeneral: Branch;
+  jiangshenBranch: Branch;
+  difen: Branch;
+  nobleChoice: NobleChoice;
+  nobleSpirit: ReturnType<typeof getNobleSpirit>;
+  renyuanStem: Stem;
+  guishenStem: Stem;
+  jiangshenStem: Stem;
+  useYao: ReturnType<typeof resolveUseYao>;
+}): RuleTrace[] {
+  const { basis, yearPillar, monthPillar, dayPillar, hourPillar, monthGeneral, jiangshenBranch, difen, nobleChoice, nobleSpirit, renyuanStem, guishenStem, jiangshenStem, useYao } = params;
+
+  return [
+    {
+      ruleId: "kingoketsu.pillars",
+      step: "four pillars",
+      value: `${yearPillar.ganzhi} / ${monthPillar.ganzhi} / ${dayPillar.ganzhi} / ${hourPillar.ganzhi}`,
+      source: KINGOKETSU_SOURCE_INDEX.pillars,
+      sourceRef: getKingoketsuSourceReference(
+        "kingoketsu:source:pillars",
+        "Pillars",
+        `${basis.wallClockDateTime} -> ${basis.correctedDateTime}`,
+        "knowledge",
+        KINGOKETSU_SOURCE_INDEX.pillars,
+      ),
+      reason: "Four pillars are calculated from the wall clock and corrected date.",
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "kingoketsu.month-general",
+      step: "month general",
+      value: `${monthPillar.branch} -> ${monthGeneral}`,
+      source: KINGOKETSU_SOURCE_INDEX.difenAndMonthGeneral,
+      sourceRef: getKingoketsuSourceReference(
+        "kingoketsu:source:difen-and-month-general",
+        "Difen / month general",
+        `${monthPillar.branch} -> ${monthGeneral}`,
+        "knowledge",
+        KINGOKETSU_SOURCE_INDEX.difenAndMonthGeneral,
+      ),
+      reason: "The month general is resolved from the month branch.",
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "kingoketsu.jiangshen",
+      step: "jiangshen",
+      value: `${monthGeneral} + ${hourPillar.branch} + ${difen} -> ${jiangshenBranch}`,
+      source: KINGOKETSU_SOURCE_INDEX.difenAndMonthGeneral,
+      sourceRef: getKingoketsuSourceReference(
+        "kingoketsu:source:difen-and-month-general",
+        "Difen / month general",
+        `${monthGeneral} / ${hourPillar.branch} / ${difen}`,
+        "knowledge",
+        KINGOKETSU_SOURCE_INDEX.difenAndMonthGeneral,
+      ),
+      reason: "Jiangshen is derived from the month general, hour branch, and difen.",
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "kingoketsu.noble",
+      step: "noble spirit",
+      value: `${nobleChoice} / ${nobleSpirit.startBranch} -> ${nobleSpirit.branch}`,
+      source: KINGOKETSU_SOURCE_INDEX.nobleAndWuzi,
+      sourceRef: getKingoketsuSourceReference(
+        "kingoketsu:source:noble-and-wuzi",
+        "Noble / Wuzi",
+        `${nobleChoice} / ${nobleSpirit.startBranch} -> ${nobleSpirit.branch}`,
+        "knowledge",
+        KINGOKETSU_SOURCE_INDEX.nobleAndWuzi,
+      ),
+      reason: "The noble spirit follows the selected noble rule and branch distance.",
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "kingoketsu.wuzi",
+      step: "wuzi dun",
+      value: `renyuan ${renyuanStem} / guishen ${guishenStem} / jiangshen ${jiangshenStem}`,
+      source: KINGOKETSU_SOURCE_INDEX.nobleAndWuzi,
+      sourceRef: getKingoketsuSourceReference(
+        "kingoketsu:source:stem-conversion",
+        "Stem conversion",
+        `renyuan ${renyuanStem} / guishen ${guishenStem} / jiangshen ${jiangshenStem}`,
+        "knowledge",
+        KINGOKETSU_SOURCE_INDEX.stemConversion,
+      ),
+      reason: "Wuzi Dun converts the stems for the three active positions.",
+      certainty: "confirmed",
+    },
+    {
+      ruleId: "kingoketsu.use-yao",
+      step: "use yao",
+      value: `${useYao.key} (${basis.useYaoReason})`,
+      source: KINGOKETSU_SOURCE_INDEX.useYaoAndInnerStates,
+      sourceRef: getKingoketsuSourceReference(
+        "kingoketsu:source:use-yao-and-inner-states",
+        "Use yao / inner states",
+        basis.useYaoReason,
+        "knowledge",
+        KINGOKETSU_SOURCE_INDEX.useYaoAndInnerStates,
+      ),
+      reason: basis.useYaoReason,
+      certainty: "confirmed",
+    },
+  ];
+}
 function formatSignedMinutes(value: number) {
   return `${value >= 0 ? "+" : ""}${value}分`;
 }
@@ -654,11 +829,15 @@ export function getKingoketsuWuziDunStem(dayStem: Stem, branch: Branch) {
 }
 
 export function getKingoketsuFourMajorVoid(xun: string) {
-  return FOUR_MAJOR_VOID_BY_XUN_LEADER[xun] ?? "なし";
+  const value = FOUR_MAJOR_VOID_BY_XUN_LEADER[xun];
+  if (!value) {
+    throw new Error(`Unknown xun leader: ${xun}`);
+  }
+  return value;
 }
 
 export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
-  const location = getLocationOffset(input.locationId);
+  const location = resolveLocationOffset(input.locationId);
   const wallClock = toWallClockDate(input);
   const wallClockParts = getUtcParts(wallClock);
   const equationOfTimeMinutes = getEquationOfTimeMinutes(wallClockParts.year, wallClockParts.month, wallClockParts.day);
@@ -693,7 +872,7 @@ export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
       displayValue: renyuanStem,
       wuxing: STEM_WUXING[renyuanStem],
       yinYang: YIN_YANG_BY_STEM[renyuanStem],
-      state: states.get(STEM_WUXING[renyuanStem]) ?? "旺",
+      state: requireSeasonalState(states, STEM_WUXING[renyuanStem], "renyuan"),
       title: "ゴール",
       titleTone: "neutral",
       convertedBranch: getStemToBranch(renyuanStem),
@@ -706,7 +885,7 @@ export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
       displayValue: `${guishenStem}${nobleSpirit.branch}`,
       wuxing: BRANCH_WUXING[nobleSpirit.branch],
       yinYang: YIN_YANG_BY_BRANCH[nobleSpirit.branch],
-      state: states.get(BRANCH_WUXING[nobleSpirit.branch]) ?? "旺",
+      state: requireSeasonalState(states, BRANCH_WUXING[nobleSpirit.branch], "guishen"),
       title: nobleSpirit.title,
       titleTone: ["貴人", "六合", "青龍", "太常", "太陰", "天后"].includes(nobleSpirit.title) ? "good" : "alert",
       convertedBranch: getStemToBranch(guishenStem),
@@ -719,7 +898,7 @@ export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
       displayValue: `${jiangshenStem}${jiangshenBranch}`,
       wuxing: BRANCH_WUXING[jiangshenBranch],
       yinYang: YIN_YANG_BY_BRANCH[jiangshenBranch],
-      state: states.get(BRANCH_WUXING[jiangshenBranch]) ?? "旺",
+      state: requireSeasonalState(states, BRANCH_WUXING[jiangshenBranch], "jiangshen"),
       title: KINGOKETSU_MONTH_GENERAL_TITLES[jiangshenBranch],
       titleTone: ["神后", "勝光", "小吉"].includes(KINGOKETSU_MONTH_GENERAL_TITLES[jiangshenBranch]) ? "good" : "neutral",
       convertedBranch: getStemToBranch(jiangshenStem),
@@ -732,7 +911,7 @@ export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
       displayValue: input.difen,
       wuxing: BRANCH_WUXING[input.difen],
       yinYang: YIN_YANG_BY_BRANCH[input.difen],
-      state: states.get(BRANCH_WUXING[input.difen]) ?? "旺",
+      state: requireSeasonalState(states, BRANCH_WUXING[input.difen], "difen"),
       title: "スタート",
       titleTone: "neutral",
       convertedBranch: null,
@@ -763,38 +942,24 @@ export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
     useYaoReason: useYao.reason,
   };
 
-  const traces: RuleTrace[] = [
-    {
-      step: "四柱",
-      value: `${yearPillar.ganzhi} / ${monthPillar.ganzhi} / ${dayPillar.ganzhi} / ${hourPillar.ganzhi}`,
-      source: KINGOKETSU_SOURCE_INDEX.pillars,
-    },
-    {
-      step: "月将",
-      value: `${monthPillar.branch} の支合 = ${monthGeneral}`,
-      source: KINGOKETSU_SOURCE_INDEX.difenAndMonthGeneral,
-    },
-    {
-      step: "将神",
-      value: `月将 ${monthGeneral} を時支 ${hourPillar.branch} に置き、地分 ${input.difen} まで順行 = ${jiangshenBranch}`,
-      source: KINGOKETSU_SOURCE_INDEX.difenAndMonthGeneral,
-    },
-    {
-      step: "貴神",
-      value: `${input.nobleChoice} / ${nobleSpirit.startBranch} から${nobleSpirit.direction === "順" ? "順行" : "逆行"} = ${nobleSpirit.branch}`,
-      source: KINGOKETSU_SOURCE_INDEX.nobleAndWuzi,
-    },
-    {
-      step: "元遁",
-      value: `人元 ${renyuanStem} / 神干 ${guishenStem} / 将干 ${jiangshenStem}`,
-      source: KINGOKETSU_SOURCE_INDEX.nobleAndWuzi,
-    },
-    {
-      step: "用爻",
-      value: `${basis.useYao} (${basis.useYaoReason})`,
-      source: KINGOKETSU_SOURCE_INDEX.useYaoAndInnerStates,
-    },
-  ];
+  const traces = buildKingoketsuTraces({
+    basis,
+    yearPillar,
+    monthPillar,
+    dayPillar,
+    hourPillar,
+    monthGeneral,
+    jiangshenBranch,
+    difen: input.difen,
+    nobleChoice: input.nobleChoice,
+    nobleSpirit,
+    renyuanStem,
+    guishenStem,
+    jiangshenStem,
+    useYao,
+  });
+  const sourceReferences = collectSourceReferences(traces, buildKingoketsuSourceReferences());
+  const certainty = resolveChartCertainty(traces);
 
   const messages: string[] = [];
   if (positions.some((item) => item.stem === "戊" || item.stem === "己")) {
@@ -820,11 +985,14 @@ export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
     positions,
     relationSummary,
     helperSections: buildHelperSections(basis, positions),
+    sourceReferences,
     explanationSections,
     interpretationSections,
     traces,
+    certainty,
     messages,
   };
 }
 
 export { KINGOKETSU_FIXTURES };
+
