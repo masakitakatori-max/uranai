@@ -1,9 +1,10 @@
-import type { DannekiChart, KingoketsuChart, LiurenChart } from "../lib/types";
+import type { DannekiChart, KingoketsuChart, LiurenChart, TaiitsuChart } from "../lib/types";
 
 type AiFeedbackPanelProps =
   | { mode: "liuren"; chart: LiurenChart }
   | { mode: "kingoketsu"; chart: KingoketsuChart }
-  | { mode: "danneki"; chart: DannekiChart };
+  | { mode: "danneki"; chart: DannekiChart }
+  | { mode: "taiitsu"; chart: TaiitsuChart };
 
 export function AiFeedbackPanel(_props: AiFeedbackPanelProps) {
   return (

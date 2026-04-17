@@ -20,9 +20,9 @@ describe("ChartSummaryPanel", () => {
       />,
     );
 
-    expect(screen.getByText("Result Header")).toBeInTheDocument();
+    expect(screen.getByText("結果サマリ")).toBeInTheDocument();
     expect(screen.getByText("六壬神課")).toBeInTheDocument();
-    expect(screen.getByText("sources 3")).toBeInTheDocument();
+    expect(screen.getByText("出典 3件")).toBeInTheDocument();
     expect(screen.getByText("month general")).toBeInTheDocument();
   });
 });

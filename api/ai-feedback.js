@@ -2,6 +2,7 @@ const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-20250514";
 const DEFAULT_MAX_TOKENS = Number(process.env.AI_FEEDBACK_MAX_TOKENS || "1200");
 const DEFAULT_GATE_MODE = process.env.AI_FEEDBACK_MODE || "disabled";
 const CHECKOUT_URL = process.env.AI_FEEDBACK_CHECKOUT_URL || "";
+const SUPPORTED_MODES = new Set(["liuren", "kingoketsu", "danneki", "taiitsu"]);
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
@@ -85,12 +86,23 @@ function buildUserPrompt(payload) {
         .map((item) => `- ${item.label}: ${item.value}`)
         .join("\n")
     : "";
+  const taiitsuContext =
+    payload.mode === "taiitsu" && payload.taiitsuContext
+      ? [
+          `方位: ${payload.taiitsuContext.direction}`,
+          `起局条件: ${payload.taiitsuContext.startCondition}`,
+          `補正時刻: ${payload.taiitsuContext.correctedDateTime}`,
+          `地点: ${payload.taiitsuContext.locationLabel}`,
+          `局序: ${payload.taiitsuContext.cycleIndex + 1}`,
+        ].join("\n")
+      : "";
 
   return [
     `占術: ${payload.modeLabel}`,
     `占的: ${payload.topic}`,
     `相談文: ${payload.questionText}`,
     highlights ? `注目ポイント:\n${highlights}` : "",
+    taiitsuContext ? `太乙神数 専用条件:\n${taiitsuContext}` : "",
     `盤面要約:\n${payload.chartSummary}`,
     "求める出力方針:",
     "- 相談者が今どこを優先して見るべきかを先に示す",
@@ -100,6 +112,29 @@ function buildUserPrompt(payload) {
   ]
     .filter(Boolean)
     .join("\n\n");
+}
+
+function validateTaiitsuPayload(payload) {
+  if (payload.mode !== "taiitsu") {
+    return null;
+  }
+
+  const context = payload.taiitsuContext;
+  if (!context || typeof context !== "object") {
+    return "太乙神数では taiitsuContext が必須です。";
+  }
+
+  const requiredFields = ["direction", "startCondition", "correctedDateTime", "locationLabel"];
+  const missingField = requiredFields.find((field) => typeof context[field] !== "string" || !context[field].trim());
+  if (missingField) {
+    return `太乙神数では taiitsuContext.${missingField} が必須です。`;
+  }
+
+  if (typeof context.cycleIndex !== "number" || !Number.isFinite(context.cycleIndex)) {
+    return "太乙神数では taiitsuContext.cycleIndex が数値である必要があります。";
+  }
+
+  return null;
 }
 
 async function callAnthropic(payload) {
@@ -161,6 +196,10 @@ export default async function handler(req, res) {
   try {
     const payload = await readJsonBody(req);
 
+    if (!SUPPORTED_MODES.has(payload?.mode)) {
+      return sendJson(res, 400, { ok: false, error: "未対応の占術モードです。" });
+    }
+
     if (!payload?.questionText || typeof payload.questionText !== "string" || payload.questionText.trim().length < 6) {
       return sendJson(res, 400, { ok: false, error: "相談文は6文字以上で入力してください。" });
     }
@@ -169,12 +208,19 @@ export default async function handler(req, res) {
       return sendJson(res, 400, { ok: false, error: "盤面要約が不足しています。" });
     }
 
+    const taiitsuError = validateTaiitsuPayload(payload);
+    if (taiitsuError) {
+      return sendJson(res, 400, { ok: false, error: taiitsuError });
+    }
+
     const feedback = await callAnthropic({
+      mode: payload.mode,
       modeLabel: payload.modeLabel || payload.mode || "占断",
       topic: payload.topic || "総合",
       questionText: payload.questionText.trim(),
       chartSummary: payload.chartSummary,
       highlights: payload.highlights || [],
+      taiitsuContext: payload.taiitsuContext,
     });
 
     return sendJson(res, 200, {

@@ -20,7 +20,7 @@ describe("App", () => {
     cleanup();
   });
 
-  it("renders all four workspaces and can switch to qimen", { timeout: 15000 }, async () => {
+  it("renders all workspaces and can switch to qimen and taiitsu", { timeout: 30000 }, async () => {
     render(<App />);
 
     await waitFor(
@@ -73,6 +73,20 @@ describe("App", () => {
     expect(screen.getByRole("textbox")).toBeInTheDocument();
     expect(window.location.pathname).toBe("/danneki/");
     expect(document.title).toContain("断易");
+
+    fireEvent.click(screen.getByRole("button", { name: "太乙神数" }));
+
+    expect(screen.getByRole("heading", { level: 1, name: /太乙神数盤/ })).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getAllByText("起局条件").length).toBeGreaterThan(0);
+      },
+      { timeout: 10000 },
+    );
+    expect(screen.getAllByText("方位").length).toBeGreaterThan(0);
+    expect(screen.getByText("PDF根拠参照")).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/taiitsu/");
+    expect(document.title).toContain("太乙神数");
   });
 
   it("resolves the initial mode from the pathname and updates metadata", async () => {
@@ -102,6 +116,24 @@ describe("App", () => {
     expect(document.title).toContain("奇門遁甲上級編");
     expect(document.querySelector('meta[property="og:url"]')?.getAttribute("content")).toContain("/qimen/");
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toContain("/qimen/");
+  });
+
+  it("resolves the taiitsu route and updates metadata", async () => {
+    window.history.replaceState({}, "", "/taiitsu/");
+
+    render(<App />);
+
+    await waitFor(
+      () => {
+        expect(screen.getAllByText("太乙神数").length).toBeGreaterThan(0);
+      },
+      { timeout: 10000 },
+    );
+
+    expect(screen.getByRole("heading", { level: 1, name: /太乙神数盤/ })).toBeInTheDocument();
+    expect(document.title).toContain("太乙神数");
+    expect(document.querySelector('meta[property="og:url"]')?.getAttribute("content")).toContain("/taiitsu/");
+    expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toContain("/taiitsu/");
   });
 
   it("uses the current time preset when 今日 is pressed", { timeout: 15000 }, async () => {
@@ -144,6 +176,10 @@ describe("App", () => {
     fireEvent.click(buttons[0]!);
     expect(window.location.pathname).toBe(getPathForMode("liuren"));
     expect(buttons[0]?.className).toContain("is-active");
+
+    fireEvent.click(buttons[4]!);
+    expect(window.location.pathname).toBe(getPathForMode("taiitsu"));
+    expect(buttons[4]?.className).toContain("is-active");
   });
 
   it("reacts to popstate navigation", async () => {

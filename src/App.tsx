@@ -5,7 +5,7 @@ import { RenderErrorBoundary } from "./components/RenderErrorBoundary";
 import { QimenReaderPanel } from "./components/QimenReaderPanel";
 import { withCurrentDateTime } from "./lib/currentDateTime";
 import { applyModeSeo, getModeFromPath, getPathForMode, normalizePath } from "./lib/seo";
-import type { AppMode, DannekiInput, KingoketsuInput, LiurenInput } from "./lib/types";
+import type { AppMode, DannekiInput, KingoketsuInput, LiurenInput, TaiitsuInput } from "./lib/types";
 
 const LiurenWorkspace = lazy(async () => {
   const module = await import("./components/workspaces/LiurenWorkspace");
@@ -20,6 +20,11 @@ const KingoketsuWorkspace = lazy(async () => {
 const DannekiWorkspace = lazy(async () => {
   const module = await import("./components/workspaces/DannekiWorkspace");
   return { default: module.DannekiWorkspace };
+});
+
+const TaiitsuWorkspace = lazy(async () => {
+  const module = await import("./components/workspaces/TaiitsuWorkspace");
+  return { default: module.TaiitsuWorkspace };
 });
 
 function createDefaultLiurenInput(): LiurenInput {
@@ -71,11 +76,27 @@ function createDefaultDannekiInput(): DannekiInput {
   });
 }
 
+function createDefaultTaiitsuInput(): TaiitsuInput {
+  return withCurrentDateTime({
+    year: 2026,
+    month: 4,
+    day: 16,
+    hour: 12,
+    minute: 0,
+    locationId: "akashi",
+    direction: "午",
+    startCondition: "time-and-direction",
+    topic: "総合",
+    questionText: "",
+  });
+}
+
 const MODE_TITLES: Record<AppMode, string> = {
   liuren: "六壬神課盤 自動作成",
   qimen: "奇門遁甲上級編 文字資料室",
   kingoketsu: "金口訣盤 自動作成",
   danneki: "断易盤 自動作成",
+  taiitsu: "太乙神数盤 自動作成",
 };
 
 const MODE_LEADS: Record<AppMode, string> = {
@@ -83,6 +104,7 @@ const MODE_LEADS: Record<AppMode, string> = {
   qimen: "手直し済みOCRを章・節・画像IDで読める参照モードです。盤面ロジックはまだ載せず、将来の土台だけを先に置いています。",
   kingoketsu: "真太陽時補正、節入り基準の四柱、月将、貴神、将神、人元、用爻を一画面で組み立てるための金口訣モードです。",
   danneki: "コイン法または時刻法で立卦し、京房納甲法で干支・六親・世応・用神を算出。本卦・之卦・動爻を日辰/月建/空亡で読み解く断易モードです。",
+  taiitsu: "太乙神数入門 測局篇のPDF構造化インデックスを参照し、起局日時・方位・起局条件から太乙神数盤を組み立てるモードです。",
 };
 
 const FEATURED_COLUMNS = [
@@ -131,10 +153,12 @@ function App() {
   const [liurenInput, setLiurenInput] = useState<LiurenInput>(() => createDefaultLiurenInput());
   const [kingoketsuInput, setKingoketsuInput] = useState<KingoketsuInput>(() => createDefaultKingoketsuInput());
   const [dannekiInput, setDannekiInput] = useState<DannekiInput>(() => createDefaultDannekiInput());
+  const [taiitsuInput, setTaiitsuInput] = useState<TaiitsuInput>(() => createDefaultTaiitsuInput());
   const years = Array.from({ length: 2065 - 1989 + 1 }, (_, index) => 1989 + index);
   const liurenDaysInMonth = getDaysInMonth(liurenInput.year, liurenInput.month);
   const kingoketsuDaysInMonth = getDaysInMonth(kingoketsuInput.year, kingoketsuInput.month);
   const dannekiDaysInMonth = getDaysInMonth(dannekiInput.year, dannekiInput.month);
+  const taiitsuDaysInMonth = getDaysInMonth(taiitsuInput.year, taiitsuInput.month);
 
   useEffect(() => {
     const handlePopState = () => setMode(getModeFromPath(window.location.pathname));
@@ -188,6 +212,9 @@ function App() {
           </button>
           <button className={mode === "danneki" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("danneki")} type="button">
             断易
+          </button>
+          <button className={mode === "taiitsu" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("taiitsu")} type="button">
+            太乙神数
           </button>
         </div>
         {mode === "liuren" ? (
@@ -254,6 +281,20 @@ function App() {
                 years={years}
                 onApplyNow={() => setDannekiInput((current) => withCurrentDateTime(current))}
                 onInputChange={(updater: (draft: DannekiInput) => DannekiInput) => setDannekiInput((current) => updater(current))}
+              />
+            </RenderErrorBoundary>
+          </Suspense>
+        ) : null}
+
+        {mode === "taiitsu" ? (
+          <Suspense fallback={<WorkspaceLoadingFallback />}>
+            <RenderErrorBoundary modeLabel="Taiitsu">
+              <TaiitsuWorkspace
+                input={taiitsuInput}
+                daysInMonth={taiitsuDaysInMonth}
+                years={years}
+                onApplyNow={() => setTaiitsuInput((current) => withCurrentDateTime(current))}
+                onInputChange={(updater: (draft: TaiitsuInput) => TaiitsuInput) => setTaiitsuInput((current) => updater(current))}
               />
             </RenderErrorBoundary>
           </Suspense>

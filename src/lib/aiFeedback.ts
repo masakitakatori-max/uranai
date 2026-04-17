@@ -1,6 +1,7 @@
-import type { AppMode, DannekiChart, KingoketsuChart, LiurenChart } from "./types";
+import type { AppMode, DannekiChart, KingoketsuChart, LiurenChart, TaiitsuChart } from "./types";
 
 export type AiFeedbackGateMode = "disabled" | "preview" | "paid";
+export const AI_QUESTION_MIN_LENGTH = 6;
 
 export interface AiContextHighlight {
   label: string;
@@ -14,6 +15,13 @@ export interface AiChartContext {
   questionText: string;
   summary: string;
   highlights: AiContextHighlight[];
+  taiitsuContext?: {
+    direction: string;
+    startCondition: string;
+    correctedDateTime: string;
+    locationLabel: string;
+    cycleIndex: number;
+  };
 }
 
 export interface AiFeedbackPayload {
@@ -39,7 +47,12 @@ export interface AiFeedbackError {
   checkoutUrl?: string;
 }
 
-type AnyChart = LiurenChart | KingoketsuChart | DannekiChart;
+type AnyChart = LiurenChart | KingoketsuChart | DannekiChart | TaiitsuChart;
+type AiFeedbackEnv = Partial<Record<"VITE_AI_FEEDBACK_MODE" | "VITE_AI_CHECKOUT_URL" | "VITE_API_BASE_URL", string>>;
+
+function getRuntimeEnv(): AiFeedbackEnv {
+  return import.meta.env as unknown as AiFeedbackEnv;
+}
 
 function normalizeGateMode(value: string | undefined): AiFeedbackGateMode {
   if (value === "preview" || value === "paid") {
@@ -49,15 +62,60 @@ function normalizeGateMode(value: string | undefined): AiFeedbackGateMode {
   return "disabled";
 }
 
-export function getAiFeedbackClientConfig() {
+export function resolveAiFeedbackClientConfig(env: AiFeedbackEnv) {
   return {
-    gateMode: normalizeGateMode(import.meta.env.VITE_AI_FEEDBACK_MODE),
-    checkoutUrl: import.meta.env.VITE_AI_CHECKOUT_URL?.trim() ?? "",
+    gateMode: normalizeGateMode(env.VITE_AI_FEEDBACK_MODE),
+    checkoutUrl: env.VITE_AI_CHECKOUT_URL?.trim() ?? "",
   };
+}
+
+export function getAiFeedbackClientConfig() {
+  return resolveAiFeedbackClientConfig(getRuntimeEnv());
+}
+
+export function resolveAiApiUrl(path: string, env: AiFeedbackEnv = getRuntimeEnv()) {
+  const baseUrl = env.VITE_API_BASE_URL?.trim();
+  if (!baseUrl) {
+    return path.startsWith("/") ? path : `/${path}`;
+  }
+
+  return new URL(path.replace(/^\/+/, ""), baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`).toString();
+}
+
+export function hasMinimumAiQuestionText(questionText: string) {
+  return questionText.trim().length >= AI_QUESTION_MIN_LENGTH;
+}
+
+export async function saveAiMemberSession(passphrase: string) {
+  const response = await fetch(resolveAiApiUrl("/api/member-session"), {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ passphrase }),
+  });
+  return response.json();
+}
+
+export async function clearAiMemberSession() {
+  const response = await fetch(resolveAiApiUrl("/api/member-session"), {
+    method: "DELETE",
+    credentials: "include",
+  });
+  return response.json();
 }
 
 function truncateParagraphs(paragraphs: string[], limit = 2) {
   return paragraphs.slice(0, limit).join(" ");
+}
+
+function formatNarrativeSections(sections: Array<{ title: string; paragraphs: string[] }> | undefined) {
+  if (!Array.isArray(sections) || sections.length === 0) {
+    return "未生成";
+  }
+
+  return sections.map((section) => `${section.title}: ${truncateParagraphs(section.paragraphs)}`).join(" | ");
 }
 
 function lineLabel(position: number) {
@@ -91,8 +149,8 @@ function buildLiurenContext(chart: LiurenChart): AiChartContext {
       `課式: ${chart.lessonType ?? "未確定"}`,
       `四課: ${fourLessons}`,
       `三伝: ${firstTransmission}`,
-      `機械解説: ${chart.explanationSections.map((section) => `${section.title}: ${truncateParagraphs(section.paragraphs)}`).join(" | ")}`,
-      `機械解釈: ${chart.interpretationSections.map((section) => `${section.title}: ${truncateParagraphs(section.paragraphs)}`).join(" | ")}`,
+      `機械解説: ${formatNarrativeSections(chart.explanationSections)}`,
+      `機械解釈: ${formatNarrativeSections(chart.interpretationSections)}`,
     ].join("\n"),
   };
 }
@@ -124,8 +182,8 @@ function buildKingoketsuContext(chart: KingoketsuChart): AiChartContext {
       `月将: ${chart.basis.monthGeneral} (${chart.basis.monthGeneralTitle})`,
       `用爻: ${chart.basis.useYao} (${chart.basis.useYaoReason})`,
       `四位: ${positions}`,
-      `機械解説: ${chart.explanationSections.map((section) => `${section.title}: ${truncateParagraphs(section.paragraphs)}`).join(" | ")}`,
-      `機械解釈: ${chart.interpretationSections.map((section) => `${section.title}: ${truncateParagraphs(section.paragraphs)}`).join(" | ")}`,
+      `機械解説: ${formatNarrativeSections(chart.explanationSections)}`,
+      `機械解釈: ${formatNarrativeSections(chart.interpretationSections)}`,
     ].join("\n"),
   };
 }
@@ -155,8 +213,50 @@ function buildDannekiContext(chart: DannekiChart): AiChartContext {
       `動爻: ${chart.basis.movingLines.map((value) => lineLabel(value)).join(" / ")}`,
       `用神候補: ${chart.basis.useDeity}`,
       `爻情報: ${lines}`,
-      `機械解説: ${chart.explanationSections.map((section) => `${section.title}: ${truncateParagraphs(section.paragraphs)}`).join(" | ")}`,
-      `機械解釈: ${chart.interpretationSections.map((section) => `${section.title}: ${truncateParagraphs(section.paragraphs)}`).join(" | ")}`,
+      `機械解説: ${formatNarrativeSections(chart.explanationSections)}`,
+      `機械解釈: ${formatNarrativeSections(chart.interpretationSections)}`,
+    ].join("\n"),
+  };
+}
+
+function buildTaiitsuContext(chart: TaiitsuChart): AiChartContext {
+  const signals = chart.signals.map((signal) => `${signal.title}: ${signal.value}`).join(" / ");
+  const references = chart.sourceReferences.map((source) => `${source.label} ${source.detail ?? source.chapter ?? source.id}`).join(" / ");
+
+  return {
+    mode: "taiitsu",
+    modeLabel: "太乙神数",
+    topic: chart.topic,
+    questionText: chart.questionText.trim(),
+    highlights: [
+      { label: "基準時刻", value: chart.basis.correctedDateTime },
+      { label: "方位", value: chart.basis.direction },
+      { label: "起局条件", value: chart.basis.startCondition },
+      { label: "局序", value: `${chart.basis.cycleIndex + 1}局` },
+    ],
+    taiitsuContext: {
+      direction: chart.basis.direction,
+      startCondition: chart.basis.startCondition,
+      correctedDateTime: chart.basis.correctedDateTime,
+      locationLabel: chart.basis.locationLabel,
+      cycleIndex: chart.basis.cycleIndex,
+    },
+    summary: [
+      `占術: 太乙神数`,
+      `占的: ${chart.topic}`,
+      `相談文: ${chart.questionText.trim() || "未入力"}`,
+      `入力時刻: ${chart.basis.wallClockDateTime}`,
+      `基準時刻: ${chart.basis.correctedDateTime}`,
+      `地点: ${chart.basis.locationLabel} (${chart.basis.locationOffsetMinutes >= 0 ? "+" : ""}${chart.basis.locationOffsetMinutes}分)`,
+      `方位: ${chart.basis.direction}`,
+      `起局条件: ${chart.basis.startCondition}`,
+      `日干支/時支: ${chart.basis.dayGanzhi} / ${chart.basis.hourBranch}`,
+      `方位起点: ${chart.basis.directionAnchor}`,
+      `七十二局序: ${chart.basis.cycleIndex + 1}`,
+      `信号: ${signals}`,
+      `高精度根拠参照: ${references || "未照合"}`,
+      `機械解説: ${formatNarrativeSections(chart.explanationSections)}`,
+      `機械解釈: ${formatNarrativeSections(chart.interpretationSections)}`,
     ].join("\n"),
   };
 }
@@ -174,12 +274,17 @@ export function buildAiChartContext(mode: AppMode, chart: AnyChart): AiChartCont
     return buildDannekiContext(chart as DannekiChart);
   }
 
+  if (mode === "taiitsu") {
+    return buildTaiitsuContext(chart as TaiitsuChart);
+  }
+
   throw new Error(`Unsupported AI feedback mode: ${mode}`);
 }
 
 export async function requestAiFeedback(context: AiChartContext) {
-  const response = await fetch("/api/ai-feedback", {
+  const response = await fetch(resolveAiApiUrl("/api/ai-feedback"), {
     method: "POST",
+    credentials: "include",
     headers: {
       "content-type": "application/json",
     },
@@ -190,6 +295,7 @@ export async function requestAiFeedback(context: AiChartContext) {
       questionText: context.questionText,
       chartSummary: context.summary,
       highlights: context.highlights,
+      taiitsuContext: context.taiitsuContext,
     }),
   });
 

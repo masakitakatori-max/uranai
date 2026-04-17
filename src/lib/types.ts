@@ -3,7 +3,7 @@ export type Branch = "子" | "丑" | "寅" | "卯" | "辰" | "巳" | "午" | "�
 export type Ganzhi = `${Stem}${Branch}`;
 export type Wuxing = "木" | "火" | "土" | "金" | "水";
 export type SixKin = "兄弟" | "子孫" | "妻財" | "官鬼" | "父母";
-export type AppMode = "liuren" | "qimen" | "kingoketsu" | "danneki";
+export type AppMode = "liuren" | "qimen" | "kingoketsu" | "danneki" | "taiitsu";
 export type YinYang = "陽" | "陰";
 export type HeavenlyGeneral =
   | "貴人"
@@ -352,5 +352,119 @@ export interface DannekiChart {
   certainty: ChartCertainty;
   explanationSections: NarrativeSection[];
   interpretationSections: NarrativeSection[];
+  messages: string[];
+}
+
+export type TaiitsuStartCondition = "time" | "direction" | "time-and-direction";
+
+export interface TaiitsuInput {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  locationId: string;
+  direction: Branch;
+  startCondition: TaiitsuStartCondition;
+  topic: DivinationTopic;
+  questionText: string;
+}
+
+export interface TaiitsuInputState {
+  input: TaiitsuInput;
+}
+
+export interface TaiitsuWorkspaceState {
+  input: TaiitsuInput;
+}
+
+export interface TaiitsuKnowledgeAudit {
+  generatedAt: string;
+  pagesScanned: number;
+  entriesCount: number;
+  emptyBodyCount: number;
+  duplicateEntryIdCount: number;
+  lowConfidenceOrShortCount: number;
+  missingPageCount: number;
+  missingPages: number[];
+  missingPagesTotal: number;
+  textCharCount?: number;
+  structuredCharCount?: number;
+  textCoverageRatio?: number;
+  rawTextSha1?: string;
+  structuredTextSha1?: string;
+}
+
+export interface TaiitsuKnowledgeEntry {
+  entryId: string;
+  chapterId: string;
+  chapterTitle: string;
+  sectionId: string;
+  sectionTitle: string;
+  headingKind: "章" | "節" | "目" | "部" | "編";
+  pageStart: number;
+  pageEnd: number;
+  body: string;
+  paragraphs: string[];
+  conditions: string[];
+  confidence: number;
+  textSha1: string;
+}
+
+export interface TaiitsuKnowledgeIndex {
+  version: string;
+  sourceFile: string;
+  sourcePageCount: number;
+  generatedAt: string;
+  textFile: string;
+  entries: TaiitsuKnowledgeEntry[];
+  audit: TaiitsuKnowledgeAudit;
+}
+
+export interface TaiitsuBasis {
+  wallClockDateTime: string;
+  correctedDateTime: string;
+  locationLabel: string;
+  locationOffsetMinutes: number;
+  direction: Branch;
+  startCondition: TaiitsuStartCondition;
+  dayGanzhi: Ganzhi;
+  dayStem: Stem;
+  dayBranch: Branch;
+  hourBranch: Branch;
+  directionAnchor: Branch;
+  cycleIndex: number;
+}
+
+export interface TaiitsuSignal {
+  key: string;
+  title: string;
+  value: string;
+  isPrimary: boolean;
+}
+
+export interface TaiitsuSummary {
+  headline: string;
+  coreSignals: TaiitsuSignal[];
+}
+
+export interface TaiitsuChart {
+  topic: DivinationTopic;
+  resolvedTopic: DivinationTopic;
+  questionText: string;
+  basis: TaiitsuBasis;
+  signals: TaiitsuSignal[];
+  cycleGrid: Array<{
+    index: number;
+    label: string;
+    branch: Branch;
+    source: string;
+  }>;
+  traces: RuleTrace[];
+  sourceReferences: SourceReference[];
+  certainty: ChartCertainty;
+  explanationSections: NarrativeSection[];
+  interpretationSections: NarrativeSection[];
+  summary: TaiitsuSummary;
   messages: string[];
 }

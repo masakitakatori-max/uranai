@@ -47,6 +47,14 @@ export const MODE_SEO: Record<AppMode, ModeSeo> = {
     keywords: `${DEFAULT_KEYWORDS},断易,五行易,本卦,之卦,動爻,用神`,
     featureList: ["相談文から解釈軸を補強", "本卦・之卦・動爻の同時表示", "用神候補と読み筋の自動整理"],
   },
+  taiitsu: {
+    path: "/taiitsu/",
+    title: "太乙神数盤を自動作成 | Divination Workspace",
+    description:
+      "太乙神数入門 測局篇の構造化PDFインデックスを参照し、起局日時・方位・起局条件から太乙神数盤を確認できる占断アプリです。",
+    keywords: `${DEFAULT_KEYWORDS},太乙神数,太乙,測局,起局,方位`,
+    featureList: ["起局日時と方位の入力", "PDFページ単位の根拠参照", "同一入力で再現可能な局序とtrace"],
+  },
 };
 
 function stripTrailingSlash(value: string) {
@@ -76,6 +84,10 @@ export function getModeFromPath(pathname: string): AppMode {
 
   if (normalized === MODE_SEO.danneki.path) {
     return "danneki";
+  }
+
+  if (normalized === MODE_SEO.taiitsu.path) {
+    return "taiitsu";
   }
 
   return "liuren";
