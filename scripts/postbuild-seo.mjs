@@ -240,6 +240,7 @@ const robotsPolicy = getRobotsPolicy();
 const sourceHtml = await fs.readFile(baseIndexPath, "utf8");
 
 await writeRoutePage(sourceHtml, routes.liuren, siteUrl, robotsPolicy);
+await writeRoutePage(sourceHtml, routes.qimen, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.kingoketsu, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.danneki, siteUrl, robotsPolicy);
 await fs.writeFile(
