@@ -25,11 +25,11 @@ export const MODE_SEO: Record<AppMode, ModeSeo> = {
   },
   qimen: {
     path: "/qimen/",
-    title: "奇門遁甲上級編 文字資料室 | Divination Workspace",
+    title: "奇門遁甲 四盤作成ツール | Divination Workspace",
     description:
-      "手直し済みの奇門遁甲OCRを章・節・画像ID単位で読める参照ページ。将来の盤面ロジックに向けた土台として整理しています。",
-    keywords: `${DEFAULT_KEYWORDS},奇門遁甲,奇門遁甲上級編,文字起こし,OCR`,
-    featureList: ["手直し済みOCRの章立て表示", "画像IDごとの本文参照", "将来の盤面ロジックに向けた土台"],
+      "奇門遁甲の活盤式をもとに、年盤・月盤・日盤・時盤と八方位の吉凶を一画面で確認できる作盤ツールです。",
+    keywords: `${DEFAULT_KEYWORDS},奇門遁甲,四盤,活盤式,八門,九星,八神,方位判断`,
+    featureList: ["年盤・月盤・日盤・時盤の同時表示", "八門・九星・八神を九宮に配置", "全方位一覧と選択方位の詳細判断"],
   },
   kingoketsu: {
     path: "/kingoketsu/",

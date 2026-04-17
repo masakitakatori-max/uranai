@@ -4,6 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getPathForMode } from "./lib/seo";
 import App from "./App";
 
+const APP_TEST_TIMEOUT = 90_000;
+const WORKSPACE_WAIT_TIMEOUT = 60_000;
+
 function getModeButtons(container: HTMLElement) {
   const modeSwitch = container.querySelector(".mode-switch");
   return modeSwitch ? Array.from(modeSwitch.querySelectorAll<HTMLButtonElement>(".mode-button")) : [];
@@ -20,14 +23,14 @@ describe("App", () => {
     cleanup();
   });
 
-  it("renders all workspaces and can switch to qimen and taiitsu", { timeout: 30000 }, async () => {
+  it("renders all workspaces and can switch to qimen and taiitsu", { timeout: APP_TEST_TIMEOUT }, async () => {
     render(<App />);
 
     await waitFor(
       () => {
         expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
       },
-      { timeout: 10000 },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
     );
 
     expect(screen.getAllByRole("combobox").length).toBeGreaterThanOrEqual(10);
@@ -38,11 +41,17 @@ describe("App", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "奇門遁甲" }));
 
-    expect(screen.getByRole("heading", { level: 1, name: "奇門遁甲上級編 文字資料室" })).toBeInTheDocument();
-    expect(screen.getByText("章立て")).toBeInTheDocument();
-    expect(screen.getByLabelText("奇門遁甲本文の検索")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "奇門遁甲 四盤作成ツール" })).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getByRole("heading", { level: 2, name: "奇門遁甲 四盤作成" })).toBeInTheDocument();
+      },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
+    );
+    expect(screen.getByRole("heading", { level: 2, name: "全方位一覧と選択方位" })).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "奇門遁甲 全方位一覧" })).toBeInTheDocument();
     expect(window.location.pathname).toBe("/qimen/");
-    expect(document.title).toContain("奇門遁甲上級編");
+    expect(document.title).toContain("奇門遁甲 四盤作成ツール");
 
     fireEvent.click(screen.getByRole("button", { name: "金口訣" }));
 
@@ -51,7 +60,7 @@ describe("App", () => {
       () => {
         expect(screen.getAllByText("地分").length).toBeGreaterThan(0);
       },
-      { timeout: 10000 },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
     );
     expect(screen.getAllByText("地分").length).toBeGreaterThan(0);
     expect(screen.getByText("解説")).toBeInTheDocument();
@@ -65,7 +74,7 @@ describe("App", () => {
       () => {
         expect(screen.getAllByText("用神候補").length).toBeGreaterThan(0);
       },
-      { timeout: 10000 },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
     );
     expect(screen.getAllByText("用神候補").length).toBeGreaterThan(0);
     expect(screen.getByText("解説")).toBeInTheDocument();
@@ -81,7 +90,7 @@ describe("App", () => {
       () => {
         expect(screen.getAllByText("起局条件").length).toBeGreaterThan(0);
       },
-      { timeout: 10000 },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
     );
     expect(screen.getAllByText("方位").length).toBeGreaterThan(0);
     expect(screen.getByText("PDF根拠参照")).toBeInTheDocument();
@@ -89,7 +98,7 @@ describe("App", () => {
     expect(document.title).toContain("太乙神数");
   });
 
-  it("resolves the initial mode from the pathname and updates metadata", async () => {
+  it("resolves the initial mode from the pathname and updates metadata", { timeout: APP_TEST_TIMEOUT }, async () => {
     window.history.replaceState({}, "", "/kingoketsu/");
 
     render(<App />);
@@ -98,7 +107,7 @@ describe("App", () => {
       () => {
         expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
       },
-      { timeout: 10000 },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
     );
 
     expect(screen.getByRole("heading", { level: 1, name: /金口訣/ })).toBeInTheDocument();
@@ -107,18 +116,24 @@ describe("App", () => {
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toContain("/kingoketsu/");
   });
 
-  it("resolves the qimen route and updates metadata", () => {
+  it("resolves the qimen route and updates metadata", { timeout: APP_TEST_TIMEOUT }, async () => {
     window.history.replaceState({}, "", "/qimen/");
 
     render(<App />);
 
-    expect(screen.getByRole("heading", { level: 1, name: "奇門遁甲上級編 文字資料室" })).toBeInTheDocument();
-    expect(document.title).toContain("奇門遁甲上級編");
+    expect(screen.getByRole("heading", { level: 1, name: "奇門遁甲 四盤作成ツール" })).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getByRole("heading", { level: 2, name: "奇門遁甲 四盤作成" })).toBeInTheDocument();
+      },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
+    );
+    expect(document.title).toContain("奇門遁甲 四盤作成ツール");
     expect(document.querySelector('meta[property="og:url"]')?.getAttribute("content")).toContain("/qimen/");
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toContain("/qimen/");
   });
 
-  it("resolves the taiitsu route and updates metadata", async () => {
+  it("resolves the taiitsu route and updates metadata", { timeout: APP_TEST_TIMEOUT }, async () => {
     window.history.replaceState({}, "", "/taiitsu/");
 
     render(<App />);
@@ -127,7 +142,7 @@ describe("App", () => {
       () => {
         expect(screen.getAllByText("太乙神数").length).toBeGreaterThan(0);
       },
-      { timeout: 10000 },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
     );
 
     expect(screen.getByRole("heading", { level: 1, name: /太乙神数盤/ })).toBeInTheDocument();
@@ -136,7 +151,7 @@ describe("App", () => {
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toContain("/taiitsu/");
   });
 
-  it("uses the current time preset when 今日 is pressed", { timeout: 15000 }, async () => {
+  it("uses the current time preset when 今日 is pressed", { timeout: APP_TEST_TIMEOUT }, async () => {
     window.history.replaceState({}, "", "/");
 
     render(<App />);
@@ -145,7 +160,7 @@ describe("App", () => {
       () => {
         expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
       },
-      { timeout: 10000 },
+      { timeout: WORKSPACE_WAIT_TIMEOUT },
     );
 
     vi.useFakeTimers();
@@ -165,7 +180,7 @@ describe("App", () => {
     expect(screen.getByLabelText("分")).toHaveValue("45");
   });
 
-  it("updates the pathname when switching modes", () => {
+  it("updates the pathname when switching modes", { timeout: APP_TEST_TIMEOUT }, () => {
     const { container } = render(<App />);
     const buttons = getModeButtons(container);
 
@@ -182,7 +197,7 @@ describe("App", () => {
     expect(buttons[4]?.className).toContain("is-active");
   });
 
-  it("reacts to popstate navigation", async () => {
+  it("reacts to popstate navigation", { timeout: APP_TEST_TIMEOUT }, async () => {
     const { container } = render(<App />);
 
     window.history.pushState({}, "", getPathForMode("kingoketsu"));

@@ -2,10 +2,9 @@ import { Suspense, lazy, useEffect, useState } from "react";
 
 import "./App.css";
 import { RenderErrorBoundary } from "./components/RenderErrorBoundary";
-import { QimenReaderPanel } from "./components/QimenReaderPanel";
 import { withCurrentDateTime } from "./lib/currentDateTime";
 import { applyModeSeo, getModeFromPath, getPathForMode, normalizePath } from "./lib/seo";
-import type { AppMode, DannekiInput, KingoketsuInput, LiurenInput, TaiitsuInput } from "./lib/types";
+import type { AppMode, DannekiInput, KingoketsuInput, LiurenInput, QimenInput, TaiitsuInput } from "./lib/types";
 
 const LiurenWorkspace = lazy(async () => {
   const module = await import("./components/workspaces/LiurenWorkspace");
@@ -17,6 +16,11 @@ const KingoketsuWorkspace = lazy(async () => {
   return { default: module.KingoketsuWorkspace };
 });
 
+const QimenWorkspace = lazy(async () => {
+  const module = await import("./components/workspaces/QimenWorkspace");
+  return { default: module.QimenWorkspace };
+});
+
 const DannekiWorkspace = lazy(async () => {
   const module = await import("./components/workspaces/DannekiWorkspace");
   return { default: module.DannekiWorkspace };
@@ -26,6 +30,8 @@ const TaiitsuWorkspace = lazy(async () => {
   const module = await import("./components/workspaces/TaiitsuWorkspace");
   return { default: module.TaiitsuWorkspace };
 });
+
+const QIMEN_YEAR_RANGE = { start: 2015, end: 2030 } as const;
 
 function createDefaultLiurenInput(): LiurenInput {
   return withCurrentDateTime({
@@ -61,6 +67,32 @@ function createDefaultKingoketsuInput(): KingoketsuInput {
   });
 }
 
+function clampQimenYear(year: number) {
+  return Math.min(Math.max(year, QIMEN_YEAR_RANGE.start), QIMEN_YEAR_RANGE.end);
+}
+
+function withCurrentQimenDateTime(input: QimenInput): QimenInput {
+  const next = withCurrentDateTime(input);
+  return {
+    ...next,
+    year: clampQimenYear(next.year),
+  };
+}
+
+function createDefaultQimenInput(): QimenInput {
+  return withCurrentQimenDateTime({
+    year: 2026,
+    month: 4,
+    day: 18,
+    hour: 12,
+    minute: 0,
+    locationId: "akashi",
+    topic: "総合",
+    questionText: "",
+    targetDirection: "東",
+  });
+}
+
 function createDefaultDannekiInput(): DannekiInput {
   return withCurrentDateTime({
     year: 2026,
@@ -93,7 +125,7 @@ function createDefaultTaiitsuInput(): TaiitsuInput {
 
 const MODE_TITLES: Record<AppMode, string> = {
   liuren: "六壬神課盤 自動作成",
-  qimen: "奇門遁甲上級編 文字資料室",
+  qimen: "奇門遁甲 四盤作成ツール",
   kingoketsu: "金口訣盤 自動作成",
   danneki: "断易盤 自動作成",
   taiitsu: "太乙神数盤 自動作成",
@@ -101,7 +133,7 @@ const MODE_TITLES: Record<AppMode, string> = {
 
 const MODE_LEADS: Record<AppMode, string> = {
   liuren: "地方時差、中気基準の月将、四課、三伝、十二天将、六親を同時に確認するための静的Webアプリです。",
-  qimen: "手直し済みOCRを章・節・画像IDで読める参照モードです。盤面ロジックはまだ載せず、将来の土台だけを先に置いています。",
+  qimen: "手直し済み原稿の活盤式を土台に、年盤・月盤・日盤・時盤と八方位の吉凶を同時に確認する作盤モードです。",
   kingoketsu: "真太陽時補正、節入り基準の四柱、月将、貴神、将神、人元、用爻を一画面で組み立てるための金口訣モードです。",
   danneki: "コイン法または時刻法で立卦し、京房納甲法で干支・六親・世応・用神を算出。本卦・之卦・動爻を日辰/月建/空亡で読み解く断易モードです。",
   taiitsu: "太乙神数入門 測局篇のPDF構造化インデックスを参照し、起局日時・方位・起局条件から太乙神数盤を組み立てるモードです。",
@@ -151,11 +183,14 @@ function WorkspaceLoadingFallback() {
 function App() {
   const [mode, setMode] = useState<AppMode>(() => getModeFromPath(window.location.pathname));
   const [liurenInput, setLiurenInput] = useState<LiurenInput>(() => createDefaultLiurenInput());
+  const [qimenInput, setQimenInput] = useState<QimenInput>(() => createDefaultQimenInput());
   const [kingoketsuInput, setKingoketsuInput] = useState<KingoketsuInput>(() => createDefaultKingoketsuInput());
   const [dannekiInput, setDannekiInput] = useState<DannekiInput>(() => createDefaultDannekiInput());
   const [taiitsuInput, setTaiitsuInput] = useState<TaiitsuInput>(() => createDefaultTaiitsuInput());
   const years = Array.from({ length: 2065 - 1989 + 1 }, (_, index) => 1989 + index);
+  const qimenYears = Array.from({ length: QIMEN_YEAR_RANGE.end - QIMEN_YEAR_RANGE.start + 1 }, (_, index) => QIMEN_YEAR_RANGE.start + index);
   const liurenDaysInMonth = getDaysInMonth(liurenInput.year, liurenInput.month);
+  const qimenDaysInMonth = getDaysInMonth(qimenInput.year, qimenInput.month);
   const kingoketsuDaysInMonth = getDaysInMonth(kingoketsuInput.year, kingoketsuInput.month);
   const dannekiDaysInMonth = getDaysInMonth(dannekiInput.year, dannekiInput.month);
   const taiitsuDaysInMonth = getDaysInMonth(taiitsuInput.year, taiitsuInput.month);
@@ -242,7 +277,19 @@ function App() {
       </header>
 
       <main className="workspace-grid">
-        {mode === "qimen" ? <QimenReaderPanel /> : null}
+        {mode === "qimen" ? (
+          <Suspense fallback={<WorkspaceLoadingFallback />}>
+            <RenderErrorBoundary modeLabel="Qimen">
+              <QimenWorkspace
+                input={qimenInput}
+                daysInMonth={qimenDaysInMonth}
+                years={qimenYears}
+                onApplyNow={() => setQimenInput((current) => withCurrentQimenDateTime(current))}
+                onInputChange={(updater: (draft: QimenInput) => QimenInput) => setQimenInput((current) => updater(current))}
+              />
+            </RenderErrorBoundary>
+          </Suspense>
+        ) : null}
 
         {mode === "liuren" ? (
           <Suspense fallback={<WorkspaceLoadingFallback />}>
