@@ -1275,6 +1275,352 @@ textarea:focus-visible {
   line-height: 1.6;
 }
 
+.qimen-reader-panel {
+  grid-column: 1 / -1;
+}
+
+.qimen-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  padding: 1.35rem 1.5rem 1.5rem;
+}
+
+.qimen-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.qimen-stat-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.qimen-stat-card span,
+.qimen-stat-card small,
+.qimen-toolbar-meta {
+  color: rgba(244, 236, 222, 0.72);
+}
+
+.qimen-stat-card strong {
+  font-size: 1.45rem;
+}
+
+.qimen-toolbar {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.qimen-search {
+  display: grid;
+  gap: 0.45rem;
+  flex: 1 1 26rem;
+}
+
+.qimen-search input {
+  width: 100%;
+  border: 1px solid rgba(204, 177, 130, 0.72);
+  background: linear-gradient(180deg, #fffaf2, #efe4d3);
+  color: var(--ink);
+  border-radius: 14px;
+  padding: 0.85rem 0.95rem;
+  font: inherit;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.48), 0 10px 24px rgba(0, 0, 0, 0.14);
+  color-scheme: light;
+}
+
+.qimen-search input:hover {
+  border-color: rgba(204, 177, 130, 0.92);
+  background: linear-gradient(180deg, #fffdf7, #f2e8d8);
+}
+
+.qimen-search input:focus-visible {
+  outline: 3px solid rgba(204, 177, 130, 0.38);
+  outline-offset: 2px;
+  border-color: rgba(204, 177, 130, 1);
+}
+
+.qimen-toolbar-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.qimen-bucket-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.qimen-bucket-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f4ecde;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.qimen-bucket-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(204, 177, 130, 0.36);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.qimen-bucket-card span {
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.qimen-bucket-card strong {
+  font-size: 1.2rem;
+}
+
+.qimen-bucket-card p {
+  margin: 0;
+  color: rgba(244, 236, 222, 0.72);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.qimen-layout {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.82fr) minmax(0, 1.18fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.qimen-outline {
+  position: sticky;
+  top: 1rem;
+  display: grid;
+  gap: 0.8rem;
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+.qimen-outline-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.qimen-outline-part {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.85rem 0.9rem;
+}
+
+.qimen-outline-part > summary {
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.qimen-outline-part > summary::-webkit-details-marker {
+  display: none;
+}
+
+.qimen-outline-part > summary strong {
+  font-size: 0.98rem;
+}
+
+.qimen-outline-part > summary span {
+  color: rgba(244, 236, 222, 0.72);
+  font-size: 0.8rem;
+}
+
+.qimen-outline-chapters {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.qimen-outline-chapter {
+  display: grid;
+  gap: 0.3rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.8rem 0.85rem;
+  color: #f4ecde;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.qimen-outline-chapter:hover {
+  transform: translateY(-1px);
+  border-color: rgba(204, 177, 130, 0.36);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.qimen-outline-chapter strong {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.qimen-outline-chapter span,
+.qimen-outline-chapter small {
+  color: rgba(244, 236, 222, 0.72);
+}
+
+.qimen-outline-chapter small {
+  line-height: 1.5;
+}
+
+.qimen-section-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.qimen-section-card {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.qimen-section-card > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1rem 1rem 0.95rem;
+}
+
+.qimen-section-card > summary::-webkit-details-marker {
+  display: none;
+}
+
+.qimen-section-summary {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.qimen-section-summary-main {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.qimen-section-kind-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.qimen-kind {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.qimen-kind-frontmatter,
+.qimen-kind-toc {
+  border-color: rgba(204, 177, 130, 0.32);
+  background: rgba(204, 177, 130, 0.08);
+}
+
+.qimen-kind-reference {
+  border-color: rgba(159, 102, 82, 0.36);
+  background: rgba(159, 102, 82, 0.08);
+}
+
+.qimen-kind-example {
+  border-color: rgba(183, 113, 66, 0.36);
+  background: rgba(183, 113, 66, 0.12);
+}
+
+.qimen-kind-note {
+  border-color: rgba(183, 113, 66, 0.42);
+  background: rgba(183, 113, 66, 0.1);
+}
+
+.qimen-kind-table {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.qimen-kind-page {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.qimen-source-id {
+  font-size: 0.76rem;
+  color: rgba(244, 236, 222, 0.72);
+  letter-spacing: 0.08em;
+}
+
+.qimen-section-summary-main strong {
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.qimen-section-summary-main p {
+  margin: 0;
+  color: rgba(244, 236, 222, 0.72);
+  line-height: 1.6;
+  font-size: 0.88rem;
+}
+
+.qimen-section-summary-meta {
+  display: grid;
+  gap: 0.25rem;
+  text-align: right;
+  font-size: 0.82rem;
+  color: rgba(244, 236, 222, 0.72);
+}
+
+.qimen-section-body {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem;
+}
+
+.qimen-section-body pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: inherit;
+  color: #f4ecde;
+  line-height: 1.8;
+}
+
+.qimen-empty-state {
+  padding: 1.2rem;
+  color: rgba(244, 236, 222, 0.72);
+}
+
+.qimen-empty-state strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -1302,6 +1648,20 @@ textarea:focus-visible {
   .summary-detail-grid {
     grid-template-columns: 1fr;
   }
+
+  .qimen-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .qimen-outline {
+    position: static;
+    max-height: none;
+  }
+
+  .qimen-stat-grid,
+  .qimen-bucket-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 980px) {
@@ -1327,6 +1687,20 @@ textarea:focus-visible {
   .plate-grid {
     grid-template-rows: repeat(4, minmax(72px, 1fr));
     min-height: 360px;
+  }
+
+  .qimen-stat-grid,
+  .qimen-bucket-grid,
+  .qimen-section-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .qimen-toolbar {
+    align-items: stretch;
+  }
+
+  .qimen-section-summary-meta {
+    text-align: left;
   }
 
   .panel-heading-row {

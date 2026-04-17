@@ -4,7 +4,7 @@ export const SITE_NAME = "Divination Workspace";
 export const SITE_URL_ENV = import.meta.env.VITE_SITE_URL?.trim() ?? "";
 export const DEFAULT_SOCIAL_IMAGE_PATH = "/social-card.svg";
 export const DEFAULT_KEYWORDS =
-  "六壬神課,金口訣,断易,五行易,東洋占術,占い,相談文,解釈,Webアプリ";
+  "六壬神課,金口訣,奇門遁甲,断易,五行易,東洋占術,占い,相談文,解釈,Webアプリ";
 
 type ModeSeo = {
   path: string;
@@ -22,6 +22,14 @@ export const MODE_SEO: Record<AppMode, ModeSeo> = {
       "六壬神課の月将・四課・三伝・十二天将・六親をまとめて確認できる占断アプリ。相談文から読み筋の整理まで対応します。",
     keywords: `${DEFAULT_KEYWORDS},六壬神課,三伝,十二天将`,
     featureList: ["月将・四課・三伝の自動表示", "相談文に沿った解釈整理", "地方時差を含む作盤条件の確認"],
+  },
+  qimen: {
+    path: "/qimen/",
+    title: "奇門遁甲上級編 文字資料室 | Divination Workspace",
+    description:
+      "手直し済みの奇門遁甲OCRを章・節・画像ID単位で読める参照ページ。将来の盤面ロジックに向けた土台として整理しています。",
+    keywords: `${DEFAULT_KEYWORDS},奇門遁甲,奇門遁甲上級編,文字起こし,OCR`,
+    featureList: ["手直し済みOCRの章立て表示", "画像IDごとの本文参照", "将来の盤面ロジックに向けた土台"],
   },
   kingoketsu: {
     path: "/kingoketsu/",
@@ -57,6 +65,10 @@ export function normalizePath(pathname: string) {
 
 export function getModeFromPath(pathname: string): AppMode {
   const normalized = normalizePath(pathname);
+
+  if (normalized === MODE_SEO.qimen.path) {
+    return "qimen";
+  }
 
   if (normalized === MODE_SEO.kingoketsu.path) {
     return "kingoketsu";

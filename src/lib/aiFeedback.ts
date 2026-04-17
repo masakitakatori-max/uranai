@@ -170,7 +170,11 @@ export function buildAiChartContext(mode: AppMode, chart: AnyChart): AiChartCont
     return buildKingoketsuContext(chart as KingoketsuChart);
   }
 
-  return buildDannekiContext(chart as DannekiChart);
+  if (mode === "danneki") {
+    return buildDannekiContext(chart as DannekiChart);
+  }
+
+  throw new Error(`Unsupported AI feedback mode: ${mode}`);
 }
 
 export async function requestAiFeedback(context: AiChartContext) {

@@ -10,6 +10,7 @@ const outputDir = path.join(projectRoot, "site-build");
 const today = new Date().toISOString().slice(0, 10);
 
 const extraAppUrls = [
+  "https://uranai.mozule.co.jp/qimen/",
   "https://uranai.mozule.co.jp/kingoketsu/",
   "https://uranai.mozule.co.jp/danneki/",
 ];

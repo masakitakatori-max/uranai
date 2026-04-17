@@ -24,6 +24,15 @@ const routes = {
     headline: "六壬神課盤を自動作成できる東洋占術Webアプリ",
     featureList: ["月将・四課・三伝の自動表示", "相談文に沿った解釈整理", "地方時差を含む作盤条件の確認"],
   },
+  qimen: {
+    path: "/qimen/",
+    title: "奇門遁甲上級編 文字資料室 | Divination Workspace",
+    description:
+      "手直し済みの奇門遁甲OCRを章・節・画像ID単位で読める参照ページ。将来の盤面ロジックに向けた土台として整理しています。",
+    keywords: `${DEFAULT_KEYWORDS},奇門遁甲,奇門遁甲上級編,文字起こし,OCR`,
+    headline: "奇門遁甲上級編の文字起こしを章立てで読める参照ページ",
+    featureList: ["手直し済みOCRの章立て表示", "画像IDごとの本文参照", "将来の盤面ロジックに向けた土台"],
+  },
   kingoketsu: {
     path: "/kingoketsu/",
     title: "金口訣盤を自動作成 | Divination Workspace",

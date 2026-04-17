@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 
 import "./App.css";
 import { RenderErrorBoundary } from "./components/RenderErrorBoundary";
+import { QimenReaderPanel } from "./components/QimenReaderPanel";
 import { withCurrentDateTime } from "./lib/currentDateTime";
 import { applyModeSeo, getModeFromPath, getPathForMode, normalizePath } from "./lib/seo";
 import type { AppMode, DannekiInput, KingoketsuInput, LiurenInput } from "./lib/types";
@@ -72,12 +73,14 @@ function createDefaultDannekiInput(): DannekiInput {
 
 const MODE_TITLES: Record<AppMode, string> = {
   liuren: "六壬神課盤 自動作成",
+  qimen: "奇門遁甲上級編 文字資料室",
   kingoketsu: "金口訣盤 自動作成",
   danneki: "断易盤 自動作成",
 };
 
 const MODE_LEADS: Record<AppMode, string> = {
   liuren: "地方時差、中気基準の月将、四課、三伝、十二天将、六親を同時に確認するための静的Webアプリです。",
+  qimen: "手直し済みOCRを章・節・画像IDで読める参照モードです。盤面ロジックはまだ載せず、将来の土台だけを先に置いています。",
   kingoketsu: "真太陽時補正、節入り基準の四柱、月将、貴神、将神、人元、用爻を一画面で組み立てるための金口訣モードです。",
   danneki: "コイン法または時刻法で立卦し、京房納甲法で干支・六親・世応・用神を算出。本卦・之卦・動爻を日辰/月建/空亡で読み解く断易モードです。",
 };
@@ -177,6 +180,9 @@ function App() {
           <button className={mode === "liuren" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("liuren")} type="button">
             六壬神課
           </button>
+          <button className={mode === "qimen" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("qimen")} type="button">
+            奇門遁甲
+          </button>
           <button className={mode === "kingoketsu" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("kingoketsu")} type="button">
             金口訣
           </button>
@@ -209,6 +215,8 @@ function App() {
       </header>
 
       <main className="workspace-grid">
+        {mode === "qimen" ? <QimenReaderPanel /> : null}
+
         {mode === "liuren" ? (
           <Suspense fallback={<WorkspaceLoadingFallback />}>
             <RenderErrorBoundary modeLabel="Liuren">

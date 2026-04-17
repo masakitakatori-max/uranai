@@ -1,5 +1,5 @@
-import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getPathForMode } from "./lib/seo";
 import App from "./App";
@@ -10,29 +10,136 @@ function getModeButtons(container: HTMLElement) {
 }
 
 describe("App", () => {
-  afterEach(() => {
-    cleanup();
+  beforeEach(() => {
     window.history.replaceState({}, "", "/");
   });
 
-  it("restores the active mode from the current pathname", async () => {
-    window.history.replaceState({}, "", getPathForMode("danneki"));
+  afterEach(() => {
+    window.history.replaceState({}, "", "/");
+    vi.useRealTimers();
+    cleanup();
+  });
 
-    const { container } = render(<App />);
-    await waitFor(() => {
-      const buttons = getModeButtons(container);
-      expect(buttons).toHaveLength(3);
-      expect(buttons[2]?.className).toContain("is-active");
-    });
+  it("renders all four workspaces and can switch to qimen", { timeout: 15000 }, async () => {
+    render(<App />);
+
+    await waitFor(
+      () => {
+        expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
+      },
+      { timeout: 10000 },
+    );
+
+    expect(screen.getAllByRole("combobox").length).toBeGreaterThanOrEqual(10);
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
+    expect(screen.getAllByText("第1課").length).toBeGreaterThan(0);
+    expect(screen.getByText("解説")).toBeInTheDocument();
+    expect(screen.getByText("解釈")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "奇門遁甲" }));
+
+    expect(screen.getByRole("heading", { level: 1, name: "奇門遁甲上級編 文字資料室" })).toBeInTheDocument();
+    expect(screen.getByText("章立て")).toBeInTheDocument();
+    expect(screen.getByLabelText("奇門遁甲本文の検索")).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/qimen/");
+    expect(document.title).toContain("奇門遁甲上級編");
+
+    fireEvent.click(screen.getByRole("button", { name: "金口訣" }));
+
+    expect(screen.getByRole("heading", { level: 1, name: /金口訣/ })).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getAllByText("地分").length).toBeGreaterThan(0);
+      },
+      { timeout: 10000 },
+    );
+    expect(screen.getAllByText("地分").length).toBeGreaterThan(0);
+    expect(screen.getByText("解説")).toBeInTheDocument();
+    expect(screen.getByText("解釈")).toBeInTheDocument();
+    expect(screen.getAllByRole("combobox").length).toBeGreaterThanOrEqual(9);
+
+    fireEvent.click(screen.getByRole("button", { name: "断易" }));
+
+    expect(screen.getByRole("heading", { level: 1, name: /断易盤/ })).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getAllByText("用神候補").length).toBeGreaterThan(0);
+      },
+      { timeout: 10000 },
+    );
+    expect(screen.getAllByText("用神候補").length).toBeGreaterThan(0);
+    expect(screen.getByText("解説")).toBeInTheDocument();
+    expect(screen.getByText("解釈")).toBeInTheDocument();
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/danneki/");
+    expect(document.title).toContain("断易");
+  });
+
+  it("resolves the initial mode from the pathname and updates metadata", async () => {
+    window.history.replaceState({}, "", "/kingoketsu/");
+
+    render(<App />);
+
+    await waitFor(
+      () => {
+        expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
+      },
+      { timeout: 10000 },
+    );
+
+    expect(screen.getByRole("heading", { level: 1, name: /金口訣/ })).toBeInTheDocument();
+    expect(document.title).toContain("金口訣");
+    expect(document.querySelector('meta[property="og:url"]')?.getAttribute("content")).toContain("/kingoketsu/");
+    expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toContain("/kingoketsu/");
+  });
+
+  it("resolves the qimen route and updates metadata", () => {
+    window.history.replaceState({}, "", "/qimen/");
+
+    render(<App />);
+
+    expect(screen.getByRole("heading", { level: 1, name: "奇門遁甲上級編 文字資料室" })).toBeInTheDocument();
+    expect(document.title).toContain("奇門遁甲上級編");
+    expect(document.querySelector('meta[property="og:url"]')?.getAttribute("content")).toContain("/qimen/");
+    expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toContain("/qimen/");
+  });
+
+  it("uses the current time preset when 今日 is pressed", { timeout: 15000 }, async () => {
+    window.history.replaceState({}, "", "/");
+
+    render(<App />);
+
+    await waitFor(
+      () => {
+        expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
+      },
+      { timeout: 10000 },
+    );
+
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 3, 13, 9, 45));
+
+    fireEvent.change(screen.getByLabelText("年"), { target: { value: "2006" } });
+    fireEvent.change(screen.getByLabelText("月"), { target: { value: "5" } });
+    fireEvent.change(screen.getByLabelText("日"), { target: { value: "12" } });
+    fireEvent.change(screen.getByLabelText("時"), { target: { value: "12" } });
+    fireEvent.change(screen.getByLabelText("分"), { target: { value: "0" } });
+    fireEvent.click(screen.getByRole("button", { name: "今日" }));
+
+    expect(screen.getByLabelText("年")).toHaveValue("2026");
+    expect(screen.getByLabelText("月")).toHaveValue("4");
+    expect(screen.getByLabelText("日")).toHaveValue("13");
+    expect(screen.getByLabelText("時")).toHaveValue("9");
+    expect(screen.getByLabelText("分")).toHaveValue("45");
   });
 
   it("updates the pathname when switching modes", () => {
     const { container } = render(<App />);
     const buttons = getModeButtons(container);
 
-    fireEvent.click(buttons[1]!);
+    fireEvent.click(buttons[2]!);
     expect(window.location.pathname).toBe(getPathForMode("kingoketsu"));
-    expect(buttons[1]?.className).toContain("is-active");
+    expect(buttons[2]?.className).toContain("is-active");
 
     fireEvent.click(buttons[0]!);
     expect(window.location.pathname).toBe(getPathForMode("liuren"));
@@ -47,7 +154,7 @@ describe("App", () => {
 
     await waitFor(() => {
       const buttons = getModeButtons(container);
-      expect(buttons[1]?.className).toContain("is-active");
+      expect(buttons[2]?.className).toContain("is-active");
     });
   });
 });
