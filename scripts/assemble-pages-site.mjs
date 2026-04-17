@@ -13,6 +13,7 @@ const extraAppUrls = [
   "https://uranai.mozule.co.jp/qimen/",
   "https://uranai.mozule.co.jp/kingoketsu/",
   "https://uranai.mozule.co.jp/danneki/",
+  "https://uranai.mozule.co.jp/taiitsu/",
 ];
 
 async function copyDirectoryContents(fromDir, toDir, options = {}) {

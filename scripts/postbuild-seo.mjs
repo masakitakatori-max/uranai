@@ -8,7 +8,7 @@ const distDir = path.join(projectRoot, "dist");
 const baseIndexPath = path.join(distDir, "index.html");
 
 const SITE_NAME = "Divination Workspace";
-const DEFAULT_KEYWORDS = "六壬神課,金口訣,断易,五行易,東洋占術,占い,相談文,解釈,Webアプリ";
+const DEFAULT_KEYWORDS = "六壬神課,金口訣,奇門遁甲,太乙神数,断易,五行易,東洋占術,占い,相談文,解釈,Webアプリ";
 const DEFAULT_IMAGE_PATH = "/social-card.svg";
 const DEFAULT_LOCALE = "ja_JP";
 const DEFAULT_ROBOTS = "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
@@ -50,6 +50,15 @@ const routes = {
     keywords: `${DEFAULT_KEYWORDS},断易,五行易,本卦,之卦,動爻,用神`,
     headline: "断易の本卦・之卦・動爻を相談文と一緒に読めるWebアプリ",
     featureList: ["相談文から解釈軸を補強", "本卦・之卦・動爻の同時表示", "用神候補と読み筋の自動整理"],
+  },
+  taiitsu: {
+    path: "/taiitsu/",
+    title: "太乙神数盤を自動作成 | Divination Workspace",
+    description:
+      "太乙神数入門 測局篇の構造化PDFインデックスを参照し、起局日時・方位・起局条件から太乙神数盤を確認できる占断アプリです。",
+    keywords: `${DEFAULT_KEYWORDS},太乙神数,太乙,測局,起局,方位`,
+    headline: "太乙神数の起局日時・方位・PDF根拠を確認できるWebアプリ",
+    featureList: ["起局日時と方位の入力", "PDFページ単位の根拠参照", "同一入力で再現可能な局序とtrace"],
   },
 };
 
@@ -243,6 +252,7 @@ await writeRoutePage(sourceHtml, routes.liuren, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.qimen, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.kingoketsu, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.danneki, siteUrl, robotsPolicy);
+await writeRoutePage(sourceHtml, routes.taiitsu, siteUrl, robotsPolicy);
 await fs.writeFile(
   path.join(distDir, "robots.txt"),
   `User-agent: *\n${robotsPolicy.startsWith("noindex") ? "Disallow: /\n" : "Allow: /\n"}Sitemap: ${siteUrl}/sitemap.xml\n`,
