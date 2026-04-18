@@ -32,7 +32,7 @@ export function TaiitsuWorkspace({ input, years, daysInMonth, onApplyNow, onInpu
         headline={chart.summary.headline}
         correctedDateTime={chart.basis.correctedDateTime}
         certainty={chart.certainty}
-        caveat={chart.messages[0] ?? "PDF構造化インデックスを参照して判定しています。"}
+        caveat={chart.messages[0] ?? "構造化ルールインデックスを参照して判定しています。"}
         sourceCount={chart.sourceReferences.length}
         details={summaryDetails}
       />

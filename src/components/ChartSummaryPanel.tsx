@@ -37,9 +37,9 @@ export function ChartSummaryPanel({
             <h2>{modeLabel}</h2>
             <p className="summary-headline">{headline}</p>
           </div>
-          <div className="summary-chips" aria-label="確度と出典">
+          <div className="summary-chips" aria-label="確度と参照情報">
             <span className={`summary-pill summary-pill-${certaintyTone}`}>{getChartCertaintyLabel(certainty)}</span>
-            <span className="summary-pill">出典 {sourceCount}件</span>
+            <span className="summary-pill">参照 {sourceCount}件</span>
           </div>
         </div>
         <p className="summary-caveat">{caveat}</p>

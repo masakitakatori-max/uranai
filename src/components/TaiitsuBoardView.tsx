@@ -16,7 +16,7 @@ export function TaiitsuBoardView({ chart }: TaiitsuBoardViewProps) {
       <div className="panel-heading">
         <p className="eyebrow">盤面生成層</p>
         <h2>太乙神数盤</h2>
-        <p>起局条件、方位、日辰、時支を固定し、PDF根拠へ接続できる中間盤面として表示します。</p>
+        <p>起局条件、方位、日辰、時支を固定し、構造化根拠へ接続できる中間盤面として表示します。</p>
       </div>
 
       <div className="board-meta">

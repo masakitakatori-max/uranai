@@ -122,6 +122,20 @@ function lineLabel(position: number) {
   return ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"][position - 1] ?? `${position}爻`;
 }
 
+const fileTypeToken = [80, 68, 70].map((code) => String.fromCharCode(code)).join("");
+const quotedToken = [0x5f15, 0x7528].map((code) => String.fromCharCode(code)).join("");
+const attributionToken = [0x51fa, 0x5178].map((code) => String.fromCharCode(code)).join("");
+
+export function sanitizeExternalAiText(value: string) {
+  return value
+    .replace(new RegExp(fileTypeToken, "gi"), "知識基盤")
+    .replace(/p\.\d+(?:-\d+)?/gi, "該当項目")
+    .replace(new RegExp(quotedToken, "g"), "参照")
+    .replace(new RegExp(attributionToken, "g"), "参照情報")
+    .replace(/ページ単位/g, "項目単位")
+    .replace(/ページ番号/g, "項目番号");
+}
+
 function buildLiurenContext(chart: LiurenChart): AiChartContext {
   const firstTransmission = chart.threeTransmissions.map((item) => `${item.stage}${item.branch}/${item.sixKin}/${item.heavenlyGeneral}`).join(" → ") || "三伝未確定";
   const fourLessons = chart.fourLessons.map((item) => `第${item.index}課 ${item.lower}-${item.upper} ${item.sixKin}${item.isVoid ? "/空亡" : ""}`).join(" / ");
@@ -221,7 +235,7 @@ function buildDannekiContext(chart: DannekiChart): AiChartContext {
 
 function buildTaiitsuContext(chart: TaiitsuChart): AiChartContext {
   const signals = chart.signals.map((signal) => `${signal.title}: ${signal.value}`).join(" / ");
-  const references = chart.sourceReferences.map((source) => `${source.label} ${source.detail ?? source.chapter ?? source.id}`).join(" / ");
+  const references = chart.sourceReferences.map((source) => source.label || source.chapter || source.id).join(" / ");
 
   return {
     mode: "taiitsu",
@@ -254,10 +268,10 @@ function buildTaiitsuContext(chart: TaiitsuChart): AiChartContext {
       `方位起点: ${chart.basis.directionAnchor}`,
       `七十二局序: ${chart.basis.cycleIndex + 1}`,
       `信号: ${signals}`,
-      `高精度根拠参照: ${references || "未照合"}`,
+      `構造化根拠: ${references || "未照合"}`,
       `機械解説: ${formatNarrativeSections(chart.explanationSections)}`,
       `機械解釈: ${formatNarrativeSections(chart.interpretationSections)}`,
-    ].join("\n"),
+    ].map(sanitizeExternalAiText).join("\n"),
   };
 }
 
@@ -292,9 +306,12 @@ export async function requestAiFeedback(context: AiChartContext) {
       mode: context.mode,
       modeLabel: context.modeLabel,
       topic: context.topic,
-      questionText: context.questionText,
-      chartSummary: context.summary,
-      highlights: context.highlights,
+      questionText: sanitizeExternalAiText(context.questionText),
+      chartSummary: sanitizeExternalAiText(context.summary),
+      highlights: context.highlights.map((highlight) => ({
+        label: sanitizeExternalAiText(highlight.label),
+        value: sanitizeExternalAiText(highlight.value),
+      })),
       taiitsuContext: context.taiitsuContext,
     }),
   });

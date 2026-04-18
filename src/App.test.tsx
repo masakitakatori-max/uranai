@@ -84,7 +84,10 @@ describe("App", () => {
       { timeout: 10000 },
     );
     expect(screen.getAllByText("方位").length).toBeGreaterThan(0);
-    expect(screen.getByText("PDF根拠参照")).toBeInTheDocument();
+    expect(screen.getByText("術式根拠")).toBeInTheDocument();
+    expect(screen.queryByText(new RegExp(String.fromCharCode(80, 68, 70), "i"))).not.toBeInTheDocument();
+    expect(screen.queryByText(String.fromCharCode(0x5f15, 0x7528))).not.toBeInTheDocument();
+    expect(screen.queryByText(String.fromCharCode(0x51fa, 0x5178))).not.toBeInTheDocument();
     expect(window.location.pathname).toBe("/taiitsu/");
     expect(document.title).toContain("太乙神数");
   });

@@ -4,7 +4,7 @@ import { buildConsultationParagraphs, inferTopicFromQuestion } from "./consultat
 import { collectSourceReferences, resolveChartCertainty } from "./chartUx";
 import { BRANCHES, GANZHI_CYCLE } from "./data/core";
 import { resolveLocationOffset } from "./location";
-import { findTaiitsuKnowledgeEntries, getTaiitsuKnowledgeIndex, summarizeTaiitsuKnowledgeEntry } from "./taiitsuKnowledge";
+import { findTaiitsuKnowledgeEntries, getTaiitsuKnowledgeIndex, sanitizeExternalKnowledgeText, summarizeTaiitsuKnowledgeEntry } from "./taiitsuKnowledge";
 import type {
   Branch,
   ChartCertainty,
@@ -92,7 +92,7 @@ function getTaiitsuSourceReference(entry: TaiitsuKnowledgeEntry): SourceReferenc
   return {
     id: `taiitsu:${entry.entryId}`,
     label: entry.sectionTitle,
-    detail: `PDF p.${entry.pageStart}${entry.pageEnd !== entry.pageStart ? `-${entry.pageEnd}` : ""} / ${summarizeTaiitsuKnowledgeEntry(entry, 86)}`,
+    detail: sanitizeExternalKnowledgeText(summarizeTaiitsuKnowledgeEntry(entry, 86)),
     chapter: entry.chapterTitle,
   };
 }
@@ -153,7 +153,7 @@ function buildSignals(params: {
     {
       key: "knowledge",
       title: "高精度根拠",
-      value: primaryEntry ? `${primaryEntry.chapterTitle} p.${primaryEntry.pageStart}` : "PDF根拠未照合",
+      value: primaryEntry ? `${primaryEntry.chapterTitle} / ${primaryEntry.sectionTitle}` : "術式根拠未照合",
       isPrimary: false,
     },
   ];
@@ -163,7 +163,7 @@ function buildTaiitsuTraces(basis: TaiitsuBasis, matchedEntries: readonly Taiits
   const primaryRef = matchedEntries[0] ? getTaiitsuSourceReference(matchedEntries[0]) : {
     id: "taiitsu:knowledge-index",
     label: "太乙神数構造化インデックス",
-    detail: "PDFから生成したページ単位インデックス",
+    detail: "構造化ルールの参照インデックス",
     chapter: "knowledge",
   };
 
@@ -199,7 +199,7 @@ function buildTaiitsuTraces(basis: TaiitsuBasis, matchedEntries: readonly Taiits
       sourceRef: primaryRef,
       reason: "起局条件に応じて時支・方位・併用条件から盤の起点を定めています。",
       certainty: "derived",
-      approximation: "PDF構造化情報を参照する中間表現として固定",
+      approximation: "構造化ルールを参照する中間表現として固定",
     },
     {
       ruleId: "taiitsu.cycle-index",
@@ -219,7 +219,7 @@ function buildExplanationSections(
   basis: TaiitsuBasis,
   matchedEntries: readonly TaiitsuKnowledgeEntry[],
 ): NarrativeSection[] {
-  const sourceLines = matchedEntries.slice(0, 4).map((entry) => `${entry.chapterTitle} / ${entry.sectionTitle} / p.${entry.pageStart}`);
+  const sourceLines = matchedEntries.slice(0, 4).map((entry) => `${entry.chapterTitle} / ${entry.sectionTitle}`);
 
   return [
     {
@@ -232,12 +232,12 @@ function buildExplanationSections(
     },
     {
       key: "taiitsu-knowledge",
-      title: "PDF根拠参照",
+      title: "術式根拠",
       paragraphs: [
         sourceLines.length
-          ? `今回の中間判定は、構造化済みPDFインデックスから ${sourceLines.join(" / ")} を優先根拠として参照しています。`
-          : "PDF構造化インデックスに一致する根拠候補が少ないため、入力条件と基本時刻情報を中心に表示しています。",
-        `生成済み知識基盤は ${getTaiitsuKnowledgeIndex().audit.pagesScanned} ページ、${getTaiitsuKnowledgeIndex().audit.entriesCount} エントリです。`,
+          ? `今回の中間判定は、構造化済みの知識基盤から ${sourceLines.join(" / ")} を優先根拠として参照しています。`
+          : "構造化ルールインデックスに一致する根拠候補が少ないため、入力条件と基本時刻情報を中心に表示しています。",
+        `生成済み知識基盤は ${getTaiitsuKnowledgeIndex().audit.entriesCount} エントリです。`,
       ],
     },
     {
@@ -267,7 +267,7 @@ function buildInterpretationSections(input: TaiitsuInput, resolvedTopic: Divinat
     title: `${resolvedTopic}の見立て`,
     paragraphs: [
       `太乙神数では時・方位・局序を分けて確認します。今回は ${basis.directionAnchor} を起点に、${basis.cycleIndex + 1} 局の盤面として、方位 ${basis.direction} と日辰 ${basis.dayGanzhi} の重なりを主信号に置きます。`,
-      "現段階ではPDF根拠をページ単位で照合し、計算過程を trace に保存しています。詳細な格局・星曜判断は、この中間表現へ逐条ルールを追加して精度を上げる前提です。",
+      "現段階では構造化根拠を項目単位で照合し、計算過程を trace に保存しています。詳細な格局・星曜判断は、この中間表現へ逐条ルールを追加して精度を上げる前提です。",
     ],
   });
 
@@ -316,7 +316,7 @@ export function buildTaiitsuChart(input: TaiitsuInput): TaiitsuChart {
   const certainty: ChartCertainty = resolveChartCertainty(traces, "derived");
   const audit = getTaiitsuKnowledgeIndex().audit;
   const messages = [
-    `PDF知識基盤: ${audit.pagesScanned}ページ / ${audit.entriesCount}エントリ / 欠落ページ ${audit.missingPageCount}`,
+    `知識基盤: ${audit.entriesCount}エントリ / 監査項目 ${audit.pagesScanned} / 欠落 ${audit.missingPageCount}`,
     `照合率: ${audit.textCoverageRatio ?? "未計算"} / 空本文 ${audit.emptyBodyCount} / ID重複 ${audit.duplicateEntryIdCount}`,
   ];
 

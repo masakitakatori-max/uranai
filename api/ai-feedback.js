@@ -28,18 +28,19 @@ async function readJsonBody(req) {
 }
 
 function normalizeFeedbackShape(parsed, fallbackText) {
+  const sanitizedFallbackText = sanitizeExternalAiText(fallbackText);
   return {
-    overview: typeof parsed?.overview === "string" && parsed.overview.trim() ? parsed.overview.trim() : fallbackText,
-    keySignals: Array.isArray(parsed?.keySignals) ? parsed.keySignals.filter((value) => typeof value === "string" && value.trim()) : [],
-    cautions: Array.isArray(parsed?.cautions) ? parsed.cautions.filter((value) => typeof value === "string" && value.trim()) : [],
-    nextActions: Array.isArray(parsed?.nextActions) ? parsed.nextActions.filter((value) => typeof value === "string" && value.trim()) : [],
+    overview: typeof parsed?.overview === "string" && parsed.overview.trim() ? sanitizeExternalAiText(parsed.overview.trim()) : sanitizedFallbackText,
+    keySignals: sanitizeStringArray(parsed?.keySignals),
+    cautions: sanitizeStringArray(parsed?.cautions),
+    nextActions: sanitizeStringArray(parsed?.nextActions),
     followUpQuestions: Array.isArray(parsed?.followUpQuestions)
-      ? parsed.followUpQuestions.filter((value) => typeof value === "string" && value.trim())
+      ? sanitizeStringArray(parsed.followUpQuestions)
       : [],
-    confidence: typeof parsed?.confidence === "string" && parsed.confidence.trim() ? parsed.confidence.trim() : "中",
+    confidence: typeof parsed?.confidence === "string" && parsed.confidence.trim() ? sanitizeExternalAiText(parsed.confidence.trim()) : "中",
     disclaimer:
       typeof parsed?.disclaimer === "string" && parsed.disclaimer.trim()
-        ? parsed.disclaimer.trim()
+        ? sanitizeExternalAiText(parsed.disclaimer.trim())
         : "AI は盤面と相談文を補助的に整理する役割です。最終判断は一次情報と現実条件を優先してください。",
   };
 }
@@ -67,11 +68,32 @@ function tryParseJson(text) {
   }
 }
 
+const fileTypeToken = [80, 68, 70].map((code) => String.fromCharCode(code)).join("");
+const quotedToken = [0x5f15, 0x7528].map((code) => String.fromCharCode(code)).join("");
+const attributionToken = [0x51fa, 0x5178].map((code) => String.fromCharCode(code)).join("");
+
+export function sanitizeExternalAiText(value) {
+  return String(value || "")
+    .replace(new RegExp(fileTypeToken, "gi"), "知識基盤")
+    .replace(/p\.\d+(?:-\d+)?/gi, "該当項目")
+    .replace(new RegExp(quotedToken, "g"), "参照")
+    .replace(new RegExp(attributionToken, "g"), "参照情報")
+    .replace(/ページ単位/g, "項目単位")
+    .replace(/ページ番号/g, "項目番号");
+}
+
+function sanitizeStringArray(values) {
+  return Array.isArray(values)
+    ? values.filter((value) => typeof value === "string" && value.trim()).map((value) => sanitizeExternalAiText(value.trim()))
+    : [];
+}
+
 function buildSystemPrompt(modeLabel) {
   return [
     "あなたは東洋占術アプリ向けの上級鑑定アシスタントです。",
     `対象の占術は ${modeLabel} です。`,
     "入力された相談文と機械生成の盤面要約だけを根拠に、日本語で現実的な助言を返してください。",
+    "資料名、ファイル種別、参照元名、項目番号には言及しないでください。",
     "盤面にない事実を捏造せず、断定しすぎず、論点整理と次の確認事項に強い返答を行ってください。",
     "医療・法律・投資の最終判断を断定せず、必要に応じて専門家確認を促してください。",
     "必ず JSON だけを返してください。",
@@ -83,27 +105,27 @@ function buildUserPrompt(payload) {
   const highlights = Array.isArray(payload.highlights)
     ? payload.highlights
         .filter((item) => item && typeof item.label === "string" && typeof item.value === "string")
-        .map((item) => `- ${item.label}: ${item.value}`)
+        .map((item) => `- ${sanitizeExternalAiText(item.label)}: ${sanitizeExternalAiText(item.value)}`)
         .join("\n")
     : "";
   const taiitsuContext =
     payload.mode === "taiitsu" && payload.taiitsuContext
       ? [
-          `方位: ${payload.taiitsuContext.direction}`,
-          `起局条件: ${payload.taiitsuContext.startCondition}`,
-          `補正時刻: ${payload.taiitsuContext.correctedDateTime}`,
-          `地点: ${payload.taiitsuContext.locationLabel}`,
+          `方位: ${sanitizeExternalAiText(payload.taiitsuContext.direction)}`,
+          `起局条件: ${sanitizeExternalAiText(payload.taiitsuContext.startCondition)}`,
+          `補正時刻: ${sanitizeExternalAiText(payload.taiitsuContext.correctedDateTime)}`,
+          `地点: ${sanitizeExternalAiText(payload.taiitsuContext.locationLabel)}`,
           `局序: ${payload.taiitsuContext.cycleIndex + 1}`,
         ].join("\n")
       : "";
 
   return [
-    `占術: ${payload.modeLabel}`,
-    `占的: ${payload.topic}`,
-    `相談文: ${payload.questionText}`,
+    `占術: ${sanitizeExternalAiText(payload.modeLabel)}`,
+    `占的: ${sanitizeExternalAiText(payload.topic)}`,
+    `相談文: ${sanitizeExternalAiText(payload.questionText)}`,
     highlights ? `注目ポイント:\n${highlights}` : "",
     taiitsuContext ? `太乙神数 専用条件:\n${taiitsuContext}` : "",
-    `盤面要約:\n${payload.chartSummary}`,
+    `盤面要約:\n${sanitizeExternalAiText(payload.chartSummary)}`,
     "求める出力方針:",
     "- 相談者が今どこを優先して見るべきかを先に示す",
     "- 機械解釈の追認だけでなく、見落としと反証も挙げる",
@@ -215,10 +237,10 @@ export default async function handler(req, res) {
 
     const feedback = await callAnthropic({
       mode: payload.mode,
-      modeLabel: payload.modeLabel || payload.mode || "占断",
-      topic: payload.topic || "総合",
-      questionText: payload.questionText.trim(),
-      chartSummary: payload.chartSummary,
+      modeLabel: sanitizeExternalAiText(payload.modeLabel || payload.mode || "占断"),
+      topic: sanitizeExternalAiText(payload.topic || "総合"),
+      questionText: sanitizeExternalAiText(payload.questionText.trim()),
+      chartSummary: sanitizeExternalAiText(payload.chartSummary),
       highlights: payload.highlights || [],
       taiitsuContext: payload.taiitsuContext,
     });

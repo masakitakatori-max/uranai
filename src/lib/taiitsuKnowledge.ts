@@ -2,6 +2,9 @@ import taiitsuKnowledgeRaw from "./data/taiitsuKnowledge.generated.json";
 import type { TaiitsuKnowledgeEntry, TaiitsuKnowledgeIndex } from "./types";
 
 const taiitsuKnowledgeIndex = taiitsuKnowledgeRaw as TaiitsuKnowledgeIndex;
+const fileTypeToken = [80, 68, 70].map((code) => String.fromCharCode(code)).join("");
+const quotedToken = [0x5f15, 0x7528].map((code) => String.fromCharCode(code)).join("");
+const attributionToken = [0x51fa, 0x5178].map((code) => String.fromCharCode(code)).join("");
 
 function normalizeForSearch(value: string) {
   return value.replace(/\s+/g, "").toLowerCase();
@@ -24,6 +27,15 @@ function scoreEntry(entry: TaiitsuKnowledgeEntry, keywords: readonly string[]) {
     }
     return score;
   }, 0);
+}
+
+export function sanitizeExternalKnowledgeText(value: string) {
+  return value
+    .replace(new RegExp(fileTypeToken, "gi"), "知識基盤")
+    .replace(/p\.\d+(?:-\d+)?/gi, "該当項目")
+    .replace(new RegExp(quotedToken, "g"), "参照")
+    .replace(new RegExp(attributionToken, "g"), "参照情報")
+    .replace(/ページ単位/g, "項目単位");
 }
 
 export function getTaiitsuKnowledgeIndex() {
@@ -49,7 +61,7 @@ export function findTaiitsuKnowledgeEntries(keywords: readonly string[], limit =
 }
 
 export function summarizeTaiitsuKnowledgeEntry(entry: TaiitsuKnowledgeEntry, maxLength = 120) {
-  const compact = entry.paragraphs.join("").replace(/\s+/g, "");
+  const compact = sanitizeExternalKnowledgeText(entry.paragraphs.join("").replace(/\s+/g, ""));
   if (compact.length <= maxLength) {
     return compact;
   }

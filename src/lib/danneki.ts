@@ -432,7 +432,7 @@ function buildInterpretationSections(
       key: "danneki-book-case",
       title: `近い書籍例: ${bookCase.title}`,
       paragraphs: [
-        `相談文「${summarizeQuestion(input.questionText)}」は書籍の「${bookCase.title}」(${bookCase.questionType}) と同質の問いです。出典: ${bookCase.sourceImage}。`,
+        `相談文「${summarizeQuestion(input.questionText)}」は書籍の「${bookCase.title}」(${bookCase.questionType}) と同質の問いです。参照情報: ${bookCase.sourceImage}。`,
         bookCase.coreLesson,
       ],
     });

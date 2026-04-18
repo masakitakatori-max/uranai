@@ -15,7 +15,7 @@ export function TaiitsuHelperPanel({ chart }: TaiitsuHelperPanelProps) {
       <div className="panel-heading">
         <p className="eyebrow">補助判断資料</p>
         <h2>太乙神数の根拠</h2>
-        <p>PDF構造化インデックス、入力条件、局序算出の trace をまとめています。</p>
+        <p>構造化ルールインデックス、入力条件、局序算出の trace をまとめています。</p>
       </div>
 
       <div className="basis-grid">

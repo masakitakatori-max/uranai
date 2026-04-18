@@ -22,7 +22,7 @@ describe("ChartSummaryPanel", () => {
 
     expect(screen.getByText("結果サマリ")).toBeInTheDocument();
     expect(screen.getByText("六壬神課")).toBeInTheDocument();
-    expect(screen.getByText("出典 3件")).toBeInTheDocument();
+    expect(screen.getByText("参照 3件")).toBeInTheDocument();
     expect(screen.getByText("month general")).toBeInTheDocument();
   });
 });

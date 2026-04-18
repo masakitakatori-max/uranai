@@ -47,7 +47,7 @@ export function TaiitsuInputPanel({ input, locations, daysInMonth, years, onAppl
             今日
           </button>
         </div>
-        <p>起局日時、地点、方位、起局条件を固定し、PDF根拠と照合できる盤面を生成します。</p>
+        <p>起局日時、地点、方位、起局条件を固定し、術式根拠と照合できる盤面を生成します。</p>
       </div>
 
       <div className="form-grid">

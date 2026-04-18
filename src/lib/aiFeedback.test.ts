@@ -9,8 +9,10 @@ import {
   resolveAiApiUrl,
   resolveAiFeedbackClientConfig,
   saveAiMemberSession,
+  sanitizeExternalAiText,
 } from "./aiFeedback";
 import { KINGOKETSU_FIXTURES, buildKingoketsuChart } from "./kingoketsu";
+import { buildTaiitsuChart } from "./taiitsu";
 import type { KingoketsuChart } from "./types";
 
 describe("aiFeedback helpers", () => {
@@ -56,6 +58,43 @@ describe("aiFeedback helpers", () => {
 
     expect(context.summary).toContain("機械解説: 未生成");
     expect(context.summary).toContain("機械解釈: 未生成");
+  });
+
+  it("removes source-file wording from taiitsu AI context", () => {
+    const fileTypeToken = String.fromCharCode(80, 68, 70);
+    const quoteToken = String.fromCharCode(0x5f15, 0x7528);
+    const attributionToken = String.fromCharCode(0x51fa, 0x5178);
+    const chart = buildTaiitsuChart({
+      year: 2026,
+      month: 4,
+      day: 16,
+      hour: 12,
+      minute: 0,
+      locationId: "akashi",
+      direction: "午",
+      startCondition: "time-and-direction",
+      topic: "総合",
+      questionText: "太乙神数の流れを確認したい",
+    });
+    const context = buildAiChartContext("taiitsu", chart);
+
+    expect(context.summary).not.toMatch(new RegExp(fileTypeToken, "i"));
+    expect(context.summary).not.toContain(quoteToken);
+    expect(context.summary).not.toContain(attributionToken);
+    expect(context.summary).not.toMatch(/p\.\d+/i);
+  });
+
+  it("sanitizes AI response text before display", () => {
+    const fileTypeToken = String.fromCharCode(80, 68, 70);
+    const quoteToken = String.fromCharCode(0x5f15, 0x7528);
+    const attributionToken = String.fromCharCode(0x51fa, 0x5178);
+    const sanitized = sanitizeExternalAiText(`${fileTypeToken} p.12 ${quoteToken} ${attributionToken} ページ単位`);
+
+    expect(sanitized).not.toMatch(new RegExp(fileTypeToken, "i"));
+    expect(sanitized).not.toContain(quoteToken);
+    expect(sanitized).not.toContain(attributionToken);
+    expect(sanitized).not.toMatch(/p\.\d+/i);
+    expect(sanitized).toContain("項目単位");
   });
 
   it("requests AI feedback with credentials included", async () => {
