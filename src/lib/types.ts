@@ -38,6 +38,14 @@ export type NobleChoice = "陽貴" | "陰貴";
 export type LiurenTopic = DivinationTopic;
 export type KingoketsuTopic = DivinationTopic;
 export type KingoketsuPositionKey = "人元" | "貴神" | "将神" | "地分";
+export type QimenTopic = DivinationTopic;
+export type QimenDirection = "北" | "北東" | "東" | "南東" | "南" | "南西" | "西" | "北西";
+export type QimenBoardKind = "year" | "month" | "day" | "time";
+export type QimenPalaceName = "坎" | "坤" | "震" | "巽" | "中" | "乾" | "兌" | "艮" | "離";
+export type QimenDoor = "休門" | "生門" | "傷門" | "杜門" | "景門" | "死門" | "驚門" | "開門";
+export type QimenStar = "天蓬星" | "天任星" | "天冲星" | "天輔星" | "天英星" | "天芮星" | "天柱星" | "天心星" | "天禽星";
+export type QimenGod = "直符" | "騰蛇" | "太陰" | "六合" | "勾陳" | "朱雀" | "九地" | "九天";
+export type QimenJudgmentLabel = "大吉" | "吉" | "平" | "注意" | "凶" | "未判定";
 
 export interface ManualOverrides {
   dayGanzhi: Ganzhi | "";
@@ -179,6 +187,18 @@ export interface KingoketsuInput {
   dstMinutes: 0 | 60;
 }
 
+export interface QimenInput {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  locationId: string;
+  topic: QimenTopic;
+  questionText: string;
+  targetDirection: QimenDirection;
+}
+
 export interface RuleTrace {
   ruleId: string;
   step: string;
@@ -261,6 +281,97 @@ export interface KingoketsuChart {
   interpretationSections: KingoketsuNarrativeSection[];
   traces: RuleTrace[];
   certainty: ChartCertainty;
+  messages: string[];
+}
+
+export interface QimenPillar {
+  label: "年" | "月" | "日" | "時";
+  ganzhi: Ganzhi;
+  stem: Stem;
+  branch: Branch;
+}
+
+export interface QimenBoardBasis {
+  kind: QimenBoardKind;
+  label: string;
+  pillar: QimenPillar;
+  yinYang: YinYang;
+  juNumber: number;
+  xunLeader: Stem;
+  voidBranches: [Branch, Branch];
+  directOfficer: QimenDoor | null;
+  directStar: QimenStar;
+  source: string;
+  certainty: ChartCertainty;
+}
+
+export interface QimenPalace {
+  palace: QimenPalaceName;
+  palaceNumber: number;
+  direction: QimenDirection | "中宮";
+  element: Wuxing;
+  branches: Branch[];
+  earthStem: Stem;
+  heavenStem: Stem;
+  door: QimenDoor | null;
+  star: QimenStar;
+  god: QimenGod | null;
+  isXunLeaderSeat: boolean;
+  isHourStemSeat: boolean;
+  isVoid: boolean;
+  notes: string[];
+  gridRow: number;
+  gridColumn: number;
+}
+
+export interface QimenBoard {
+  kind: QimenBoardKind;
+  label: string;
+  basis: QimenBoardBasis;
+  palaces: QimenPalace[];
+}
+
+export interface QimenDirectionJudgment {
+  direction: QimenDirection;
+  palace: QimenPalaceName;
+  boardKind: QimenBoardKind;
+  boardLabel: string;
+  score: number;
+  label: QimenJudgmentLabel;
+  tone: "good" | "neutral" | "warning" | "alert" | "unknown";
+  patterns: string[];
+  reasons: string[];
+  warnings: string[];
+  sourceReferences: SourceReference[];
+}
+
+export interface QimenBasis {
+  wallClockDateTime: string;
+  correctedDateTime: string;
+  locationLabel: string;
+  locationOffsetMinutes: number;
+  supportRange: string;
+  selectedDirection: QimenDirection;
+  yearPillar: QimenPillar;
+  monthPillar: QimenPillar;
+  dayPillar: QimenPillar;
+  hourPillar: QimenPillar;
+}
+
+export interface QimenChart {
+  topic: QimenTopic;
+  resolvedTopic: QimenTopic;
+  questionText: string;
+  basis: QimenBasis;
+  boards: QimenBoard[];
+  primaryBoard: QimenBoard;
+  directionJudgments: QimenDirectionJudgment[];
+  selectedDirectionJudgment: QimenDirectionJudgment;
+  traces: RuleTrace[];
+  sourceReferences: SourceReference[];
+  certainty: ChartCertainty;
+  explanationSections: NarrativeSection[];
+  interpretationSections: NarrativeSection[];
   messages: string[];
 }
 

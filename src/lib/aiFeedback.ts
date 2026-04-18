@@ -62,7 +62,7 @@ function normalizeGateMode(value: string | undefined): AiFeedbackGateMode {
   return "disabled";
 }
 
-export function resolveAiFeedbackClientConfig(env: AiFeedbackEnv) {
+export function resolveAiFeedbackClientConfig(env: AiFeedbackEnv = getRuntimeEnv()) {
   return {
     gateMode: normalizeGateMode(env.VITE_AI_FEEDBACK_MODE),
     checkoutUrl: env.VITE_AI_CHECKOUT_URL?.trim() ?? "",
@@ -74,12 +74,13 @@ export function getAiFeedbackClientConfig() {
 }
 
 export function resolveAiApiUrl(path: string, env: AiFeedbackEnv = getRuntimeEnv()) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const baseUrl = env.VITE_API_BASE_URL?.trim();
   if (!baseUrl) {
-    return path.startsWith("/") ? path : `/${path}`;
+    return normalizedPath;
   }
 
-  return new URL(path.replace(/^\/+/, ""), baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`).toString();
+  return new URL(normalizedPath, baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`).toString();
 }
 
 export function hasMinimumAiQuestionText(questionText: string) {
@@ -110,12 +111,21 @@ function truncateParagraphs(paragraphs: string[], limit = 2) {
   return paragraphs.slice(0, limit).join(" ");
 }
 
-function formatNarrativeSections(sections: Array<{ title: string; paragraphs: string[] }> | undefined) {
+function formatNarrativeSections(sections: unknown) {
   if (!Array.isArray(sections) || sections.length === 0) {
     return "未生成";
   }
 
-  return sections.map((section) => `${section.title}: ${truncateParagraphs(section.paragraphs)}`).join(" | ");
+  return sections
+    .map((section) => {
+      const candidate = section as { title?: unknown; paragraphs?: unknown };
+      const title = typeof candidate.title === "string" ? candidate.title : "無題";
+      const paragraphs = Array.isArray(candidate.paragraphs)
+        ? candidate.paragraphs.filter((paragraph): paragraph is string => typeof paragraph === "string")
+        : [];
+      return `${title}: ${truncateParagraphs(paragraphs) || "本文なし"}`;
+    })
+    .join(" | ");
 }
 
 function lineLabel(position: number) {
