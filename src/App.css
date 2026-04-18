@@ -10,6 +10,11 @@
   --line: rgba(42, 32, 20, 0.2);
   --panel-line: rgba(255, 255, 255, 0.08);
   --shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
+  --wuxing-wood: #2f9e44;
+  --wuxing-fire: #d83b3b;
+  --wuxing-earth: #8a5a36;
+  --wuxing-metal: #f2c94c;
+  --wuxing-water: #1f78d1;
 }
 
 .app-shell {
@@ -23,7 +28,7 @@
   gap: 0.85rem;
   align-items: end;
   margin: 0 auto 2rem;
-  max-width: 1600px;
+  max-width: 1180px;
   animation: rise 480ms ease;
 }
 
@@ -150,10 +155,10 @@
 }
 
 .workspace-grid {
-  max-width: 1600px;
+  max-width: 1180px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(280px, 0.95fr) minmax(560px, 1.45fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
   align-items: start;
 }
@@ -197,24 +202,24 @@
 }
 
 .summary-panel {
-  grid-column: 2 / 4;
-  grid-row: 1;
+  grid-column: 1 / -1;
+  grid-row: auto;
 }
 
 .board-panel {
-  grid-column: 1 / 3;
-  grid-row: 2;
+  grid-column: 1 / -1;
+  grid-row: auto;
 }
 
 .helper-panel {
-  grid-column: 3 / 4;
-  grid-row: 2;
+  grid-column: 1 / -1;
+  grid-row: auto;
   padding-bottom: 1.3rem;
 }
 
 .ai-feedback-panel {
   grid-column: 1 / -1;
-  grid-row: 3;
+  grid-row: auto;
   padding-bottom: 1.3rem;
 }
 
@@ -426,12 +431,12 @@ textarea:focus-visible {
   z-index: 1;
   padding: 1.4rem 1.5rem 1.5rem;
   display: grid;
-  grid-template-columns: minmax(340px, 1.1fr) minmax(260px, 0.9fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.35rem;
 }
 
 .kingoketsu-canvas {
-  grid-template-columns: minmax(360px, 1.15fr) minmax(260px, 0.85fr);
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .plate-shell {
@@ -493,7 +498,7 @@ textarea:focus-visible {
 
 .danneki-line-row {
   display: grid;
-  grid-template-columns: 52px 1fr;
+  grid-template-columns: 52px 1fr auto;
   gap: 0.7rem;
   align-items: center;
 }
@@ -513,7 +518,7 @@ textarea:focus-visible {
   display: block;
   height: 10px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #45311f, #22160f);
+  background: linear-gradient(90deg, var(--element-color, #45311f), #22160f);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
@@ -526,7 +531,8 @@ textarea:focus-visible {
 }
 
 .danneki-line.is-moving span {
-  background: linear-gradient(90deg, #9f6652, #703d2d);
+  background: linear-gradient(90deg, var(--element-color, #9f6652), #703d2d);
+  box-shadow: 0 0 0 2px rgba(159, 102, 82, 0.18);
 }
 
 .danneki-trigram-card strong {
@@ -608,6 +614,7 @@ textarea:focus-visible {
   gap: 0.75rem;
   align-items: center;
   padding: 0.95rem 1rem;
+  border-left: 6px solid var(--element-color, rgba(31, 25, 18, 0.18));
 }
 
 .kingoketsu-position strong {
@@ -616,6 +623,7 @@ textarea:focus-visible {
 
 .kingoketsu-position.is-useyao {
   border-color: rgba(159, 102, 82, 0.42);
+  border-left-color: var(--element-color, rgba(159, 102, 82, 0.42));
   box-shadow: inset 0 0 0 1px rgba(159, 102, 82, 0.16);
 }
 
@@ -647,6 +655,44 @@ textarea:focus-visible {
   color: #7e402f;
 }
 
+.element-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  gap: 0.36rem;
+  padding: 0.24rem 0.56rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--element-color, #ccb182) 58%, transparent);
+  background: color-mix(in srgb, var(--element-color, #ccb182) 18%, transparent);
+  color: #fff7e6;
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+.element-badge-compact {
+  padding: 0.18rem 0.42rem;
+  font-size: 0.72rem;
+}
+
+.element-badge-dot,
+.wuxing-pentagram-dot {
+  width: 0.62rem;
+  height: 0.62rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--element-color, #ccb182);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.26);
+}
+
+.plate-shell .element-badge,
+.danneki-shell .element-badge,
+.kingoketsu-shell .element-badge {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--element-color, #ccb182) 20%, white);
+  border-color: color-mix(in srgb, var(--element-color, #ccb182) 55%, rgba(31, 25, 18, 0.12));
+}
+
 .kingoketsu-meta {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -673,12 +719,13 @@ textarea:focus-visible {
   gap: 0.25rem;
   padding: 0.65rem 0.4rem;
   text-align: center;
+  border-left: 6px solid var(--element-color, var(--line));
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .plate-cell:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 25px rgba(31, 25, 18, 0.12);
+  box-shadow: 0 12px 25px rgba(31, 25, 18, 0.12), inset 0 0 0 1px color-mix(in srgb, var(--element-color, #ccb182) 35%, transparent);
 }
 
 .plate-cell strong {
@@ -749,6 +796,212 @@ textarea:focus-visible {
 .board-side {
   display: grid;
   gap: 1rem;
+}
+
+.relationship-map {
+  display: grid;
+  gap: 1rem;
+  padding: 1.05rem;
+  border-radius: 22px;
+  border: 1px solid rgba(204, 177, 130, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
+    rgba(255, 255, 255, 0.025);
+}
+
+.relationship-map-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.relationship-map h3 {
+  margin: 0.2rem 0 0;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+}
+
+.relationship-counts,
+.relationship-node-meta,
+.relationship-node-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.relationship-counts span,
+.relationship-node-meta > span:not(.element-badge),
+.relationship-node-tags span {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.18rem 0.48rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(244, 236, 222, 0.74);
+  font-size: 0.74rem;
+}
+
+.relationship-summary {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.relationship-summary p,
+.relationship-edge p {
+  margin: 0;
+  color: rgba(244, 236, 222, 0.76);
+  line-height: 1.65;
+}
+
+.relationship-node-grid,
+.relationship-edge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.75rem;
+}
+
+.relationship-node,
+.relationship-edge,
+.relationship-empty {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.9rem 0.95rem;
+}
+
+.relationship-node {
+  display: grid;
+  gap: 0.65rem;
+  border-left: 6px solid var(--element-color, rgba(204, 177, 130, 0.24));
+}
+
+.relationship-node.is-primary {
+  background: color-mix(in srgb, var(--element-color, #ccb182) 14%, rgba(255, 255, 255, 0.04));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--element-color, #ccb182) 35%, transparent);
+}
+
+.relationship-node header,
+.relationship-edge header,
+.relationship-edge-values {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.relationship-node header span,
+.relationship-edge header span {
+  color: rgba(244, 236, 222, 0.72);
+  font-size: 0.82rem;
+}
+
+.relationship-node header strong,
+.relationship-edge-values strong {
+  font-size: 1.08rem;
+}
+
+.relationship-pentagram-wrap {
+  display: grid;
+  justify-items: center;
+  padding: 0.6rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.wuxing-pentagram {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  width: min(100%, 540px);
+}
+
+.wuxing-pentagram svg {
+  width: min(100%, 240px);
+  height: auto;
+}
+
+.wuxing-pentagram-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem 0.65rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.wuxing-pentagram-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(244, 236, 222, 0.76);
+  font-size: 0.76rem;
+}
+
+.relationship-edge {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.relationship-edge-values {
+  justify-content: flex-start;
+  color: #f6e6d3;
+}
+
+.relation-badge {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 0.24rem 0.58rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f6e6d3;
+  font-size: 0.76rem;
+}
+
+.relation-badge-generate,
+.relationship-edge-generate {
+  border-color: rgba(72, 187, 120, 0.34);
+}
+
+.relation-badge-generate {
+  background: rgba(72, 187, 120, 0.14);
+  color: #dbf8e6;
+}
+
+.relation-badge-overcome,
+.relationship-edge-overcome,
+.relation-badge-break,
+.relationship-edge-break {
+  border-color: rgba(216, 59, 59, 0.36);
+}
+
+.relation-badge-overcome,
+.relation-badge-break {
+  background: rgba(216, 59, 59, 0.14);
+  color: #ffd8d8;
+}
+
+.relation-badge-branch,
+.relationship-edge-branch {
+  border-color: rgba(242, 201, 76, 0.34);
+}
+
+.relation-badge-branch {
+  background: rgba(242, 201, 76, 0.12);
+  color: #fff0ba;
+}
+
+.relation-badge-flow,
+.relation-badge-structure,
+.relation-badge-role {
+  background: rgba(204, 177, 130, 0.14);
+  border-color: rgba(204, 177, 130, 0.34);
+}
+
+.relation-badge-void {
+  background: rgba(148, 163, 184, 0.16);
+  border-color: rgba(148, 163, 184, 0.34);
 }
 
 .section-label {
@@ -1000,7 +1253,7 @@ textarea:focus-visible {
 }
 
 .site-footer {
-  max-width: 1600px;
+  max-width: 1180px;
   margin: 1.4rem auto 0;
   padding: 1rem 0 0.5rem;
   display: flex;
@@ -1626,7 +1879,7 @@ textarea:focus-visible {
 }
 
 .qimen-canvas {
-  display: block;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .qimen-plate-grid {
@@ -1643,6 +1896,7 @@ textarea:focus-visible {
   padding: 1rem;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 6px solid var(--element-color, rgba(255, 255, 255, 0.1));
   background:
     radial-gradient(circle at top left, rgba(204, 177, 130, 0.1), transparent 42%),
     rgba(255, 255, 255, 0.04);
@@ -1806,7 +2060,7 @@ textarea:focus-visible {
 
 @media (max-width: 1320px) {
   .workspace-grid {
-    grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.3fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .summary-panel,
@@ -1844,8 +2098,10 @@ textarea:focus-visible {
   .workspace-grid,
   .column-link-grid,
   .board-meta,
-  .board-canvas,
-  .ai-highlight-grid,
+    .board-canvas,
+    .relationship-node-grid,
+    .relationship-edge-grid,
+    .ai-highlight-grid,
   .danneki-hexagrams,
   .danneki-trigram-row,
   .override-grid,
@@ -1886,6 +2142,13 @@ textarea:focus-visible {
   .panel-heading-row {
     align-items: start;
     flex-direction: column;
+  }
+
+  .relationship-map-heading,
+  .relationship-node header,
+  .relationship-edge header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .kingoketsu-position,

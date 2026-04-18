@@ -22,6 +22,7 @@ import {
 import { BRANCH_WUXING, DAY_NIGHT_NOBLE_BRANCH, GENERAL_ORDER_NAMES, STEM_WUXING, getBranchRelations, getGeneralOrderFromNobleEarth, getSeasonalState, getSixKin } from "./data/rules";
 import { collectSourceReferences, resolveChartCertainty } from "./chartUx";
 import { resolveLocationOffset } from "./location";
+import { createBranchRelationEdges, createFlowEdge, createRelationshipGraph, createWuxingRelationEdges } from "./relationships";
 import { resolveSanChuanRow } from "./sanChuanResolver";
 import type {
   Branch,
@@ -37,6 +38,8 @@ import type {
   NarrativeSection,
   NobleMode,
   PlateCell,
+  RelationshipGraph,
+  RelationshipNode,
   RuleTrace,
   SourceReference,
   SeasonalState,
@@ -348,6 +351,83 @@ function buildHelperAnnotations(fourLessons: FourLesson[], threeTransmissions: T
   }));
 
   return [...transmissionAnnotations, ...lessonAnnotations];
+}
+
+function buildLiurenRelationships(
+  basis: ChartBasis,
+  fourLessons: readonly FourLesson[],
+  threeTransmissions: readonly ThreeTransmission[],
+  helperAnnotations: readonly HelperAnnotation[],
+): RelationshipGraph {
+  const annotationMap = getAnnotationMap(helperAnnotations);
+  const referenceNodes: RelationshipNode[] = [
+    {
+      id: "liuren-day",
+      label: "日支",
+      value: basis.dayBranch,
+      element: BRANCH_WUXING[basis.dayBranch],
+      branch: basis.dayBranch,
+      role: "基準",
+      tags: [`日干${basis.dayStem}`, `空亡${basis.voidBranches.join("")}`],
+    },
+    {
+      id: "liuren-month-general",
+      label: "月将",
+      value: basis.monthGeneral,
+      element: BRANCH_WUXING[basis.monthGeneral],
+      branch: basis.monthGeneral,
+      role: "月将",
+    },
+    {
+      id: "liuren-hour",
+      label: "占時",
+      value: basis.hourBranch,
+      element: BRANCH_WUXING[basis.hourBranch],
+      branch: basis.hourBranch,
+      role: "時",
+    },
+  ];
+  const transmissionNodes: RelationshipNode[] = threeTransmissions.map((item) => {
+    const annotation = annotationMap.get(item.stage);
+    return {
+      id: `liuren-transmission-${item.stage}`,
+      label: item.stage,
+      value: item.dunStem ? `${item.dunStem}${item.branch}` : item.branch,
+      element: BRANCH_WUXING[item.branch],
+      branch: item.branch,
+      stem: item.dunStem ?? undefined,
+      role: item.sixKin,
+      tags: [item.heavenlyGeneral, annotation?.seasonalState ?? "", item.isVoid ? "空亡" : "実神"].filter(Boolean),
+      isPrimary: item.stage === "初伝",
+    };
+  });
+  const lessonNodes: RelationshipNode[] = fourLessons.map((lesson) => {
+    const annotation = annotationMap.get(`第${lesson.index}課`);
+    return {
+      id: `liuren-lesson-${lesson.index}`,
+      label: `第${lesson.index}課`,
+      value: lesson.upper,
+      element: BRANCH_WUXING[lesson.upper],
+      branch: lesson.upper,
+      role: lesson.sixKin,
+      tags: [lesson.heavenlyGeneral, annotation?.seasonalState ?? "", lesson.isVoid ? "空亡" : "実神"].filter(Boolean),
+    };
+  });
+  const nodes = [...referenceNodes, ...transmissionNodes, ...lessonNodes];
+  const flowEdges =
+    transmissionNodes.length >= 2
+      ? transmissionNodes.slice(0, -1).map((node, index) => createFlowEdge(node, transmissionNodes[index + 1], "三伝順", `${node.label}から${transmissionNodes[index + 1].label}へ進みます。`))
+      : [];
+
+  return createRelationshipGraph({
+    title: "六壬神課の星関係",
+    summary: [
+      threeTransmissions.length ? `三伝は ${threeTransmissions.map((item) => item.stage).join(" → ")} の順に読みます。` : "三伝未確定のため、四課と基準支の関係を中心に表示します。",
+      `日支 ${basis.dayBranch}、月将 ${basis.monthGeneral}、占時 ${basis.hourBranch} を基準に五行と支関係を重ねています。`,
+    ],
+    nodes,
+    edges: [...flowEdges, ...createWuxingRelationEdges(nodes, "liuren-wuxing"), ...createBranchRelationEdges(nodes, "liuren-branch")],
+  });
 }
 
 function describeLessonType(lessonType: LessonType | null) {
@@ -716,6 +796,7 @@ export function buildLiurenChart(input: LiurenInput): LiurenChart {
   const fourLessons = createFourLessons(dayStem, dayBranch, heavenPlate, dayElement, generalByHeavenBranch, voidBranches);
   const sanChuan = createThreeTransmissions(dayGanzhi, fourLessons[0].upper, dayElement, generalByHeavenBranch, voidBranches);
   const helperAnnotations = buildHelperAnnotations(fourLessons, sanChuan.items, basis, monthElement);
+  const relations = buildLiurenRelationships(basis, fourLessons, sanChuan.items, helperAnnotations);
   const explanationSections = buildLiurenExplanationSections(basis, fourLessons, sanChuan.items, helperAnnotations, sanChuan.lessonType);
   const interpretationSections = buildLiurenInterpretationSections(input, resolvedTopic, basis, sanChuan.items, helperAnnotations, sanChuan.lessonType);
   const traces = buildLiurenTraces(basis, fourLessons, sanChuan.items, sanChuan.source, sanChuan.trace);
@@ -781,6 +862,7 @@ export function buildLiurenChart(input: LiurenInput): LiurenChart {
     certainty,
     explanationSections,
     interpretationSections,
+    relations,
     messages,
   };
 }

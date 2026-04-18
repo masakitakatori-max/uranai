@@ -1,6 +1,11 @@
 import { PLATE_GRID_POSITIONS } from "../lib/engine";
+import { BRANCH_WUXING } from "../lib/data/rules";
+import { getWuxingColor } from "../lib/relationships";
 import { getSafeList } from "../lib/uiUtils";
 import type { TaiitsuChart } from "../lib/types";
+import type { CSSProperties } from "react";
+import { ElementBadge } from "./ElementBadge";
+import { RelationshipMap } from "./RelationshipMap";
 
 interface TaiitsuBoardViewProps {
   chart: TaiitsuChart;
@@ -45,10 +50,16 @@ export function TaiitsuBoardView({ chart }: TaiitsuBoardViewProps) {
           <div className="plate-grid">
             {cycleGrid.map((cell) => {
               const position = PLATE_GRID_POSITIONS[cell.branch];
+              const element = BRANCH_WUXING[cell.branch];
               return (
-                <div className="plate-cell" key={`${cell.label}-${cell.branch}`} style={{ gridRow: position.row, gridColumn: position.column }}>
+                <div
+                  className="plate-cell"
+                  key={`${cell.label}-${cell.branch}`}
+                  style={{ gridRow: position.row, gridColumn: position.column, "--element-color": getWuxingColor(element) } as CSSProperties}
+                >
                   <span>{cell.label}</span>
                   <strong>{cell.branch}</strong>
+                  <ElementBadge compact element={element} />
                   <em>{cell.source}</em>
                 </div>
               );
@@ -63,18 +74,19 @@ export function TaiitsuBoardView({ chart }: TaiitsuBoardViewProps) {
 
         <div className="board-side">
           <div className="lesson-block">
-            <div className="section-label">Signals</div>
+            <div className="section-label">主要信号</div>
             <div className="transmission-stack">
               {signals.map((signal) => (
                 <article className="transmission-card" key={signal.key}>
                   <span>{signal.title}</span>
                   <strong>{signal.value}</strong>
-                  <small>{signal.isPrimary ? "primary" : "support"}</small>
+                  <small>{signal.isPrimary ? "主" : "補助"}</small>
                 </article>
               ))}
             </div>
           </div>
         </div>
+        <RelationshipMap graph={chart.relations} />
       </div>
 
       {messages.length ? (

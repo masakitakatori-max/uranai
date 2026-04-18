@@ -1,6 +1,11 @@
 import { PLATE_GRID_POSITIONS } from "../lib/engine";
+import { BRANCH_WUXING } from "../lib/data/rules";
+import { getWuxingColor } from "../lib/relationships";
 import { getSafeList } from "../lib/uiUtils";
 import type { LiurenChart } from "../lib/types";
+import type { CSSProperties } from "react";
+import { ElementBadge } from "./ElementBadge";
+import { RelationshipMap } from "./RelationshipMap";
 
 interface BoardViewProps {
   chart: LiurenChart;
@@ -52,10 +57,16 @@ export function BoardView({ chart }: BoardViewProps) {
           <div className="plate-grid">
             {plateCells.map((cell) => {
               const position = PLATE_GRID_POSITIONS[cell.earth];
+              const element = BRANCH_WUXING[cell.heaven];
               return (
-                <div className={cell.isVoid ? "plate-cell plate-cell-void" : "plate-cell"} key={cell.earth} style={{ gridRow: position.row, gridColumn: position.column }}>
+                <div
+                  className={cell.isVoid ? "plate-cell plate-cell-void" : "plate-cell"}
+                  key={cell.earth}
+                  style={{ gridRow: position.row, gridColumn: position.column, "--element-color": getWuxingColor(element) } as CSSProperties}
+                >
                   <span className={badgeClassName(cell.isNobleSeat)}>{cell.general}</span>
                   <strong className={badgeClassName(cell.isMonthGeneral, "accent")}>{cell.heaven}</strong>
+                  <ElementBadge compact element={element} />
                   <span className={badgeClassName(cell.isVoid, "warning")}>{cell.earth}</span>
                   {cell.isHourSeat ? <em>占時</em> : null}
                 </div>
@@ -88,6 +99,7 @@ export function BoardView({ chart }: BoardViewProps) {
                   </div>
                   <footer>
                     <span>{lesson.sixKin}</span>
+                    <ElementBadge compact element={BRANCH_WUXING[lesson.upper]} />
                     <span>{lesson.isVoid ? "空亡" : "実神"}</span>
                   </footer>
                 </article>
@@ -105,6 +117,7 @@ export function BoardView({ chart }: BoardViewProps) {
                     <strong>{item.dunStem ? `${item.dunStem}${item.branch}` : item.branch}</strong>
                     <small>{item.heavenlyGeneral}</small>
                     <em>{item.sixKin}</em>
+                    <ElementBadge compact element={BRANCH_WUXING[item.branch]} />
                   </article>
                 ))
               ) : (
@@ -117,6 +130,7 @@ export function BoardView({ chart }: BoardViewProps) {
             </div>
           </div>
         </div>
+        <RelationshipMap graph={chart.relations} />
       </div>
 
       {messages.length ? (

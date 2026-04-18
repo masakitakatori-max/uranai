@@ -24,11 +24,22 @@ describe("DannekiBoardView", () => {
     const regressionChart = {
       ...chart,
       lines: undefined,
+      relations: undefined,
       messages: undefined,
     } as unknown as DannekiChart;
 
     const { container } = render(<DannekiBoardView chart={regressionChart} />);
 
     expect(container.querySelector(".board-panel")).not.toBeNull();
+    expect(container.querySelector(".relationship-map")).not.toBeNull();
+  });
+
+  it("renders relationship map and five-element chips", () => {
+    const chart = buildDannekiChart(baseInput);
+
+    const { container } = render(<DannekiBoardView chart={chart} />);
+
+    expect(container.querySelector(".relationship-map")).not.toBeNull();
+    expect(container.querySelector(".element-badge")).not.toBeNull();
   });
 });

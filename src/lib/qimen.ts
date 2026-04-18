@@ -2,8 +2,10 @@ import { Solar } from "lunar-typescript";
 
 import { buildConsultationParagraphs, inferTopicFromQuestion } from "./consultation";
 import { GANZHI_CYCLE, LOCATION_OFFSETS, VOID_BRANCHES_BY_XUN } from "./data/core";
+import { STEM_WUXING } from "./data/rules";
 import { resolveChartCertainty } from "./chartUx";
 import { resolveLocationOffset } from "./location";
+import { createRelationshipGraph, createStructureEdge, createWuxingRelationEdges } from "./relationships";
 import {
   QIMEN_BOARD_LABELS,
   QIMEN_DAY_JU_FIXTURES,
@@ -42,9 +44,12 @@ import type {
   QimenPillar,
   QimenStar,
   QimenTopic,
+  RelationshipGraph,
+  RelationshipNode,
   RuleTrace,
   SourceReference,
   Stem,
+  Wuxing,
   YinYang,
 } from "./types";
 
@@ -61,6 +66,29 @@ type JuResolution = {
 
 const SOURCE_BY_ID = new Map(QIMEN_SOURCE_REFERENCES.map((source) => [source.id, source]));
 const EIGHT_PALACE_SET = new Set<QimenPalaceName>(QIMEN_EIGHT_PALACE_ORDER);
+
+const QIMEN_DOOR_ELEMENT: Record<QimenDoor, Wuxing> = {
+  休門: "水",
+  生門: "土",
+  傷門: "木",
+  杜門: "木",
+  景門: "火",
+  死門: "土",
+  驚門: "金",
+  開門: "金",
+};
+
+const QIMEN_STAR_ELEMENT: Record<QimenStar, Wuxing> = {
+  天蓬星: "水",
+  天任星: "土",
+  天冲星: "木",
+  天輔星: "木",
+  天英星: "火",
+  天芮星: "土",
+  天柱星: "金",
+  天心星: "金",
+  天禽星: "土",
+};
 
 function mod(value: number, divisor: number) {
   return ((value % divisor) + divisor) % divisor;
@@ -508,6 +536,76 @@ function createDirectionJudgments(board: QimenBoard) {
     .sort((a, b) => b.score - a.score);
 }
 
+function buildQimenRelationships(primaryBoard: QimenBoard, selected: QimenDirectionJudgment): RelationshipGraph {
+  const palace = primaryBoard.palaces.find((item) => item.palace === selected.palace) ?? primaryBoard.palaces[0];
+  if (!palace) {
+    return createRelationshipGraph({
+      title: "奇門遁甲の選択方位関係",
+      summary: ["選択方位の宮を特定できませんでした。"],
+      nodes: [],
+      edges: [],
+    });
+  }
+  const palaceNode: RelationshipNode = {
+    id: "qimen-palace",
+    label: `${palace.direction} ${palace.palace}宮`,
+    value: String(palace.palaceNumber),
+    element: palace.element,
+    branch: palace.branches[0],
+    role: "宮",
+    tags: [palace.isVoid ? "空亡" : "", palace.isXunLeaderSeat ? "旬首" : "", palace.isHourStemSeat ? "盤干" : ""].filter(Boolean),
+    isPrimary: true,
+  };
+  const starNode: RelationshipNode = {
+    id: "qimen-star",
+    label: "九星",
+    value: palace.star,
+    element: QIMEN_STAR_ELEMENT[palace.star],
+    role: "星",
+  };
+  const doorNode: RelationshipNode | null = palace.door
+    ? {
+        id: "qimen-door",
+        label: "八門",
+        value: palace.door,
+        element: QIMEN_DOOR_ELEMENT[palace.door],
+        role: "門",
+      }
+    : null;
+  const heavenStemNode: RelationshipNode = {
+    id: "qimen-heaven-stem",
+    label: "天盤干",
+    value: palace.heavenStem,
+    element: STEM_WUXING[palace.heavenStem],
+    stem: palace.heavenStem,
+    role: "天",
+  };
+  const earthStemNode: RelationshipNode = {
+    id: "qimen-earth-stem",
+    label: "地盤干",
+    value: palace.earthStem,
+    element: STEM_WUXING[palace.earthStem],
+    stem: palace.earthStem,
+    role: "地",
+  };
+  const nodes = [palaceNode, starNode, ...(doorNode ? [doorNode] : []), heavenStemNode, earthStemNode];
+
+  return createRelationshipGraph({
+    title: "奇門遁甲の選択方位関係",
+    summary: [
+      `${selected.direction}方位は ${palace.palace}宮で、宮五行は ${palace.element} です。`,
+      `九星 ${palace.star}、八門 ${palace.door ?? "中宮なし"}、天盤干 ${palace.heavenStem}、地盤干 ${palace.earthStem} の五行関係を表示します。`,
+    ],
+    nodes,
+    edges: [
+      createStructureEdge(palaceNode, starNode, "宮と星", "選択宮に入った九星です。"),
+      ...(doorNode ? [createStructureEdge(palaceNode, doorNode, "宮と門", "選択宮に入った八門です。")] : []),
+      createStructureEdge(heavenStemNode, earthStemNode, "天地盤", "天盤干と地盤干の五行関係です。"),
+      ...createWuxingRelationEdges(nodes, "qimen-wuxing"),
+    ],
+  });
+}
+
 function buildTraces(params: {
   wallClockDateTime: string;
   correctedDateTime: string;
@@ -667,6 +765,7 @@ export function buildQimenChart(input: QimenInput): QimenChart {
   };
   const explanationSections = buildExplanationSections({ basis, primaryBoard, directionJudgments });
   const interpretationSections = buildInterpretationSections(input, resolvedTopic, selectedDirectionJudgment);
+  const relations = buildQimenRelationships(primaryBoard, selectedDirectionJudgment);
 
   return {
     topic: input.topic,
@@ -682,6 +781,7 @@ export function buildQimenChart(input: QimenInput): QimenChart {
     certainty: resolveChartCertainty(traces, "derived"),
     explanationSections,
     interpretationSections,
+    relations,
     messages,
   };
 }

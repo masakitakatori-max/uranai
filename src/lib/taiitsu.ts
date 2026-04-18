@@ -3,7 +3,9 @@ import { Solar } from "lunar-typescript";
 import { buildConsultationParagraphs, inferTopicFromQuestion } from "./consultation";
 import { collectSourceReferences, resolveChartCertainty } from "./chartUx";
 import { BRANCHES, GANZHI_CYCLE } from "./data/core";
+import { BRANCH_WUXING } from "./data/rules";
 import { resolveLocationOffset } from "./location";
+import { createBranchRelationEdges, createFlowEdge, createRelationshipGraph, createWuxingRelationEdges } from "./relationships";
 import { findTaiitsuKnowledgeEntries, getTaiitsuKnowledgeIndex, sanitizeExternalKnowledgeText, summarizeTaiitsuKnowledgeEntry } from "./taiitsuKnowledge";
 import type {
   Branch,
@@ -11,6 +13,8 @@ import type {
   DivinationTopic,
   Ganzhi,
   NarrativeSection,
+  RelationshipGraph,
+  RelationshipNode,
   RuleTrace,
   SourceReference,
   Stem,
@@ -157,6 +161,60 @@ function buildSignals(params: {
       isPrimary: false,
     },
   ];
+}
+
+function buildTaiitsuRelationships(basis: TaiitsuBasis): RelationshipGraph {
+  const directionNode: RelationshipNode = {
+    id: "taiitsu-direction",
+    label: "方位",
+    value: basis.direction,
+    element: BRANCH_WUXING[basis.direction],
+    branch: basis.direction,
+    role: "入力方位",
+    isPrimary: true,
+  };
+  const hourNode: RelationshipNode = {
+    id: "taiitsu-hour",
+    label: "時支",
+    value: basis.hourBranch,
+    element: BRANCH_WUXING[basis.hourBranch],
+    branch: basis.hourBranch,
+    role: "時",
+  };
+  const dayNode: RelationshipNode = {
+    id: "taiitsu-day",
+    label: "日支",
+    value: basis.dayBranch,
+    element: BRANCH_WUXING[basis.dayBranch],
+    branch: basis.dayBranch,
+    stem: basis.dayStem,
+    role: "日辰",
+  };
+  const anchorNode: RelationshipNode = {
+    id: "taiitsu-anchor",
+    label: "起点",
+    value: basis.directionAnchor,
+    element: BRANCH_WUXING[basis.directionAnchor],
+    branch: basis.directionAnchor,
+    role: START_CONDITION_LABELS[basis.startCondition],
+    isPrimary: true,
+  };
+  const nodes = [directionNode, hourNode, dayNode, anchorNode];
+
+  return createRelationshipGraph({
+    title: "太乙神数の起点関係",
+    summary: [
+      `方位 ${basis.direction}、時支 ${basis.hourBranch}、日支 ${basis.dayBranch}、起点 ${basis.directionAnchor} の関係です。`,
+      `起局条件は ${START_CONDITION_LABELS[basis.startCondition]}、局序は ${basis.cycleIndex + 1} 局です。`,
+    ],
+    nodes,
+    edges: [
+      createFlowEdge(directionNode, anchorNode, "方位→起点", "入力方位が盤の起点へ反映される線です。"),
+      createFlowEdge(hourNode, anchorNode, "時支→起点", "時支が盤の起点へ反映される線です。"),
+      ...createWuxingRelationEdges(nodes, "taiitsu-wuxing"),
+      ...createBranchRelationEdges(nodes, "taiitsu-branch"),
+    ],
+  });
 }
 
 function buildTaiitsuTraces(basis: TaiitsuBasis, matchedEntries: readonly TaiitsuKnowledgeEntry[]): RuleTrace[] {
@@ -311,6 +369,7 @@ export function buildTaiitsuChart(input: TaiitsuInput): TaiitsuChart {
     resolvedTopic,
   ]);
   const signals = buildSignals({ input, basis, matchedEntries, resolvedTopic });
+  const relations = buildTaiitsuRelationships(basis);
   const traces = buildTaiitsuTraces(basis, matchedEntries);
   const sourceReferences = collectSourceReferences(traces, matchedEntries.map(getTaiitsuSourceReference));
   const certainty: ChartCertainty = resolveChartCertainty(traces, "derived");
@@ -336,6 +395,7 @@ export function buildTaiitsuChart(input: TaiitsuInput): TaiitsuChart {
       headline: `${resolvedTopic} / ${START_CONDITION_LABELS[input.startCondition]} / ${cycleIndex + 1}局`,
       coreSignals: signals.filter((signal) => signal.isPrimary),
     },
+    relations,
     messages,
   };
 }

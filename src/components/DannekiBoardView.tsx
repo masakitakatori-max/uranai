@@ -1,5 +1,9 @@
 import type { DannekiChart, DannekiLine, YinYang } from "../lib/types";
+import type { CSSProperties } from "react";
+import { getWuxingColor } from "../lib/relationships";
 import { getDannekiLineLabel, getSafeList } from "../lib/uiUtils";
+import { ElementBadge } from "./ElementBadge";
+import { RelationshipMap } from "./RelationshipMap";
 
 interface DannekiBoardViewProps {
   chart: DannekiChart;
@@ -20,12 +24,13 @@ function renderHexagram(title: string, lines: DannekiLine[], changed = false) {
         {[...source]
           .reverse()
           .map((line) => (
-            <div className="danneki-line-row" key={`${title}-${line.position}`}>
+            <div className="danneki-line-row" key={`${title}-${line.position}`} style={{ "--element-color": getWuxingColor(line.element) } as CSSProperties}>
               <small>{getDannekiLineLabel(line.position)}</small>
               <div className={lineClassName(line.original, line.isMoving)}>
                 <span />
                 {line.original === "陰" ? <span /> : null}
               </div>
+              <ElementBadge compact element={line.element} />
             </div>
           ))}
       </div>
@@ -107,6 +112,7 @@ export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
                 <small>
                   {chart.basis.lowerTrigram.image} / {chart.basis.lowerTrigram.element}
                 </small>
+                <ElementBadge compact element={chart.basis.lowerTrigram.element} />
               </article>
               <article className="danneki-trigram-card">
                 <span>外卦</span>
@@ -117,6 +123,7 @@ export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
                 <small>
                   {chart.basis.upperTrigram.image} / {chart.basis.upperTrigram.element}
                 </small>
+                <ElementBadge compact element={chart.basis.upperTrigram.element} />
               </article>
               <article className="danneki-trigram-card">
                 <span>之卦</span>
@@ -179,6 +186,7 @@ export function DannekiBoardView({ chart }: DannekiBoardViewProps) {
             </div>
           </div>
         </div>
+        <RelationshipMap graph={chart.relations} />
       </div>
 
       {messages.length ? (

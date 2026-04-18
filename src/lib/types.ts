@@ -46,6 +46,48 @@ export type QimenDoor = "休門" | "生門" | "傷門" | "杜門" | "景門" | "
 export type QimenStar = "天蓬星" | "天任星" | "天冲星" | "天輔星" | "天英星" | "天芮星" | "天柱星" | "天心星" | "天禽星";
 export type QimenGod = "直符" | "騰蛇" | "太陰" | "六合" | "勾陳" | "朱雀" | "九地" | "九天";
 export type QimenJudgmentLabel = "大吉" | "吉" | "平" | "注意" | "凶" | "未判定";
+export type RelationshipKind =
+  | "same"
+  | "generates"
+  | "generated-by"
+  | "overcomes"
+  | "overcome-by"
+  | "branch"
+  | "flow"
+  | "state"
+  | "void"
+  | "month-break"
+  | "role"
+  | "structure";
+
+export interface RelationshipNode {
+  id: string;
+  label: string;
+  value: string;
+  element: Wuxing;
+  branch?: Branch;
+  stem?: Stem;
+  role?: string;
+  tags?: string[];
+  isPrimary?: boolean;
+}
+
+export interface RelationshipEdge {
+  id: string;
+  from: string;
+  to: string;
+  label: string;
+  kind: RelationshipKind;
+  detail?: string;
+  tags?: string[];
+}
+
+export interface RelationshipGraph {
+  title: string;
+  summary: string[];
+  nodes: RelationshipNode[];
+  edges: RelationshipEdge[];
+}
 
 export interface ManualOverrides {
   dayGanzhi: Ganzhi | "";
@@ -157,6 +199,7 @@ export interface LiurenChart {
   certainty: ChartCertainty;
   explanationSections: NarrativeSection[];
   interpretationSections: NarrativeSection[];
+  relations: RelationshipGraph;
   messages: string[];
 }
 
@@ -279,6 +322,7 @@ export interface KingoketsuChart {
   sourceReferences: SourceReference[];
   explanationSections: KingoketsuNarrativeSection[];
   interpretationSections: KingoketsuNarrativeSection[];
+  relations: RelationshipGraph;
   traces: RuleTrace[];
   certainty: ChartCertainty;
   messages: string[];
@@ -372,6 +416,7 @@ export interface QimenChart {
   certainty: ChartCertainty;
   explanationSections: NarrativeSection[];
   interpretationSections: NarrativeSection[];
+  relations: RelationshipGraph;
   messages: string[];
 }
 
@@ -463,6 +508,7 @@ export interface DannekiChart {
   certainty: ChartCertainty;
   explanationSections: NarrativeSection[];
   interpretationSections: NarrativeSection[];
+  relations: RelationshipGraph;
   messages: string[];
 }
 
@@ -577,5 +623,6 @@ export interface TaiitsuChart {
   explanationSections: NarrativeSection[];
   interpretationSections: NarrativeSection[];
   summary: TaiitsuSummary;
+  relations: RelationshipGraph;
   messages: string[];
 }

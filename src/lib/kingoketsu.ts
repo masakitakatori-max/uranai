@@ -17,6 +17,7 @@ import {
 import { BRANCH_WUXING, STEM_WUXING, getBranchRelations, getSeasonalState } from "./data/rules";
 import { collectSourceReferences, resolveChartCertainty } from "./chartUx";
 import { resolveLocationOffset } from "./location";
+import { createBranchRelationEdges, createFlowEdge, createRelationshipGraph, createWuxingRelationEdges } from "./relationships";
 import { requireSeasonalState } from "./seasonalState";
 import type {
   Branch,
@@ -32,6 +33,8 @@ import type {
   KingoketsuPillar,
   KingoketsuTopic,
   NobleChoice,
+  RelationshipGraph,
+  RelationshipNode,
   RuleTrace,
   SourceReference,
   SeasonalState,
@@ -402,6 +405,48 @@ function buildRelationSummary(positions: readonly KingoketsuPosition[], basis: K
     ...item,
     badges: item.badges.length ? item.badges : ["特記なし"],
   }));
+}
+
+function buildKingoketsuRelationships(
+  positions: readonly KingoketsuPosition[],
+  basis: KingoketsuBasis,
+  relationSummary: readonly KingoketsuRelation[],
+): RelationshipGraph {
+  const nodes: RelationshipNode[] = positions.map((position) => ({
+    id: `kingoketsu-${position.key}`,
+    label: position.key,
+    value: position.displayValue,
+    element: position.wuxing,
+    branch: position.branch ?? position.convertedBranch ?? undefined,
+    stem: position.stem ?? undefined,
+    role: position.isUseYao ? "用爻" : position.title,
+    tags: [position.title, position.state, position.yinYang, position.convertedBranch ? `変換${position.convertedBranch}` : "", position.isUseYao ? "用爻" : ""].filter(Boolean),
+    isPrimary: position.isUseYao,
+  }));
+  const nodeByLabel = new Map(nodes.map((node) => [node.label, node]));
+  const difen = nodeByLabel.get("地分");
+  const jiangshen = nodeByLabel.get("将神");
+  const guishen = nodeByLabel.get("貴神");
+  const renyuan = nodeByLabel.get("人元");
+  const flowEdges =
+    difen && jiangshen && guishen && renyuan
+      ? [
+          createFlowEdge(difen, jiangshen, "地分→将神", "足元から事の動きへつながる線です。"),
+          createFlowEdge(jiangshen, guishen, "将神→貴神", "事の動きから外部条件へつながる線です。"),
+          createFlowEdge(guishen, renyuan, "貴神→人元", "外部条件から最終判断の芯へつながる線です。"),
+        ]
+      : [];
+  const useYao = positions.find((position) => position.key === basis.useYao);
+
+  return createRelationshipGraph({
+    title: "金口訣の四位関係",
+    summary: [
+      `用爻は ${basis.useYao}${useYao ? ` ${useYao.displayValue} / ${useYao.wuxing} / ${useYao.state}` : ""} です。`,
+      relationSummary.map((item) => `${item.label}: ${item.badges.join(" / ")}`).join("。"),
+    ],
+    nodes,
+    edges: [...flowEdges, ...createWuxingRelationEdges(nodes, "kingoketsu-wuxing"), ...createBranchRelationEdges(nodes, "kingoketsu-branch")],
+  });
 }
 
 function buildKingoketsuSourceReferences(): SourceReference[] {
@@ -973,6 +1018,7 @@ export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
   }
 
   const relationSummary = buildRelationSummary(positions, basis);
+  const relations = buildKingoketsuRelationships(positions, basis, relationSummary);
   const resolvedTopic = inferTopicFromQuestion(input.questionText, input.topic);
   const explanationSections = buildExplanationSections(input, basis, positions, relationSummary);
   const interpretationSections = buildInterpretationSections(input, resolvedTopic, basis, positions, relationSummary);
@@ -988,6 +1034,7 @@ export function buildKingoketsuChart(input: KingoketsuInput): KingoketsuChart {
     sourceReferences,
     explanationSections,
     interpretationSections,
+    relations,
     traces,
     certainty,
     messages,

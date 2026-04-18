@@ -16,6 +16,7 @@ import {
 } from "./data/dannekiNajia";
 import { BRANCH_WUXING, STEM_WUXING, getBranchRelations, getSeasonalState, getSixKin } from "./data/rules";
 import { resolveLocationOffset } from "./location";
+import { createBranchRelationEdges, createRelationshipGraph, createStructureEdge, createWuxingRelationEdges } from "./relationships";
 import type {
   Branch,
   ChartCertainty,
@@ -30,6 +31,8 @@ import type {
   DannekiUseGodRole,
   Ganzhi,
   NarrativeSection,
+  RelationshipGraph,
+  RelationshipNode,
   RuleTrace,
   SeasonalState,
   SixKin,
@@ -286,6 +289,143 @@ function assignUseGodRoles(lines: DannekiLine[], useDeity: DannekiUseDeity, useG
       line.useGodRole = "仇神";
     }
   }
+}
+
+function buildDannekiRelationships(basis: DannekiBasis, lines: readonly DannekiLine[]): RelationshipGraph {
+  const dayNode: RelationshipNode = {
+    id: "danneki-day",
+    label: "日辰",
+    value: basis.dayGanzhi,
+    element: BRANCH_WUXING[basis.dayBranch],
+    branch: basis.dayBranch,
+    stem: basis.dayStem,
+    role: "日辰",
+  };
+  const monthNode: RelationshipNode = {
+    id: "danneki-month",
+    label: "月建",
+    value: basis.monthBranch,
+    element: basis.monthElement,
+    branch: basis.monthBranch,
+    role: "月建",
+  };
+  const lineNodes: RelationshipNode[] = lines.map((line) => ({
+    id: `danneki-line-${line.position}`,
+    label: getDannekiGraphLineLabel(line.position),
+    value: `${line.stem}${line.branch}`,
+    element: line.element,
+    branch: line.branch,
+    stem: line.stem,
+    role: [line.role, line.useGodRole || line.relation].filter(Boolean).join(" / "),
+    tags: [
+      line.relation,
+      line.seasonalState,
+      line.sixSpirit,
+      line.isMoving ? "動爻" : "静爻",
+      line.isVoid ? "空亡" : "",
+      line.isMonthBroken ? "月破" : "",
+      ...line.dayRelations.map((relation) => `日辰:${relation}`),
+    ].filter(Boolean),
+    isPrimary: line.position === basis.useGodLine || line.role === "世",
+  }));
+  const trigramNodes: RelationshipNode[] = [
+    {
+      id: "danneki-lower-trigram",
+      label: "内卦",
+      value: basis.lowerTrigram.key,
+      element: basis.lowerTrigram.element,
+      role: basis.lowerTrigram.image,
+      tags: basis.lowerTrigram.keywords,
+    },
+    {
+      id: "danneki-upper-trigram",
+      label: "外卦",
+      value: basis.upperTrigram.key,
+      element: basis.upperTrigram.element,
+      role: basis.upperTrigram.image,
+      tags: basis.upperTrigram.keywords,
+    },
+    {
+      id: "danneki-changed-lower-trigram",
+      label: "之卦内",
+      value: basis.changedLowerTrigram.key,
+      element: basis.changedLowerTrigram.element,
+      role: basis.changedLowerTrigram.image,
+      tags: basis.changedLowerTrigram.keywords,
+    },
+    {
+      id: "danneki-changed-upper-trigram",
+      label: "之卦外",
+      value: basis.changedUpperTrigram.key,
+      element: basis.changedUpperTrigram.element,
+      role: basis.changedUpperTrigram.image,
+      tags: basis.changedUpperTrigram.keywords,
+    },
+  ];
+  const nodes = [dayNode, monthNode, ...lineNodes, ...trigramNodes];
+  const lineByPosition = new Map(lines.map((line, index) => [line.position, lineNodes[index]] as const));
+  const structureEdges = [
+    createStructureEdge(trigramNodes[0], trigramNodes[1], "内外", "内卦と外卦の五行関係です。"),
+    createStructureEdge(trigramNodes[0], trigramNodes[2], "之卦へ", "下三爻が変化した後の内卦です。"),
+    createStructureEdge(trigramNodes[1], trigramNodes[3], "之卦へ", "上三爻が変化した後の外卦です。"),
+    ...(basis.worldLine && basis.responseLine && lineByPosition.get(basis.worldLine) && lineByPosition.get(basis.responseLine)
+      ? [createStructureEdge(lineByPosition.get(basis.worldLine)!, lineByPosition.get(basis.responseLine)!, "世応", "相談者側と相手・外部条件側の対応線です。")]
+      : []),
+  ];
+  const stateEdges = lines.flatMap((line, index) => {
+    const target = lineNodes[index];
+    const edges = [];
+    if (line.isVoid) {
+      edges.push({
+        id: `danneki-void-${line.position}`,
+        from: dayNode.id,
+        to: target.id,
+        label: "空亡",
+        kind: "void" as const,
+        detail: `${target.label} ${line.branch} は空亡 ${basis.voidBranches.join(" / ")} に掛かります。`,
+      });
+    }
+    if (line.isMonthBroken) {
+      edges.push({
+        id: `danneki-month-break-${line.position}`,
+        from: monthNode.id,
+        to: target.id,
+        label: "月破",
+        kind: "month-break" as const,
+        detail: `${target.label} ${line.branch} は月建 ${basis.monthBranch} から冲を受けます。`,
+      });
+    }
+    if (line.useGodRole) {
+      edges.push({
+        id: `danneki-role-${line.position}`,
+        from: target.id,
+        to: dayNode.id,
+        label: line.useGodRole,
+        kind: "role" as const,
+        detail: `${target.label} は ${line.useGodRole} として扱います。`,
+      });
+    }
+    return edges;
+  });
+
+  return createRelationshipGraph({
+    title: "断易の爻関係",
+    summary: [
+      `用神候補は ${basis.useDeity}、決定線は ${basis.useGodLine ? getDannekiGraphLineLabel(basis.useGodLine) : "未確定"} です。`,
+      `世 / 応 は ${basis.worldLine ? getDannekiGraphLineLabel(basis.worldLine) : "未確定"} / ${basis.responseLine ? getDannekiGraphLineLabel(basis.responseLine) : "未確定"} です。`,
+    ],
+    nodes,
+    edges: [
+      ...structureEdges,
+      ...stateEdges,
+      ...createWuxingRelationEdges([dayNode, monthNode, ...lineNodes, ...trigramNodes], "danneki-wuxing"),
+      ...createBranchRelationEdges([dayNode, monthNode, ...lineNodes], "danneki-branch"),
+    ],
+  });
+}
+
+function getDannekiGraphLineLabel(position: number) {
+  return lineLabel(position);
 }
 
 function tokenizeQuestion(question: string) {
@@ -601,6 +741,7 @@ export function buildDannekiChart(input: DannekiInput): DannekiChart {
   };
 
   const bookCase = findBookCase(input.questionText);
+  const relations = buildDannekiRelationships(basis, lines);
   const explanationSections = buildExplanationSections(input, resolvedTopic, basis, lines);
   const interpretationSections = buildInterpretationSections(input, resolvedTopic, basis, lines, bookCase);
 
@@ -618,6 +759,7 @@ export function buildDannekiChart(input: DannekiInput): DannekiChart {
     certainty,
     explanationSections,
     interpretationSections,
+    relations,
     messages: [
       input.lineInputMode === "manual"
         ? "コイン法 (6/7/8/9) 入力を本卦・之卦・動爻の根拠として採用しました。"

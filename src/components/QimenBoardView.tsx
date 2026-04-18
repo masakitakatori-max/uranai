@@ -1,7 +1,12 @@
 import { useState } from "react";
+import type { CSSProperties } from "react";
 
+import { STEM_WUXING } from "../lib/data/rules";
+import { getWuxingColor } from "../lib/relationships";
 import { getSafeList } from "../lib/uiUtils";
 import type { QimenBoardKind, QimenChart, QimenPalace } from "../lib/types";
+import { ElementBadge } from "./ElementBadge";
+import { RelationshipMap } from "./RelationshipMap";
 
 interface QimenBoardViewProps {
   chart: QimenChart;
@@ -88,7 +93,11 @@ export function QimenBoardView({ chart }: QimenBoardViewProps) {
       <div className="board-canvas qimen-canvas">
         <div className="qimen-plate-grid" aria-label={`${board.label} 九宮盤`}>
           {palaces.map((palace) => (
-            <article className={getPalaceClassName(palace)} key={palace.palace} style={{ gridRow: palace.gridRow, gridColumn: palace.gridColumn }}>
+            <article
+              className={getPalaceClassName(palace)}
+              key={palace.palace}
+              style={{ gridRow: palace.gridRow, gridColumn: palace.gridColumn, "--element-color": getWuxingColor(palace.element) } as CSSProperties}
+            >
               <header>
                 <span>{palace.direction}</span>
                 <strong>
@@ -96,6 +105,7 @@ export function QimenBoardView({ chart }: QimenBoardViewProps) {
                   {palace.palaceNumber}
                 </strong>
               </header>
+              <ElementBadge compact element={palace.element} />
               <div className="qimen-palace-core">
                 <span className={markerClassName(palace.god === "直符", "accent")}>{palace.god ?? "八神なし"}</span>
                 <span>{palace.star}</span>
@@ -105,10 +115,12 @@ export function QimenBoardView({ chart }: QimenBoardViewProps) {
                 <span>
                   <small>天</small>
                   {palace.heavenStem}
+                  <ElementBadge compact element={STEM_WUXING[palace.heavenStem]} />
                 </span>
                 <span>
                   <small>地</small>
                   {palace.earthStem}
+                  <ElementBadge compact element={STEM_WUXING[palace.earthStem]} />
                 </span>
               </div>
               <footer>
@@ -119,6 +131,7 @@ export function QimenBoardView({ chart }: QimenBoardViewProps) {
             </article>
           ))}
         </div>
+        <RelationshipMap graph={chart.relations} />
       </div>
 
       {messages.length ? (

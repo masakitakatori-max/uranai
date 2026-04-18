@@ -13,11 +13,22 @@ describe("KingoketsuBoardView", () => {
       positions: undefined,
       helperSections: undefined,
       relationSummary: undefined,
+      relations: undefined,
       messages: undefined,
     } as unknown as KingoketsuChart;
 
     const { container } = render(<KingoketsuBoardView chart={regressionChart} />);
 
     expect(container.querySelector(".board-panel")).not.toBeNull();
+    expect(container.querySelector(".relationship-map")).not.toBeNull();
+  });
+
+  it("renders relationship map and five-element chips", () => {
+    const chart = buildKingoketsuChart(KINGOKETSU_FIXTURES[0].input);
+
+    const { container } = render(<KingoketsuBoardView chart={chart} />);
+
+    expect(container.querySelector(".relationship-map")).not.toBeNull();
+    expect(container.querySelector(".element-badge")).not.toBeNull();
   });
 });

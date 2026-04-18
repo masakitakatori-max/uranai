@@ -1,6 +1,9 @@
 import type { KingoketsuChart } from "../lib/types";
+import type { CSSProperties } from "react";
+import { getWuxingColor } from "../lib/relationships";
 import { getSafeList } from "../lib/uiUtils";
-import { WuxingPentagram } from "./WuxingPentagram";
+import { ElementBadge } from "./ElementBadge";
+import { RelationshipMap } from "./RelationshipMap";
 
 interface KingoketsuBoardViewProps {
   chart: KingoketsuChart;
@@ -15,7 +18,6 @@ function toneClassName(tone: "neutral" | "good" | "alert") {
 export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
   const positions = getSafeList(chart.positions);
   const helperSections = getSafeList(chart.helperSections);
-  const relationSummary = getSafeList(chart.relationSummary);
   const messages = getSafeList(chart.messages);
 
   return (
@@ -72,7 +74,11 @@ export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
 
             <div className="kingoketsu-position-list">
               {positions.map((position) => (
-                <article className={`kingoketsu-position ${position.isUseYao ? "is-useyao" : ""}`} key={position.key}>
+                <article
+                  className={`kingoketsu-position ${position.isUseYao ? "is-useyao" : ""}`}
+                  key={position.key}
+                  style={{ "--element-color": getWuxingColor(position.wuxing) } as CSSProperties}
+                >
                   <div>
                     <span>{position.key}</span>
                     <strong>
@@ -82,7 +88,7 @@ export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
                   </div>
                   <div className="kingoketsu-position-meta">
                     <span className={toneClassName(position.titleTone)}>{position.title}</span>
-                    <span>{position.wuxing}</span>
+                    <ElementBadge compact element={position.wuxing} />
                     <span>{position.state}</span>
                     <span>{position.yinYang}</span>
                   </div>
@@ -106,25 +112,8 @@ export function KingoketsuBoardView({ chart }: KingoketsuBoardViewProps) {
             </div>
           </div>
 
-          <div className="transmission-block">
-            <div className="section-label">関係</div>
-            <div className="transmission-stack">
-              {relationSummary.map((item) => (
-                <article className="transmission-card" key={item.key}>
-                  <span>{item.label}</span>
-                  <strong>{item.badges.join(" / ")}</strong>
-                </article>
-              ))}
-            </div>
-          </div>
-
-          <div className="transmission-block">
-            <div className="section-label">五行相関</div>
-            <WuxingPentagram
-              highlights={positions.map((position) => ({ label: position.key, element: position.wuxing }))}
-            />
-          </div>
         </div>
+        <RelationshipMap graph={chart.relations} />
       </div>
 
       {messages.length ? (
