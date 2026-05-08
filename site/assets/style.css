@@ -90,3 +90,30 @@ img { max-width: 100%; border-radius: 12px; }
   h1 { font-size: 24px; }
   .wrap { padding: 12px; }
 }
+
+.direct-answer {
+  background: #f0f4ff;
+  border-left: 4px solid #4d6bff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+.cat-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.cat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(77,107,255,0.12); }
+.cat-card a { text-decoration: none; color: var(--text); }
+.cat-card h2 { font-size: 16px; margin: 0; }
