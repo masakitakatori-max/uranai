@@ -10,6 +10,7 @@ const outputDir = path.join(projectRoot, "site-build");
 const today = new Date().toISOString().slice(0, 10);
 
 const extraAppUrls = [
+  "https://uranai.mozule.co.jp/liuren/",
   "https://uranai.mozule.co.jp/qimen/",
   "https://uranai.mozule.co.jp/kingoketsu/",
   "https://uranai.mozule.co.jp/danneki/",
@@ -54,7 +55,8 @@ await fs.rm(outputDir, { recursive: true, force: true });
 await fs.mkdir(outputDir, { recursive: true });
 
 await copyDirectoryContents(distDir, outputDir);
-await copyDirectoryContents(staticDir, outputDir, { skipNames: new Set(["index.html"]) });
+// site/index.html をルートとして使う（dist/index.html を上書きする）
+await copyDirectoryContents(staticDir, outputDir);
 
 const sitemapPath = path.join(outputDir, "sitemap.xml");
 const sitemapXml = await fs.readFile(sitemapPath, "utf8");

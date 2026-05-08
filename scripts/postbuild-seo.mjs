@@ -16,7 +16,7 @@ const PREVIEW_ROBOTS = "noindex,nofollow,noarchive";
 
 const routes = {
   liuren: {
-    path: "/",
+    path: "/liuren/",
     title: "六壬神課盤を自動作成 | Divination Workspace",
     description:
       "六壬神課の月将・四課・三伝・十二天将・六親をまとめて確認できる占断アプリ。相談文から読み筋の整理まで対応します。",
@@ -216,7 +216,7 @@ function buildSitemap(siteUrl) {
     <loc>${location}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${route.path === "/" ? "1.0" : "0.8"}</priority>
+    <priority>0.8</priority>
   </url>`;
     })
     .join("\n");

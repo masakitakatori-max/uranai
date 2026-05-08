@@ -16,7 +16,7 @@ type ModeSeo = {
 
 export const MODE_SEO: Record<AppMode, ModeSeo> = {
   liuren: {
-    path: "/",
+    path: "/liuren/",
     title: "六壬神課盤を自動作成 | Divination Workspace",
     description:
       "六壬神課の月将・四課・三伝・十二天将・六親をまとめて確認できる占断アプリ。相談文から読み筋の整理まで対応します。",
@@ -73,6 +73,10 @@ export function normalizePath(pathname: string) {
 
 export function getModeFromPath(pathname: string): AppMode {
   const normalized = normalizePath(pathname);
+
+  if (normalized === MODE_SEO.liuren.path) {
+    return "liuren";
+  }
 
   if (normalized === MODE_SEO.qimen.path) {
     return "qimen";
