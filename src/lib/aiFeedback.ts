@@ -396,6 +396,33 @@ export function buildAiChartContext(mode: AppMode, chart: AnyChart): AiChartCont
   throw new Error(`Unsupported AI feedback mode: ${mode}`);
 }
 
+export interface AiSessionSummary {
+  id: string;
+  mode: string;
+  topic: string;
+  questionText: string;
+  highlights: AiContextHighlight[];
+  model: string;
+  createdAt: number;
+}
+
+export interface AiSessionDetail extends AiSessionSummary {
+  feedback: AiFeedbackPayload;
+}
+
+export async function fetchAiSessions(mode = "all", offset = 0): Promise<AiSessionSummary[]> {
+  const params = new URLSearchParams({ mode, offset: String(offset) });
+  const response = await fetch(resolveAiApiUrl(`/api/ai-sessions?${params}`), { credentials: "include" });
+  const payload = await response.json() as { ok: boolean; sessions?: AiSessionSummary[] };
+  return payload.sessions ?? [];
+}
+
+export async function fetchAiSession(id: string): Promise<AiSessionDetail | null> {
+  const response = await fetch(resolveAiApiUrl(`/api/ai-sessions/${id}`), { credentials: "include" });
+  const payload = await response.json() as { ok: boolean; session?: AiSessionDetail };
+  return payload.session ?? null;
+}
+
 export async function requestAiFeedback(context: AiChartContext) {
   const response = await fetch(resolveAiApiUrl("/api/ai-feedback"), {
     method: "POST",

@@ -2,12 +2,13 @@ const DEFAULT_MAX_TOKENS = 8192;
 const SUPPORTED_MODES = new Set(["liuren", "qimen", "kingoketsu", "danneki", "taiitsu", "sansiki"]);
 
 const ALLOWED_ORIGIN = "https://uranai.mozule.co.jp";
+const SESSION_PAGE_SIZE = 20;
 
 function corsHeaders(origin) {
   const allowed = origin === ALLOWED_ORIGIN || (origin && origin.startsWith("http://localhost")) || (origin && origin.startsWith("http://127.0.0.1"));
   return {
     "Access-Control-Allow-Origin": allowed ? origin : ALLOWED_ORIGIN,
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Credentials": "true",
   };
@@ -183,16 +184,103 @@ async function callAnthropic(payload, env) {
   return { feedback: normalizeFeedbackShape(parsed, text || "AI から有効な応答を取得できませんでした。"), model };
 }
 
+function generateId() {
+  return crypto.randomUUID();
+}
+
+async function saveSession(db, { id, mode, topic, questionText, highlights, feedback, model }) {
+  await db.prepare(
+    `INSERT INTO ai_sessions (id, mode, topic, question_text, highlights_json, feedback_json, model, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  ).bind(
+    id,
+    mode,
+    topic || "総合",
+    questionText,
+    JSON.stringify(highlights || []),
+    JSON.stringify(feedback),
+    model,
+    Date.now(),
+  ).run();
+}
+
+async function listSessions(db, mode, offset) {
+  const where = mode && mode !== "all" ? "WHERE mode = ?" : "";
+  const bindings = mode && mode !== "all" ? [mode, SESSION_PAGE_SIZE, offset || 0] : [SESSION_PAGE_SIZE, offset || 0];
+  const { results } = await db.prepare(
+    `SELECT id, mode, topic, question_text, highlights_json, model, created_at
+     FROM ai_sessions ${where}
+     ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+  ).bind(...bindings).all();
+
+  return results.map((row) => ({
+    id: row.id,
+    mode: row.mode,
+    topic: row.topic,
+    questionText: row.question_text,
+    highlights: JSON.parse(row.highlights_json || "[]"),
+    model: row.model,
+    createdAt: row.created_at,
+  }));
+}
+
+async function getSession(db, id) {
+  const row = await db.prepare(
+    `SELECT id, mode, topic, question_text, highlights_json, feedback_json, model, created_at
+     FROM ai_sessions WHERE id = ?`,
+  ).bind(id).first();
+
+  if (!row) return null;
+
+  return {
+    id: row.id,
+    mode: row.mode,
+    topic: row.topic,
+    questionText: row.question_text,
+    highlights: JSON.parse(row.highlights_json || "[]"),
+    feedback: JSON.parse(row.feedback_json),
+    model: row.model,
+    createdAt: row.created_at,
+  };
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
+    const url = new URL(request.url);
 
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
+    // GET /api/ai-sessions — list recent sessions
+    if (request.method === "GET" && url.pathname === "/api/ai-sessions") {
+      if (!env.DB) return jsonResponse(503, { ok: false, error: "DB未設定" }, origin);
+      const mode = url.searchParams.get("mode") || "all";
+      const offset = Number(url.searchParams.get("offset") || "0");
+      try {
+        const sessions = await listSessions(env.DB, mode, offset);
+        return jsonResponse(200, { ok: true, sessions }, origin);
+      } catch (e) {
+        return jsonResponse(500, { ok: false, error: String(e?.message || e) }, origin);
+      }
+    }
+
+    // GET /api/ai-sessions/:id — get single session with feedback
+    if (request.method === "GET" && url.pathname.startsWith("/api/ai-sessions/")) {
+      if (!env.DB) return jsonResponse(503, { ok: false, error: "DB未設定" }, origin);
+      const id = url.pathname.replace("/api/ai-sessions/", "");
+      try {
+        const session = await getSession(env.DB, id);
+        if (!session) return jsonResponse(404, { ok: false, error: "セッションが見つかりません" }, origin);
+        return jsonResponse(200, { ok: true, session }, origin);
+      } catch (e) {
+        return jsonResponse(500, { ok: false, error: String(e?.message || e) }, origin);
+      }
+    }
+
     if (request.method !== "POST") {
-      return jsonResponse(405, { ok: false, error: "POST のみ対応しています。" }, origin);
+      return jsonResponse(405, { ok: false, error: "対応していないメソッドです。" }, origin);
     }
 
     if (!env.ANTHROPIC_API_KEY) {
@@ -256,7 +344,24 @@ export default {
         env,
       );
 
-      return jsonResponse(200, { ok: true, model, feedback }, origin);
+      const sessionId = generateId();
+      if (env.DB) {
+        try {
+          await saveSession(env.DB, {
+            id: sessionId,
+            mode: payload.mode,
+            topic: payload.topic || "総合",
+            questionText: payload.questionText.trim(),
+            highlights: payload.highlights || [],
+            feedback,
+            model,
+          });
+        } catch {
+          // DB保存失敗はログのみ、レスポンスは返す
+        }
+      }
+
+      return jsonResponse(200, { ok: true, model, feedback, sessionId }, origin);
     } catch (error) {
       const message = error instanceof Error ? error.message : "AI フィードバックの生成に失敗しました。";
       return jsonResponse(500, { ok: false, error: message }, origin);

@@ -1,6 +1,7 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 
 import "./App.css";
+import { AiSessionHistoryPanel } from "./components/AiSessionHistoryPanel";
 import { RenderErrorBoundary } from "./components/RenderErrorBoundary";
 import { withCurrentDateTime } from "./lib/currentDateTime";
 import { applyModeSeo, getModeFromPath, getPathForMode, normalizePath } from "./lib/seo";
@@ -214,6 +215,8 @@ function App() {
   const [dannekiInput, setDannekiInput] = useState<DannekiInput>(() => createDefaultDannekiInput());
   const [taiitsuInput, setTaiitsuInput] = useState<TaiitsuInput>(() => createDefaultTaiitsuInput());
   const [synthesisInput, setSynthesisInput] = useState<SynthesisInput>(() => createDefaultSynthesisInput());
+  const [showHistory, setShowHistory] = useState(false);
+  const historyRef = useRef<HTMLDivElement>(null);
   const years = Array.from({ length: 2065 - 1989 + 1 }, (_, index) => 1989 + index);
   const qimenYears = Array.from({ length: QIMEN_YEAR_RANGE.end - QIMEN_YEAR_RANGE.start + 1 }, (_, index) => QIMEN_YEAR_RANGE.start + index);
   const liurenDaysInMonth = getDaysInMonth(liurenInput.year, liurenInput.month);
@@ -281,6 +284,16 @@ function App() {
           </button>
           <button className={mode === "sansiki" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("sansiki")} type="button">
             三式統合
+          </button>
+          <button
+            className={showHistory ? "mode-button is-active" : "mode-button"}
+            onClick={() => {
+              setShowHistory((v) => !v);
+              setTimeout(() => historyRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+            }}
+            type="button"
+          >
+            履歴
           </button>
         </div>
         {mode === "liuren" ? (
@@ -392,6 +405,12 @@ function App() {
           </Suspense>
         ) : null}
       </main>
+
+      {showHistory ? (
+        <div ref={historyRef}>
+          <AiSessionHistoryPanel currentMode={mode} />
+        </div>
+      ) : null}
 
       <footer className="site-footer">
         <p>本ツールは書籍準拠の方式で盤を自動作成します。最終判断は原典と占式でご確認ください。</p>
