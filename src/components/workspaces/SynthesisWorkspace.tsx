@@ -48,7 +48,7 @@ export function SynthesisWorkspace({ input, years, daysInMonth, onApplyNow, onIn
     year: input.year, month: input.month, day: input.day,
     hour: input.hour, minute: input.minute, locationId: input.locationId,
     topic: input.topic, questionText: input.questionText,
-    manualOverrides: { dayGanzhi: "", monthGeneral: "", hourBranch: "" },
+    manualOverrides: { dayGanzhi: "" as const, monthGeneral: "" as const, hourBranch: "" as const },
   }), [input]);
 
   const qimenInput = useMemo(() => ({
