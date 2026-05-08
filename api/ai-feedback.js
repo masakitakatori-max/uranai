@@ -1,8 +1,8 @@
-const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-20250514";
+const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6";
 const DEFAULT_MAX_TOKENS = Number(process.env.AI_FEEDBACK_MAX_TOKENS || "1200");
 const DEFAULT_GATE_MODE = process.env.AI_FEEDBACK_MODE || "disabled";
 const CHECKOUT_URL = process.env.AI_FEEDBACK_CHECKOUT_URL || "";
-const SUPPORTED_MODES = new Set(["liuren", "kingoketsu", "danneki", "taiitsu"]);
+const SUPPORTED_MODES = new Set(["liuren", "qimen", "kingoketsu", "danneki", "taiitsu"]);
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;

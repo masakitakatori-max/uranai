@@ -5,10 +5,11 @@ import {
   hasMinimumAiQuestionText,
   requestAiFeedback,
 } from "../lib/aiFeedback";
-import type { DannekiChart, KingoketsuChart, LiurenChart, TaiitsuChart } from "../lib/types";
+import type { DannekiChart, KingoketsuChart, LiurenChart, QimenChart, TaiitsuChart } from "../lib/types";
 
 type AiFeedbackPanelProps =
   | { mode: "liuren"; chart: LiurenChart }
+  | { mode: "qimen"; chart: QimenChart }
   | { mode: "kingoketsu"; chart: KingoketsuChart }
   | { mode: "danneki"; chart: DannekiChart }
   | { mode: "taiitsu"; chart: TaiitsuChart };
@@ -24,6 +25,7 @@ type NormalizedAiError = {
 
 const MODE_LABELS: Record<AiFeedbackPanelProps["mode"], string> = {
   liuren: "六壬神課",
+  qimen: "奇門遁甲",
   kingoketsu: "金口訣",
   danneki: "断易",
   taiitsu: "太乙神数",

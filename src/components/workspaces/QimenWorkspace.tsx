@@ -1,3 +1,4 @@
+import { AiFeedbackPanel } from "../AiFeedbackPanel";
 import { ChartSummaryPanel } from "../ChartSummaryPanel";
 import { QimenBoardView } from "../QimenBoardView";
 import { QimenHelperPanel } from "../QimenHelperPanel";
@@ -37,6 +38,7 @@ export function QimenWorkspace({ input, years, daysInMonth, onApplyNow, onInputC
       />
       <QimenBoardView chart={chart} />
       <QimenHelperPanel chart={chart} />
+      <AiFeedbackPanel chart={chart} mode="qimen" />
     </>
   );
 }

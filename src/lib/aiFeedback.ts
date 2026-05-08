@@ -1,4 +1,4 @@
-import type { AppMode, DannekiChart, KingoketsuChart, LiurenChart, TaiitsuChart } from "./types";
+import type { AppMode, DannekiChart, KingoketsuChart, LiurenChart, QimenChart, TaiitsuChart } from "./types";
 
 export type AiFeedbackGateMode = "disabled" | "preview" | "paid";
 export const AI_QUESTION_MIN_LENGTH = 6;
@@ -47,7 +47,7 @@ export interface AiFeedbackError {
   checkoutUrl?: string;
 }
 
-type AnyChart = LiurenChart | KingoketsuChart | DannekiChart | TaiitsuChart;
+type AnyChart = LiurenChart | QimenChart | KingoketsuChart | DannekiChart | TaiitsuChart;
 type AiFeedbackEnv = Partial<Record<"VITE_AI_FEEDBACK_MODE" | "VITE_AI_CHECKOUT_URL" | "VITE_API_BASE_URL", string>>;
 
 function getRuntimeEnv(): AiFeedbackEnv {
@@ -243,6 +243,40 @@ function buildDannekiContext(chart: DannekiChart): AiChartContext {
   };
 }
 
+function buildQimenContext(chart: QimenChart): AiChartContext {
+  const primaryBoard = chart.primaryBoard;
+  const boardSummary = chart.boards
+    .map((board) => `${board.label}: ${board.basis.yinYang}${board.basis.juNumber}局`)
+    .join(" / ");
+  const directionNote = `${chart.selectedDirectionJudgment.direction} ${chart.selectedDirectionJudgment.label} (スコア: ${chart.selectedDirectionJudgment.score})`;
+
+  return {
+    mode: "qimen",
+    modeLabel: "奇門遁甲",
+    topic: chart.topic,
+    questionText: chart.questionText.trim(),
+    highlights: [
+      { label: "補正時刻", value: chart.basis.correctedDateTime },
+      { label: "時盤", value: `${primaryBoard.basis.yinYang}${primaryBoard.basis.juNumber}局` },
+      { label: "選択方位", value: chart.selectedDirectionJudgment.direction },
+      { label: "方位判断", value: chart.selectedDirectionJudgment.label },
+    ],
+    summary: [
+      `占術: 奇門遁甲`,
+      `占的: ${chart.topic}`,
+      `相談文: ${chart.questionText.trim() || "未入力"}`,
+      `入力時刻: ${chart.basis.wallClockDateTime}`,
+      `補正時刻: ${chart.basis.correctedDateTime}`,
+      `地点: ${chart.basis.locationLabel} (${chart.basis.locationOffsetMinutes >= 0 ? "+" : ""}${chart.basis.locationOffsetMinutes}分)`,
+      `四柱: 年${chart.basis.yearPillar.ganzhi} / 月${chart.basis.monthPillar.ganzhi} / 日${chart.basis.dayPillar.ganzhi} / 時${chart.basis.hourPillar.ganzhi}`,
+      `四盤: ${boardSummary}`,
+      `選択方位: ${directionNote}`,
+      `機械解説: ${formatNarrativeSections(chart.explanationSections)}`,
+      `機械解釈: ${formatNarrativeSections(chart.interpretationSections)}`,
+    ].join("\n"),
+  };
+}
+
 function buildTaiitsuContext(chart: TaiitsuChart): AiChartContext {
   const signals = chart.signals.map((signal) => `${signal.title}: ${signal.value}`).join(" / ");
   const references = chart.sourceReferences.map((source) => source.label || source.chapter || source.id).join(" / ");
@@ -288,6 +322,10 @@ function buildTaiitsuContext(chart: TaiitsuChart): AiChartContext {
 export function buildAiChartContext(mode: AppMode, chart: AnyChart): AiChartContext {
   if (mode === "liuren") {
     return buildLiurenContext(chart as LiurenChart);
+  }
+
+  if (mode === "qimen") {
+    return buildQimenContext(chart as QimenChart);
   }
 
   if (mode === "kingoketsu") {
