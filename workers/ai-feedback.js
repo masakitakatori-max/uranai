@@ -1,4 +1,4 @@
-const DEFAULT_MAX_TOKENS = 1200;
+const DEFAULT_MAX_TOKENS = 8192;
 const SUPPORTED_MODES = new Set(["liuren", "qimen", "kingoketsu", "danneki", "taiitsu", "sansiki"]);
 
 const ALLOWED_ORIGIN = "https://uranai.mozule.co.jp";

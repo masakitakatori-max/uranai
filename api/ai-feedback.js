@@ -1,5 +1,5 @@
 const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6";
-const DEFAULT_MAX_TOKENS = Number(process.env.AI_FEEDBACK_MAX_TOKENS || "1200");
+const DEFAULT_MAX_TOKENS = Number(process.env.AI_FEEDBACK_MAX_TOKENS || "8192");
 const DEFAULT_GATE_MODE = process.env.AI_FEEDBACK_MODE || "disabled";
 const CHECKOUT_URL = process.env.AI_FEEDBACK_CHECKOUT_URL || "";
 const SUPPORTED_MODES = new Set(["liuren", "qimen", "kingoketsu", "danneki", "taiitsu", "sansiki"]);
