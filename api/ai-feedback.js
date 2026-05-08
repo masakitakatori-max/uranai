@@ -2,7 +2,7 @@ const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6";
 const DEFAULT_MAX_TOKENS = Number(process.env.AI_FEEDBACK_MAX_TOKENS || "1200");
 const DEFAULT_GATE_MODE = process.env.AI_FEEDBACK_MODE || "disabled";
 const CHECKOUT_URL = process.env.AI_FEEDBACK_CHECKOUT_URL || "";
-const SUPPORTED_MODES = new Set(["liuren", "qimen", "kingoketsu", "danneki", "taiitsu"]);
+const SUPPORTED_MODES = new Set(["liuren", "qimen", "kingoketsu", "danneki", "taiitsu", "sansiki"]);
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
@@ -88,7 +88,18 @@ function sanitizeStringArray(values) {
     : [];
 }
 
-function buildSystemPrompt(modeLabel) {
+function buildSystemPrompt(modeLabel, isSynthesis) {
+  if (isSynthesis) {
+    return [
+      "あなたは三式（六壬神課・奇門遁甲・太乙神数）と卜術（金口訣・断易）を統合的に分析する上級占術アシスタントです。",
+      "5つの占術盤面を横断して分析し、各占術の収束点・相違点・総合的な判断材料を整理してください。",
+      "資料名、ファイル種別、参照元名、項目番号には言及しないでください。",
+      "各占術間で方向性が一致する点を keySignals、矛盾や注意点を cautions として整理してください。",
+      "医療・法律・投資の最終判断を断定せず、必要に応じて専門家確認を促してください。",
+      "必ず JSON だけを返してください。",
+      'JSON schema: {"overview":string,"keySignals":string[],"cautions":string[],"nextActions":string[],"followUpQuestions":string[],"confidence":string,"disclaimer":string}',
+    ].join("\n");
+  }
   return [
     "あなたは東洋占術アプリ向けの上級鑑定アシスタントです。",
     `対象の占術は ${modeLabel} です。`,
@@ -171,7 +182,7 @@ async function callAnthropic(payload) {
       model: DEFAULT_MODEL,
       max_tokens: DEFAULT_MAX_TOKENS,
       temperature: 0.4,
-      system: buildSystemPrompt(payload.modeLabel),
+      system: buildSystemPrompt(payload.modeLabel, payload.mode === "sansiki"),
       messages: [
         {
           role: "user",

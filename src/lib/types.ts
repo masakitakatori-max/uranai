@@ -3,7 +3,7 @@ export type Branch = "子" | "丑" | "寅" | "卯" | "辰" | "巳" | "午" | "�
 export type Ganzhi = `${Stem}${Branch}`;
 export type Wuxing = "木" | "火" | "土" | "金" | "水";
 export type SixKin = "兄弟" | "子孫" | "妻財" | "官鬼" | "父母";
-export type AppMode = "liuren" | "qimen" | "kingoketsu" | "danneki" | "taiitsu";
+export type AppMode = "liuren" | "qimen" | "kingoketsu" | "danneki" | "taiitsu" | "sansiki";
 export type YinYang = "陽" | "陰";
 export type HeavenlyGeneral =
   | "貴人"
@@ -529,6 +529,23 @@ export interface TaiitsuInput {
 
 export interface TaiitsuInputState {
   input: TaiitsuInput;
+}
+
+export interface SynthesisInput {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  locationId: string;
+  topic: DivinationTopic;
+  questionText: string;
+  targetDirection: QimenDirection;
+  difen: Branch;
+  nobleChoice: NobleChoice;
+  dstMinutes: 0 | 60;
+  taiitsuDirection: Branch;
+  startCondition: TaiitsuStartCondition;
 }
 
 export interface TaiitsuWorkspaceState {

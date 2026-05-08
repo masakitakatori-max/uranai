@@ -48,6 +48,14 @@ export interface AiFeedbackError {
 }
 
 type AnyChart = LiurenChart | QimenChart | KingoketsuChart | DannekiChart | TaiitsuChart;
+
+export interface SynthesisCharts {
+  liuren: LiurenChart;
+  qimen: QimenChart;
+  kingoketsu: KingoketsuChart;
+  danneki: DannekiChart;
+  taiitsu: TaiitsuChart;
+}
 type AiFeedbackEnv = Partial<Record<"VITE_AI_FEEDBACK_MODE" | "VITE_AI_CHECKOUT_URL" | "VITE_API_BASE_URL", string>>;
 
 function getRuntimeEnv(): AiFeedbackEnv {
@@ -315,6 +323,51 @@ function buildTaiitsuContext(chart: TaiitsuChart): AiChartContext {
       `構造化根拠: ${references || "未照合"}`,
       `機械解説: ${formatNarrativeSections(chart.explanationSections)}`,
       `機械解釈: ${formatNarrativeSections(chart.interpretationSections)}`,
+    ].map(sanitizeExternalAiText).join("\n"),
+  };
+}
+
+export function buildSynthesisContext(charts: SynthesisCharts): AiChartContext {
+  const liurenCtx = buildLiurenContext(charts.liuren);
+  const qimenCtx = buildQimenContext(charts.qimen);
+  const kingoketsuCtx = buildKingoketsuContext(charts.kingoketsu);
+  const dannekiCtx = buildDannekiContext(charts.danneki);
+  const taiitsuCtx = buildTaiitsuContext(charts.taiitsu);
+
+  const questionText = charts.liuren.questionText.trim();
+  const topic = String(charts.liuren.topic);
+
+  return {
+    mode: "sansiki",
+    modeLabel: "三式統合・卜術総覧",
+    topic,
+    questionText,
+    highlights: [
+      { label: "六壬 課式", value: charts.liuren.lessonType ?? "未確定" },
+      { label: "奇門 方位判断", value: `${charts.qimen.selectedDirectionJudgment.direction} ${charts.qimen.selectedDirectionJudgment.label}` },
+      { label: "金口訣 用爻", value: charts.kingoketsu.basis.useYao },
+      { label: "断易 用神", value: charts.danneki.basis.useDeity },
+      { label: "太乙 局序", value: `${charts.taiitsu.basis.cycleIndex + 1}局` },
+    ],
+    summary: [
+      `占術: 三式統合・卜術総覧`,
+      `占的: ${topic}`,
+      `相談文: ${questionText || "未入力"}`,
+      ``,
+      `=== 六壬神課 ===`,
+      liurenCtx.summary,
+      ``,
+      `=== 奇門遁甲 ===`,
+      qimenCtx.summary,
+      ``,
+      `=== 金口訣 ===`,
+      kingoketsuCtx.summary,
+      ``,
+      `=== 断易 ===`,
+      dannekiCtx.summary,
+      ``,
+      `=== 太乙神数 ===`,
+      taiitsuCtx.summary,
     ].map(sanitizeExternalAiText).join("\n"),
   };
 }

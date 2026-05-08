@@ -14,6 +14,8 @@ type ModeSeo = {
   featureList: string[];
 };
 
+export const DEFAULT_KEYWORDS_SANSIKI = `${DEFAULT_KEYWORDS},三式,六壬神課,奇門遁甲,太乙神数,金口訣,断易,統合占術`;
+
 export const MODE_SEO: Record<AppMode, ModeSeo> = {
   liuren: {
     path: "/liuren/",
@@ -55,6 +57,14 @@ export const MODE_SEO: Record<AppMode, ModeSeo> = {
     keywords: `${DEFAULT_KEYWORDS},太乙神数,太乙,測局,起局,方位`,
     featureList: ["起局日時と方位の入力", "構造化ルールの根拠参照", "同一入力で再現可能な局序とtrace"],
   },
+  sansiki: {
+    path: "/sansiki/",
+    title: "三式統合・卜術総覧 | Divination Workspace",
+    description:
+      "六壬神課・奇門遁甲・太乙神数（三式）と金口訣・断易（卜術）を同一条件で同時作盤し、AIによる統合解釈を得られる総合占術ワークスペースです。",
+    keywords: DEFAULT_KEYWORDS_SANSIKI,
+    featureList: ["三式（六壬・奇門・太乙）と卜術（金口訣・断易）の同時作盤", "単一入力から5種の盤を自動生成", "AIによる占術横断・統合解釈"],
+  },
 };
 
 function stripTrailingSlash(value: string) {
@@ -92,6 +102,10 @@ export function getModeFromPath(pathname: string): AppMode {
 
   if (normalized === MODE_SEO.taiitsu.path) {
     return "taiitsu";
+  }
+
+  if (normalized === MODE_SEO.sansiki.path) {
+    return "sansiki";
   }
 
   return "liuren";

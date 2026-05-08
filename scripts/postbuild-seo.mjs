@@ -60,6 +60,15 @@ const routes = {
     headline: "太乙神数の起局日時・方位・術式根拠を確認できるWebアプリ",
     featureList: ["起局日時と方位の入力", "構造化ルールの根拠参照", "同一入力で再現可能な局序とtrace"],
   },
+  sansiki: {
+    path: "/sansiki/",
+    title: "三式統合・卜術総覧 | Divination Workspace",
+    description:
+      "六壬神課・奇門遁甲・太乙神数（三式）と金口訣・断易（卜術）を同一条件で同時作盤し、AIによる統合解釈を得られる総合占術ワークスペースです。",
+    keywords: `${DEFAULT_KEYWORDS},三式,六壬神課,奇門遁甲,太乙神数,金口訣,断易,統合占術`,
+    headline: "三式と卜術を同時作盤してAI統合解釈を得られるWebアプリ",
+    featureList: ["三式（六壬・奇門・太乙）と卜術（金口訣・断易）の同時作盤", "単一入力から5種の盤を自動生成", "AIによる占術横断・統合解釈"],
+  },
 };
 
 function stripTrailingSlash(url) {
@@ -249,6 +258,7 @@ await writeRoutePage(sourceHtml, routes.qimen, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.kingoketsu, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.danneki, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.taiitsu, siteUrl, robotsPolicy);
+await writeRoutePage(sourceHtml, routes.sansiki, siteUrl, robotsPolicy);
 await fs.writeFile(
   path.join(distDir, "robots.txt"),
   `User-agent: *\n${robotsPolicy.startsWith("noindex") ? "Disallow: /\n" : "Allow: /\n"}Sitemap: ${siteUrl}/sitemap.xml\n`,

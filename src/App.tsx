@@ -4,7 +4,7 @@ import "./App.css";
 import { RenderErrorBoundary } from "./components/RenderErrorBoundary";
 import { withCurrentDateTime } from "./lib/currentDateTime";
 import { applyModeSeo, getModeFromPath, getPathForMode, normalizePath } from "./lib/seo";
-import type { AppMode, DannekiInput, KingoketsuInput, LiurenInput, QimenInput, TaiitsuInput } from "./lib/types";
+import type { AppMode, DannekiInput, KingoketsuInput, LiurenInput, QimenInput, SynthesisInput, TaiitsuInput } from "./lib/types";
 
 const LiurenWorkspace = lazy(async () => {
   const module = await import("./components/workspaces/LiurenWorkspace");
@@ -29,6 +29,11 @@ const DannekiWorkspace = lazy(async () => {
 const TaiitsuWorkspace = lazy(async () => {
   const module = await import("./components/workspaces/TaiitsuWorkspace");
   return { default: module.TaiitsuWorkspace };
+});
+
+const SynthesisWorkspace = lazy(async () => {
+  const module = await import("./components/workspaces/SynthesisWorkspace");
+  return { default: module.SynthesisWorkspace };
 });
 
 const QIMEN_YEAR_RANGE = { start: 2015, end: 2030 } as const;
@@ -123,12 +128,32 @@ function createDefaultTaiitsuInput(): TaiitsuInput {
   });
 }
 
+function createDefaultSynthesisInput(): SynthesisInput {
+  return withCurrentDateTime({
+    year: 2026,
+    month: 4,
+    day: 16,
+    hour: 12,
+    minute: 0,
+    locationId: "akashi",
+    topic: "総合",
+    questionText: "",
+    targetDirection: "東",
+    difen: "丑",
+    nobleChoice: "陽貴",
+    dstMinutes: 0,
+    taiitsuDirection: "午",
+    startCondition: "time-and-direction",
+  });
+}
+
 const MODE_TITLES: Record<AppMode, string> = {
   liuren: "六壬神課盤 自動作成",
   qimen: "奇門遁甲 四盤作成ツール",
   kingoketsu: "金口訣盤 自動作成",
   danneki: "断易盤 自動作成",
   taiitsu: "太乙神数盤 自動作成",
+  sansiki: "三式統合・卜術総覧",
 };
 
 const MODE_LEADS: Record<AppMode, string> = {
@@ -137,6 +162,7 @@ const MODE_LEADS: Record<AppMode, string> = {
   kingoketsu: "真太陽時補正、節入り基準の四柱、月将、貴神、将神、人元、用爻を一画面で組み立てるための金口訣モードです。",
   danneki: "コイン法または時刻法で立卦し、京房納甲法で干支・六親・世応・用神を算出。本卦・之卦・動爻を日辰/月建/空亡で読み解く断易モードです。",
   taiitsu: "太乙神数の構造化ルールインデックスを参照し、起局日時・方位・起局条件から太乙神数盤を組み立てるモードです。",
+  sansiki: "三式（六壬神課・奇門遁甲・太乙神数）と卜術（金口訣・断易）を単一条件で同時作盤し、AIによる横断解釈を得るモードです。",
 };
 
 const FEATURED_COLUMNS = [
@@ -187,6 +213,7 @@ function App() {
   const [kingoketsuInput, setKingoketsuInput] = useState<KingoketsuInput>(() => createDefaultKingoketsuInput());
   const [dannekiInput, setDannekiInput] = useState<DannekiInput>(() => createDefaultDannekiInput());
   const [taiitsuInput, setTaiitsuInput] = useState<TaiitsuInput>(() => createDefaultTaiitsuInput());
+  const [synthesisInput, setSynthesisInput] = useState<SynthesisInput>(() => createDefaultSynthesisInput());
   const years = Array.from({ length: 2065 - 1989 + 1 }, (_, index) => 1989 + index);
   const qimenYears = Array.from({ length: QIMEN_YEAR_RANGE.end - QIMEN_YEAR_RANGE.start + 1 }, (_, index) => QIMEN_YEAR_RANGE.start + index);
   const liurenDaysInMonth = getDaysInMonth(liurenInput.year, liurenInput.month);
@@ -194,6 +221,7 @@ function App() {
   const kingoketsuDaysInMonth = getDaysInMonth(kingoketsuInput.year, kingoketsuInput.month);
   const dannekiDaysInMonth = getDaysInMonth(dannekiInput.year, dannekiInput.month);
   const taiitsuDaysInMonth = getDaysInMonth(taiitsuInput.year, taiitsuInput.month);
+  const synthesisDaysInMonth = getDaysInMonth(synthesisInput.year, synthesisInput.month);
 
   useEffect(() => {
     const handlePopState = () => setMode(getModeFromPath(window.location.pathname));
@@ -250,6 +278,9 @@ function App() {
           </button>
           <button className={mode === "taiitsu" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("taiitsu")} type="button">
             太乙神数
+          </button>
+          <button className={mode === "sansiki" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("sansiki")} type="button">
+            三式統合
           </button>
         </div>
         {mode === "liuren" ? (
@@ -342,6 +373,20 @@ function App() {
                 years={years}
                 onApplyNow={() => setTaiitsuInput((current) => withCurrentDateTime(current))}
                 onInputChange={(updater: (draft: TaiitsuInput) => TaiitsuInput) => setTaiitsuInput((current) => updater(current))}
+              />
+            </RenderErrorBoundary>
+          </Suspense>
+        ) : null}
+
+        {mode === "sansiki" ? (
+          <Suspense fallback={<WorkspaceLoadingFallback />}>
+            <RenderErrorBoundary modeLabel="SanShiki">
+              <SynthesisWorkspace
+                input={synthesisInput}
+                daysInMonth={synthesisDaysInMonth}
+                years={years}
+                onApplyNow={() => setSynthesisInput((current) => withCurrentDateTime(current))}
+                onInputChange={(updater: (draft: SynthesisInput) => SynthesisInput) => setSynthesisInput((current) => updater(current))}
               />
             </RenderErrorBoundary>
           </Suspense>
