@@ -23,6 +23,56 @@ npm run test:run
 npm run build
 ```
 
+## Native iOS アプリ (Capacitor)
+
+同じ React/Vite コードを Capacitor で iOS ネイティブアプリとして配布します。
+占術ロジックはすべてクライアント側で動くため、AI/決済 API なしでもアプリは完全に機能します（AI はデフォルト無効）。
+
+- Bundle ID: `jp.co.mozule.uranai`
+- 表示名: `占術ワークスペース`（`ios/App/App/Info.plist` の `CFBundleDisplayName` で変更可）
+- 設定: `capacitor.config.ts`（`webDir: dist`）
+- ネイティブプロジェクト: `ios/`（Swift Package Manager 構成。CocoaPods 不要）
+
+### Windows でできること（作成済み）
+
+```bash
+npm run build        # dist を生成
+npx cap sync ios     # dist と設定を ios/ へ反映
+```
+
+アイコン/スプラッシュを作り直す場合:
+
+```bash
+node scripts/gen-app-assets.mjs        # favicon.svg から assets/ の元画像を生成
+npx @capacitor/assets generate --ios   # ios のアセットカタログへ反映
+```
+
+### Mac で必要なこと（実機ビルド・App Store 申請）
+
+iOS の実機ビルドと App Store 申請には **Mac + Xcode** が必須です。
+
+```bash
+npm ci
+npm run ios          # build → cap sync ios → Xcode で開く
+# （= npm run build && npx cap sync ios && npx cap open ios）
+```
+
+Xcode 側:
+
+1. `Signing & Capabilities` で Apple Developer アカウント（Team）を設定
+2. 実機 or シミュレータを選んで Run で動作確認
+3. `Product > Archive` → App Store Connect へアップロード
+
+Mac がない場合は Codemagic / Ionic Appflow などのクラウド Mac CI でも同手順をビルドできます。
+
+### AI フィードバックを有効化する場合
+
+ネイティブのアプリ原点は `capacitor://localhost` のため、相対パスの API 呼び出しは解決できません。
+
+- `.env`（native ビルド時）に絶対 URL を設定: `VITE_API_BASE_URL=https://api.uranai.mozule.co.jp`
+- API 側の `ALLOWED_ORIGINS` に `capacitor://localhost` を追加
+- iOS の App Store 審査では、アプリ内デジタルコンテンツ課金は Apple IAP が原則（外部 Stripe checkout はガイドライン要確認）
+
 ## Public URLs
 
 - フロント: `https://uranai.mozule.co.jp`
