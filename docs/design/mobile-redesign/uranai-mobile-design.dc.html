@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Kaku+Gothic+Antique:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#0E0E11; font-family:"Zen Kaku Gothic New","Hiragino Sans",system-ui,sans-serif; color:#EFE6D6; }
+  a { color:#CCB182; text-decoration:none; }
+  a:hover { color:#E4CFA3; }
+</style>
+</helmet>
+
+<section style="padding:56px 56px 96px; display:flex; flex-direction:column; gap:40px;">
+  <div id="1a" style="display:flex; flex-direction:column; gap:12px; maxWidth:900px;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="display:inline-flex; align-items:center; justify-content:center; min-width:34px; height:24px; padding:0 8px; border-radius:6px; background:#CCB182; color:#14100A; font-size:13px; font-weight:700; letter-spacing:0.04em;">1a</span>
+      <span style="font-size:12px; letter-spacing:0.24em; color:#8C8375; text-transform:uppercase;">iOS · Redesign</span>
+    </div>
+    <h1 style="margin:0; font-family:'Shippori Mincho B1',serif; font-size:40px; font-weight:600; letter-spacing:0.02em; color:#F6EFE2;">占術ワークスペース — スマホ再定義</h1>
+    <p style="margin:0; max-width:720px; font-size:15px; line-height:1.9; color:#A79E8E; text-wrap:pretty;">現行の Web 版は「全モードの巨大フォームを一画面に並べる」構成でした。モバイルでは <strong style="color:#EFE6D6; font-weight:500;">目的 → 起局 → 要点 → 盤 → 記録</strong> の一本道に組み替え、盤面の情報量は段階開示で保持します。和の書物感（明朝・金・墨）はブランド資産として維持しつつ、操作系はiOSネイティブの作法に寄せました。</p>
+  </div>
+
+  <div style="display:flex; flex-wrap:wrap; gap:44px 32px; align-items:flex-start;">
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:402px;">
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+        <div style="height:100%; display:flex; flex-direction:column; background:radial-gradient(120% 60% at 50% 0%, rgba(204,177,130,0.16), transparent 60%), linear-gradient(180deg,#0B0B0D,#08080A);">
+          <div style="padding:70px 24px 0;">
+            <p style="margin:0 0 6px; font-size:11px; letter-spacing:0.28em; color:#CCB182;">STEP 1 / 3</p>
+            <h2 style="margin:0 0 8px; font-family:'Shippori Mincho B1',serif; font-size:27px; font-weight:600; color:#F6EFE2; letter-spacing:0.02em;">何を知りたいですか</h2>
+            <p style="margin:0; font-size:13px; line-height:1.7; color:#8F8878;">術ではなく目的から選べます。あとから切り替えもできます。</p>
+          </div>
+          <div style="flex:1; overflow:hidden; padding:20px 24px 0; display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; min-height:56px; border-radius:16px; background:linear-gradient(180deg,rgba(204,177,130,0.18),rgba(204,177,130,0.07)); border:1px solid rgba(204,177,130,0.55);">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#F6EFE2; width:36px; text-align:center;">壬</span>
+              <div style="flex:1;">
+                <div style="font-size:15px; font-weight:500; color:#F6EFE2;">出来事の行方を読む</div>
+                <div style="font-size:11.5px; color:#9C9482; margin-top:2px;">六壬神課 ・ 四課三伝</div>
+              </div>
+              <span style="width:22px; height:22px; border-radius:11px; background:#CCB182; color:#14100A; font-size:13px; display:flex; align-items:center; justify-content:center;">✓</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; min-height:56px; border-radius:16px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#CCB182; width:36px; text-align:center;">遁</span>
+              <div style="flex:1;">
+                <div style="font-size:15px; font-weight:500; color:#EFE6D6;">動く方角を決める</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:2px;">奇門遁甲 ・ 九宮八門</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; min-height:56px; border-radius:16px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#CCB182; width:36px; text-align:center;">易</span>
+              <div style="flex:1;">
+                <div style="font-size:15px; font-weight:500; color:#EFE6D6;">是か非かを判じる</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:2px;">断易 ・ 用神と世応</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; min-height:56px; border-radius:16px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#CCB182; width:36px; text-align:center;">金</span>
+              <div style="flex:1;">
+                <div style="font-size:15px; font-weight:500; color:#EFE6D6;">今この場から占う</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:2px;">金口訣 ・ 地分と月将</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; min-height:56px; border-radius:16px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#CCB182; width:36px; text-align:center;">乙</span>
+              <div style="flex:1;">
+                <div style="font-size:15px; font-weight:500; color:#EFE6D6;">大きな流れを俯瞰する</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:2px;">太乙神数 ・ 局と方位</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; min-height:56px; border-radius:16px; background:rgba(159,102,82,0.14); border:1px solid rgba(159,102,82,0.45);">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#D89A80; width:36px; text-align:center;">三</span>
+              <div style="flex:1;">
+                <div style="font-size:15px; font-weight:500; color:#F0DDD3;">五術をまとめて照合する</div>
+                <div style="font-size:11.5px; color:#A98476; margin-top:2px;">三式統合 ・ 横断解釈</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding:16px 24px 34px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; gap:6px; justify-content:center;">
+              <span style="width:20px; height:4px; border-radius:2px; background:#CCB182;"></span>
+              <span style="width:6px; height:4px; border-radius:2px; background:rgba(255,255,255,0.2);"></span>
+              <span style="width:6px; height:4px; border-radius:2px; background:rgba(255,255,255,0.2);"></span>
+            </div>
+            <button style="height:52px; border:none; border-radius:15px; background:#CCB182; color:#14100A; font-family:inherit; font-size:16px; font-weight:700; letter-spacing:0.04em;">続ける</button>
+          </div>
+        </div>
+      </x-import>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">01 オンボーディング</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">術名の羅列をやめ「目的」を主見出しに。専門名は副次表記で残し、経験者の探索性も維持。</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:402px;">
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+        <div style="height:100%; display:flex; flex-direction:column; background:linear-gradient(180deg,#0B0B0D,#08080A);">
+          <div style="flex:1; overflow:hidden; padding:62px 20px 0; display:flex; flex-direction:column; gap:16px;">
+            <div style="display:flex; align-items:flex-end; justify-content:space-between;">
+              <div>
+                <p style="margin:0 0 2px; font-size:11.5px; letter-spacing:0.2em; color:#8C8375;">2026.08.03 MON</p>
+                <h2 style="margin:0; font-family:'Shippori Mincho B1',serif; font-size:24px; font-weight:600; color:#F6EFE2;">丙午日・己未月</h2>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:11.5px; color:#8C8375;">立秋まで</div>
+                <div style="font-size:15px; color:#CCB182; font-weight:700;">4日</div>
+              </div>
+            </div>
+
+            <div style="border-radius:20px; padding:20px; background:linear-gradient(150deg,rgba(204,177,130,0.22),rgba(159,102,82,0.14) 60%,rgba(255,255,255,0.03)); border:1px solid rgba(204,177,130,0.4); display:flex; flex-direction:column; gap:14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; letter-spacing:0.22em; color:#CCB182;">NOW</span>
+                <span style="font-size:11.5px; color:#B0A692;">東京23区 ・ 真太陽時 −18分</span>
+              </div>
+              <div style="display:flex; align-items:baseline; gap:10px;">
+                <span style="font-family:'Shippori Mincho B1',serif; font-size:40px; line-height:1; color:#F6EFE2;">午</span>
+                <div>
+                  <div style="font-size:20px; font-weight:700; color:#F6EFE2;">12:18</div>
+                  <div style="font-size:11.5px; color:#A79E8E;">占時 ・ 月将 未</div>
+                </div>
+              </div>
+              <button style="height:50px; border:none; border-radius:14px; background:#CCB182; color:#14100A; font-family:inherit; font-size:16px; font-weight:700;">いま起局する</button>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; font-weight:700; color:#EFE6D6;">目的から選ぶ</span>
+                <span style="font-size:12px; color:#CCB182;">すべて</span>
+              </div>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:#EFE6D6;">仕事</span>
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:#EFE6D6;">金運</span>
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:#EFE6D6;">恋愛</span>
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:#EFE6D6;">健康</span>
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:#EFE6D6;">失せ物</span>
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:#EFE6D6;">方位</span>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <span style="font-size:13px; font-weight:700; color:#EFE6D6;">続きから</span>
+              <div style="display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+                <span style="width:38px; height:38px; border-radius:12px; background:rgba(204,177,130,0.16); color:#CCB182; font-family:'Shippori Mincho B1',serif; font-size:17px; display:flex; align-items:center; justify-content:center;">壬</span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:14px; color:#EFE6D6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">転職の返事はいつ来るか</div>
+                  <div style="font-size:11.5px; color:#837C6D; margin-top:2px;">昨日 21:40 ・ 確度 高</div>
+                </div>
+                <span style="color:#5E594E; font-size:16px;">›</span>
+              </div>
+              <div style="display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+                <span style="width:38px; height:38px; border-radius:12px; background:rgba(31,120,209,0.16); color:#6FA8E0; font-family:'Shippori Mincho B1',serif; font-size:17px; display:flex; align-items:center; justify-content:center;">遁</span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:14px; color:#EFE6D6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">来週の出張、東は取れるか</div>
+                  <div style="font-size:11.5px; color:#837C6D; margin-top:2px;">7月30日 ・ 確度 中</div>
+                </div>
+                <span style="color:#5E594E; font-size:16px;">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; padding:10px 8px 26px; background:rgba(10,10,12,0.86); backdrop-filter:blur(20px); border-top:1px solid rgba(255,255,255,0.07);">
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#CCB182;">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">盤</span>
+              <span style="font-size:10.5px;">ホーム</span>
+            </div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">録</span>
+              <span style="font-size:10.5px;">記録</span>
+            </div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">典</span>
+              <span style="font-size:10.5px;">辞典</span>
+            </div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;">
+              <span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">設</span>
+              <span style="font-size:10.5px;">設定</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">02 ホーム</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">現在時刻・地点・真太陽時補正を既定値として先に確定し、主導線は「いま起局する」1タップ。フォームは既定から外れる時だけ開く。</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:402px;">
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" keyboard="{{ true }}" hint-size="402px,874px">
+        <div style="height:100%; display:flex; flex-direction:column; background:linear-gradient(180deg,#0B0B0D,#08080A);">
+          <div style="padding:58px 20px 12px; display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:15px; color:#CCB182; min-height:44px; display:flex; align-items:center;">‹ 戻る</span>
+            <span style="font-size:15px; font-weight:700; color:#F6EFE2;">相談内容</span>
+            <span style="font-size:14px; color:#5E594E; min-height:44px; display:flex; align-items:center;">省略</span>
+          </div>
+          <div style="flex:1; padding:8px 20px 0; display:flex; flex-direction:column; gap:16px;">
+            <div style="border-radius:18px; padding:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(204,177,130,0.35); min-height:120px;">
+              <p style="margin:0; font-family:'Shippori Mincho B1',serif; font-size:17px; line-height:1.85; color:#F6EFE2; text-wrap:pretty;">先方に出した見積の返事が来ない。今月中に決まるか<span style="display:inline-block; width:2px; height:20px; background:#CCB182; vertical-align:-3px; margin-left:2px;"></span></p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-size:11.5px; letter-spacing:0.16em; color:#8C8375;">推定された占的</span>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(204,177,130,0.18); border:1px solid rgba(204,177,130,0.5); color:#F6EFE2;">仕事 ✓</span>
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#B0A692;">金運</span>
+                <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#B0A692;">待人</span>
+              </div>
+              <p style="margin:2px 0 0; font-size:11.5px; line-height:1.7; color:#6E6759;">占的は解釈の重みづけにのみ使われ、盤の算出は変わりません。</p>
+            </div>
+          </div>
+          <div style="padding:12px 20px; background:rgba(10,10,12,0.9); border-top:1px solid rgba(255,255,255,0.06);">
+            <button style="width:100%; height:50px; border:none; border-radius:14px; background:#CCB182; color:#14100A; font-family:inherit; font-size:16px; font-weight:700;">この内容で起局</button>
+          </div>
+        </div>
+      </x-import>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">03 質問入力</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">Web版のプルダウン群より先に「相談文」を置く質問先行型。文面から占的を推定し、選択操作を1つ減らす。</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:402px;">
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+        <div style="height:100%; display:flex; flex-direction:column; justify-content:flex-end; background:linear-gradient(180deg,rgba(11,11,13,0.5),rgba(4,4,6,0.86)), linear-gradient(180deg,#101014,#0A0A0C);">
+          <div style="border-radius:28px 28px 0 0; background:#121216; border:1px solid rgba(255,255,255,0.09); border-bottom:none; padding:10px 20px 30px; display:flex; flex-direction:column; gap:16px;">
+            <div style="width:38px; height:5px; border-radius:3px; background:rgba(255,255,255,0.22); align-self:center;"></div>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <h3 style="margin:0; font-family:'Shippori Mincho B1',serif; font-size:20px; font-weight:600; color:#F6EFE2;">起局条件</h3>
+              <span style="font-size:13px; color:#CCB182;">既定に戻す</span>
+            </div>
+
+            <div style="display:flex; padding:3px; border-radius:12px; background:rgba(255,255,255,0.06);">
+              <span style="flex:1; text-align:center; padding:9px 0; border-radius:9px; background:#CCB182; color:#14100A; font-size:14px; font-weight:700;">現在時刻</span>
+              <span style="flex:1; text-align:center; padding:9px 0; font-size:14px; color:#B0A692;">日時を指定</span>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+              <div style="flex:1; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);">
+                <div style="font-size:11.5px; color:#837C6D; margin-bottom:6px;">日付</div>
+                <div style="font-size:17px; color:#F6EFE2; font-weight:500;">2026/08/03</div>
+              </div>
+              <div style="flex:1; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);">
+                <div style="font-size:11.5px; color:#837C6D; margin-bottom:6px;">時刻</div>
+                <div style="font-size:17px; color:#F6EFE2; font-weight:500;">12:18</div>
+              </div>
+            </div>
+
+            <div style="border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.04);">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 16px; min-height:52px; border-bottom:1px solid rgba(255,255,255,0.06);">
+                <span style="font-size:15px; color:#EFE6D6;">地点</span>
+                <span style="font-size:15px; color:#B0A692;">東京23区 ›</span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 16px; min-height:52px; border-bottom:1px solid rgba(255,255,255,0.06);">
+                <div>
+                  <div style="font-size:15px; color:#EFE6D6;">真太陽時補正</div>
+                  <div style="font-size:11.5px; color:#6E6759; margin-top:2px;">明石基準 −18分を適用中</div>
+                </div>
+                <span style="width:50px; height:30px; border-radius:15px; background:#CCB182; position:relative;"><span style="position:absolute; top:2px; right:2px; width:26px; height:26px; border-radius:13px; background:#fff;"></span></span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 16px; min-height:52px;">
+                <span style="font-size:15px; color:#EFE6D6;">詳細設定</span>
+                <span style="font-size:13px; color:#6E6759;">日干支・月将・占時を手動指定 ›</span>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; padding:12px 14px; border-radius:14px; background:rgba(183,113,66,0.12); border:1px solid rgba(183,113,66,0.3);">
+              <span style="font-size:11.5px; line-height:1.7; color:#D3A184;">補正後 12:00 午刻。境界（12:00±5分）に近いため、判断が分かれる可能性があります。</span>
+            </div>
+
+            <button style="height:52px; border:none; border-radius:15px; background:#CCB182; color:#14100A; font-family:inherit; font-size:16px; font-weight:700;">起局する</button>
+          </div>
+        </div>
+      </x-import>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">04 起局条件シート</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">年月日時分の5連プルダウンを廃し、既定＋差分編集へ。境界時刻の警告を条件段階で出し、誤読を未然に防ぐ。</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:402px;">
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+        <div style="height:100%; display:flex; flex-direction:column; background:linear-gradient(180deg,#0B0B0D,#08080A);">
+          <div style="padding:58px 20px 10px; display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:15px; color:#CCB182; min-height:44px; display:flex; align-items:center;">‹</span>
+            <span style="font-size:15px; font-weight:700; color:#F6EFE2;">六壬神課</span>
+            <span style="font-size:15px; color:#CCB182; min-height:44px; display:flex; align-items:center;">保存</span>
+          </div>
+          <div style="flex:1; overflow:hidden; padding:6px 20px 0; display:flex; flex-direction:column; gap:16px;">
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:700; background:rgba(47,158,68,0.18); border:1px solid rgba(47,158,68,0.45); color:#7BD293;">確度 高</span>
+              <span style="padding:6px 12px; border-radius:999px; font-size:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#B0A692;">原典参照 6件</span>
+              <span style="font-size:12px; color:#6E6759; margin-left:auto;">丙午日 12:00</span>
+            </div>
+
+            <div style="border-radius:20px; padding:20px; background:linear-gradient(160deg,rgba(204,177,130,0.15),rgba(255,255,255,0.02)); border:1px solid rgba(204,177,130,0.3);">
+              <p style="margin:0 0 10px; font-size:11px; letter-spacing:0.22em; color:#CCB182;">要点</p>
+              <p style="margin:0; font-family:'Shippori Mincho B1',serif; font-size:22px; line-height:1.6; color:#F6EFE2; text-wrap:pretty;">用神は旺じ、動きは早い。ただし初伝が空亡し、一度は空振りする形。</p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <span style="font-size:11.5px; letter-spacing:0.16em; color:#8C8375;">読みの根拠</span>
+              <div style="display:flex; gap:12px; padding:14px; border-radius:14px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+                <span style="width:4px; border-radius:2px; background:#2F9E44;"></span>
+                <div>
+                  <div style="font-size:14px; color:#EFE6D6;">日干 丙 に対し用神 卯木が相生</div>
+                  <div style="font-size:11.5px; color:#6E6759; margin-top:3px;">四課 第2課 ・ 六親 印綬</div>
+                </div>
+              </div>
+              <div style="display:flex; gap:12px; padding:14px; border-radius:14px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+                <span style="width:4px; border-radius:2px; background:#B77142;"></span>
+                <div>
+                  <div style="font-size:14px; color:#EFE6D6;">初伝 戌 が空亡（旬空）</div>
+                  <div style="font-size:11.5px; color:#6E6759; margin-top:3px;">三伝 初 ・ 実現は中伝以降にずれる</div>
+                </div>
+              </div>
+              <div style="display:flex; gap:12px; padding:14px; border-radius:14px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+                <span style="width:4px; border-radius:2px; background:#1F78D1;"></span>
+                <div>
+                  <div style="font-size:14px; color:#EFE6D6;">貴人が順行、応期は 未 の日</div>
+                  <div style="font-size:11.5px; color:#6E6759; margin-top:3px;">目安 8月9日前後</div>
+                </div>
+              </div>
+            </div>
+
+            <p style="margin:0; font-size:11px; line-height:1.7; color:#5E594E;">本アプリは書籍準拠の方式で盤を自動作成します。最終判断は原典と占式でご確認ください。</p>
+          </div>
+          <div style="padding:12px 20px 30px; display:flex; gap:10px; background:rgba(10,10,12,0.9); border-top:1px solid rgba(255,255,255,0.06);">
+            <button style="flex:1; height:50px; border:1px solid rgba(204,177,130,0.5); border-radius:14px; background:transparent; color:#CCB182; font-family:inherit; font-size:15px; font-weight:700;">盤を見る</button>
+            <button style="flex:1; height:50px; border:none; border-radius:14px; background:#CCB182; color:#14100A; font-family:inherit; font-size:15px; font-weight:700;">AI解説</button>
+          </div>
+        </div>
+      </x-import>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">05 結果サマリ</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">盤より先に「要点1文＋根拠3件」。確度と参照件数を最上部に置き、AI解説は主導線ではなく補助に格下げ。</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:402px;">
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+        <div style="height:100%; display:flex; flex-direction:column; background:linear-gradient(180deg,#0B0B0D,#08080A);">
+          <div style="padding:58px 20px 10px; display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:15px; color:#CCB182; min-height:44px; display:flex; align-items:center;">‹ 要点</span>
+            <span style="font-size:15px; font-weight:700; color:#F6EFE2;">盤</span>
+            <span style="font-size:15px; color:#CCB182; min-height:44px; display:flex; align-items:center;">···</span>
+          </div>
+          <div style="padding:0 20px 12px; display:flex; padding:3px; margin:0 20px 12px; border-radius:12px; background:rgba(255,255,255,0.06);">
+            <span style="flex:1; text-align:center; padding:8px 0; border-radius:9px; background:#CCB182; color:#14100A; font-size:13.5px; font-weight:700;">天地盤</span>
+            <span style="flex:1; text-align:center; padding:8px 0; font-size:13.5px; color:#B0A692;">四課</span>
+            <span style="flex:1; text-align:center; padding:8px 0; font-size:13.5px; color:#B0A692;">三伝</span>
+            <span style="flex:1; text-align:center; padding:8px 0; font-size:13.5px; color:#B0A692;">関係</span>
+          </div>
+
+          <div style="flex:1; overflow:hidden; padding:0 20px; display:flex; flex-direction:column; gap:14px;">
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(4,1fr); gap:6px; aspect-ratio:1;">
+              <div style="grid-row:1; grid-column:1; border-radius:10px; background:rgba(216,59,59,0.10); border:1px solid rgba(216,59,59,0.35); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">朱雀</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">午</strong><span style="font-size:10px; color:#6E6759;">巳</span></div>
+              <div style="grid-row:1; grid-column:2; border-radius:10px; background:rgba(216,59,59,0.10); border:1px solid rgba(216,59,59,0.35); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">六合</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">未</strong><span style="font-size:10px; color:#6E6759;">午</span></div>
+              <div style="grid-row:1; grid-column:3; border-radius:10px; background:rgba(138,90,54,0.14); border:1px solid rgba(138,90,54,0.4); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">勾陳</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">申</strong><span style="font-size:10px; color:#6E6759;">未</span></div>
+              <div style="grid-row:1; grid-column:4; border-radius:10px; background:rgba(242,201,76,0.10); border:1px solid rgba(242,201,76,0.32); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">青龍</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">酉</strong><span style="font-size:10px; color:#6E6759;">申</span></div>
+              <div style="grid-row:2; grid-column:1; border-radius:10px; background:rgba(138,90,54,0.14); border:1px solid rgba(138,90,54,0.4); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">天空</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">巳</strong><span style="font-size:10px; color:#6E6759;">辰</span></div>
+              <div style="grid-row:2 / span 2; grid-column:2 / span 2; border-radius:14px; background:rgba(204,177,130,0.08); border:1px dashed rgba(204,177,130,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;">
+                <span style="font-size:10.5px; letter-spacing:0.2em; color:#8C8375;">天盤</span>
+                <strong style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#CCB182; font-weight:600;">順行</strong>
+                <span style="font-size:11px; color:#837C6D;">貴人 陽貴 丑</span>
+                <span style="font-size:11px; color:#837C6D;">四課三伝 ・ 涉害課</span>
+              </div>
+              <div style="grid-row:2; grid-column:4; border-radius:10px; background:rgba(242,201,76,0.10); border:1px solid rgba(242,201,76,0.32); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">白虎</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">戌</strong><span style="font-size:10px; color:#6E6759;">酉</span></div>
+              <div style="grid-row:3; grid-column:1; border-radius:10px; background:rgba(47,158,68,0.12); border:1px solid rgba(47,158,68,0.4); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">太常</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">辰</strong><span style="font-size:10px; color:#6E6759;">卯</span></div>
+              <div style="grid-row:3; grid-column:4; border-radius:10px; background:rgba(31,120,209,0.12); border:1px solid rgba(31,120,209,0.42); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">玄武</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">亥</strong><span style="font-size:10px; color:#6E6759;">戌</span></div>
+              <div style="grid-row:4; grid-column:1; border-radius:10px; background:rgba(47,158,68,0.12); border:1px solid rgba(47,158,68,0.4); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">太陰</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">卯</strong><span style="font-size:10px; color:#6E6759;">寅</span></div>
+              <div style="grid-row:4; grid-column:2; border-radius:10px; background:rgba(138,90,54,0.14); border:1px solid rgba(138,90,54,0.4); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">天后</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">寅</strong><span style="font-size:10px; color:#6E6759;">丑</span></div>
+              <div style="grid-row:4; grid-column:3; border-radius:10px; background:rgba(204,177,130,0.16); border:1px solid rgba(204,177,130,0.6); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#CCB182;">貴人</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">丑</strong><span style="font-size:10px; color:#6E6759;">子</span></div>
+              <div style="grid-row:4; grid-column:4; border-radius:10px; background:rgba(31,120,209,0.12); border:1px solid rgba(31,120,209,0.42); padding:6px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:10px; color:#9C9482;">螣蛇</span><strong style="font-family:'Shippori Mincho B1',serif; font-size:20px; color:#F6EFE2; font-weight:600;">子</strong><span style="font-size:10px; color:#6E6759;">亥</span></div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <span style="font-size:11px; color:#6E6759;">五行</span>
+              <span style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#9C9482;"><span style="width:8px; height:8px; border-radius:4px; background:#2F9E44;"></span>木</span>
+              <span style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#9C9482;"><span style="width:8px; height:8px; border-radius:4px; background:#D83B3B;"></span>火</span>
+              <span style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#9C9482;"><span style="width:8px; height:8px; border-radius:4px; background:#8A5A36;"></span>土</span>
+              <span style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#9C9482;"><span style="width:8px; height:8px; border-radius:4px; background:#F2C94C;"></span>金</span>
+              <span style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#9C9482;"><span style="width:8px; height:8px; border-radius:4px; background:#1F78D1;"></span>水</span>
+              <span style="margin-left:auto; font-size:11.5px; color:#CCB182;">用語を表示 ›</span>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+              <div style="flex:1; border-radius:14px; padding:12px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+                <div style="font-size:10.5px; letter-spacing:0.18em; color:#8C8375; margin-bottom:6px;">初伝</div>
+                <div style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#F6EFE2;">戊戌</div>
+                <div style="font-size:11px; color:#B77142; margin-top:4px;">空亡 ・ 白虎</div>
+              </div>
+              <div style="flex:1; border-radius:14px; padding:12px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+                <div style="font-size:10.5px; letter-spacing:0.18em; color:#8C8375; margin-bottom:6px;">中伝</div>
+                <div style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#F6EFE2;">乙卯</div>
+                <div style="font-size:11px; color:#7BD293; margin-top:4px;">印綬 ・ 太陰</div>
+              </div>
+              <div style="flex:1; border-radius:14px; padding:12px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);">
+                <div style="font-size:10.5px; letter-spacing:0.18em; color:#8C8375; margin-bottom:6px;">末伝</div>
+                <div style="font-family:'Shippori Mincho B1',serif; font-size:22px; color:#F6EFE2;">丁未</div>
+                <div style="font-size:11px; color:#9C9482; margin-top:4px;">傷官 ・ 六合</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </x-import>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">06 盤詳細</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">4×4の天地盤は画面幅に収め、横スクロール・ピンチを不要に。四課／三伝／関係はタブで切替え、密度を保ったまま一望性を確保。</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:402px;">
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+        <div style="height:100%; display:flex; flex-direction:column; background:linear-gradient(180deg,#0B0B0D,#08080A);">
+          <div style="padding:62px 20px 12px; display:flex; flex-direction:column; gap:12px;">
+            <h2 style="margin:0; font-family:'Shippori Mincho B1',serif; font-size:26px; font-weight:600; color:#F6EFE2;">記録</h2>
+            <div style="display:flex; align-items:center; gap:8px; height:38px; padding:0 12px; border-radius:11px; background:rgba(255,255,255,0.07);">
+              <span style="color:#6E6759; font-size:14px;">⌕</span>
+              <span style="font-size:15px; color:#6E6759;">質問文・干支で検索</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <span style="padding:7px 13px; border-radius:999px; font-size:12.5px; background:#CCB182; color:#14100A; font-weight:700;">すべて</span>
+              <span style="padding:7px 13px; border-radius:999px; font-size:12.5px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#B0A692;">六壬</span>
+              <span style="padding:7px 13px; border-radius:999px; font-size:12.5px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#B0A692;">奇門</span>
+              <span style="padding:7px 13px; border-radius:999px; font-size:12.5px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#B0A692;">断易</span>
+              <span style="padding:7px 13px; border-radius:999px; font-size:12.5px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#B0A692;">要検証</span>
+            </div>
+          </div>
+
+          <div style="flex:1; overflow:hidden; padding:4px 20px 0; display:flex; flex-direction:column; gap:8px;">
+            <div style="font-size:11.5px; letter-spacing:0.18em; color:#6E6759; padding:8px 0 2px;">今日</div>
+            <div style="display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);">
+              <span style="width:36px; height:36px; border-radius:11px; background:rgba(204,177,130,0.16); color:#CCB182; font-family:'Shippori Mincho B1',serif; font-size:16px; display:flex; align-items:center; justify-content:center;">壬</span>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14.5px; color:#EFE6D6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">見積の返事は今月中に来るか</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:3px;">12:18 ・ 丙午日 ・ 涉害課</div>
+              </div>
+              <span style="width:8px; height:8px; border-radius:4px; background:#2F9E44;"></span>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);">
+              <span style="width:36px; height:36px; border-radius:11px; background:rgba(216,59,59,0.14); color:#E08A8A; font-family:'Shippori Mincho B1',serif; font-size:16px; display:flex; align-items:center; justify-content:center;">易</span>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14.5px; color:#EFE6D6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">この契約は結んでよいか</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:3px;">09:02 ・ 澤水困 → 澤地萃</div>
+              </div>
+              <span style="width:8px; height:8px; border-radius:4px; background:#B77142;"></span>
+            </div>
+
+            <div style="font-size:11.5px; letter-spacing:0.18em; color:#6E6759; padding:12px 0 2px;">7月</div>
+            <div style="display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);">
+              <span style="width:36px; height:36px; border-radius:11px; background:rgba(31,120,209,0.16); color:#6FA8E0; font-family:'Shippori Mincho B1',serif; font-size:16px; display:flex; align-items:center; justify-content:center;">遁</span>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14.5px; color:#EFE6D6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">来週の出張、東は取れるか</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:3px;">7月30日 ・ 陰遁6局 ・ 生門</div>
+              </div>
+              <span style="width:8px; height:8px; border-radius:4px; background:#2F9E44;"></span>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);">
+              <span style="width:36px; height:36px; border-radius:11px; background:rgba(159,102,82,0.18); color:#D89A80; font-family:'Shippori Mincho B1',serif; font-size:16px; display:flex; align-items:center; justify-content:center;">三</span>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14.5px; color:#EFE6D6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">転居の時期をいつにするか</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:3px;">7月22日 ・ 三式統合 ・ 5盤照合</div>
+              </div>
+              <span style="width:8px; height:8px; border-radius:4px; background:#2F9E44;"></span>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);">
+              <span style="width:36px; height:36px; border-radius:11px; background:rgba(242,201,76,0.14); color:#E4C87A; font-family:'Shippori Mincho B1',serif; font-size:16px; display:flex; align-items:center; justify-content:center;">金</span>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14.5px; color:#EFE6D6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">失くした鍵はどこにあるか</div>
+                <div style="font-size:11.5px; color:#837C6D; margin-top:3px;">7月18日 ・ 地分 丑 ・ 陽貴</div>
+              </div>
+              <span style="width:8px; height:8px; border-radius:4px; background:#6E6759;"></span>
+            </div>
+          </div>
+
+          <div style="display:flex; padding:10px 8px 26px; background:rgba(10,10,12,0.86); border-top:1px solid rgba(255,255,255,0.07);">
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;"><span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">盤</span><span style="font-size:10.5px;">ホーム</span></div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#CCB182;"><span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">録</span><span style="font-size:10.5px;">記録</span></div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;"><span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">典</span><span style="font-size:10.5px;">辞典</span></div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;"><span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">設</span><span style="font-size:10.5px;">設定</span></div>
+          </div>
+        </div>
+      </x-import>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">07 記録（一覧 → 詳細）</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">履歴を隠しパネルからタブの一級市民へ昇格。確度をドットで示し、後追い検証（当たり外れの記入）へ繋げる。</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:402px;">
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+        <div style="height:100%; display:flex; flex-direction:column; background:linear-gradient(180deg,#0B0B0D,#08080A);">
+          <div style="flex:1; overflow:hidden; padding:62px 20px 0; display:flex; flex-direction:column; gap:18px;">
+            <h2 style="margin:0; font-family:'Shippori Mincho B1',serif; font-size:26px; font-weight:600; color:#F6EFE2;">設定</h2>
+
+            <div style="border-radius:18px; padding:18px; background:linear-gradient(150deg,rgba(204,177,130,0.18),rgba(255,255,255,0.03)); border:1px solid rgba(204,177,130,0.35); display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; letter-spacing:0.22em; color:#CCB182;">AI 解説パス</span>
+                <span style="padding:5px 10px; border-radius:999px; font-size:11.5px; font-weight:700; background:rgba(47,158,68,0.2); color:#7BD293;">有効</span>
+              </div>
+              <div style="font-size:15px; color:#F6EFE2;">2026年9月2日まで ・ 今月 12 / 50 回</div>
+              <div style="height:6px; border-radius:3px; background:rgba(255,255,255,0.1); overflow:hidden;"><span style="display:block; width:24%; height:100%; background:#CCB182;"></span></div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-size:11.5px; letter-spacing:0.16em; color:#8C8375; padding-left:4px;">作盤の既定値</span>
+              <div style="border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.04);">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:15px; color:#EFE6D6;">既定の地点</span><span style="font-size:15px; color:#837C6D;">東京23区 ›</span></div>
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:15px; color:#EFE6D6;">真太陽時補正</span><span style="width:50px; height:30px; border-radius:15px; background:#CCB182; position:relative;"><span style="position:absolute; top:2px; right:2px; width:26px; height:26px; border-radius:13px; background:#fff;"></span></span></div>
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px;"><span style="font-size:15px; color:#EFE6D6;">貴人の採用</span><span style="font-size:15px; color:#837C6D;">陽貴 ›</span></div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-size:11.5px; letter-spacing:0.16em; color:#8C8375; padding-left:4px;">表示</span>
+              <div style="border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.04);">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:15px; color:#EFE6D6;">盤の書体</span><span style="font-size:15px; color:#837C6D;">明朝 ›</span></div>
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:15px; color:#EFE6D6;">文字サイズ</span><span style="font-size:15px; color:#837C6D;">標準 ›</span></div>
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px;"><span style="font-size:15px; color:#EFE6D6;">専門用語のふりがな</span><span style="width:50px; height:30px; border-radius:15px; background:rgba(255,255,255,0.14); position:relative;"><span style="position:absolute; top:2px; left:2px; width:26px; height:26px; border-radius:13px; background:#B0A692;"></span></span></div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.04);">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:15px; color:#EFE6D6;">記録の書き出し</span><span style="font-size:15px; color:#837C6D;">CSV / JSON ›</span></div>
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:15px; color:#EFE6D6;">利用規約</span><span style="font-size:15px; color:#837C6D;">›</span></div>
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; min-height:52px;"><span style="font-size:15px; color:#EFE6D6;">プライバシーポリシー</span><span style="font-size:15px; color:#837C6D;">›</span></div>
+              </div>
+              <p style="margin:4px 4px 0; font-size:11px; color:#5E594E;">占術ワークスペース 2.0 ・ jp.co.mozule.uranai</p>
+            </div>
+          </div>
+
+          <div style="display:flex; padding:10px 8px 26px; background:rgba(10,10,12,0.86); border-top:1px solid rgba(255,255,255,0.07);">
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;"><span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">盤</span><span style="font-size:10.5px;">ホーム</span></div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;"><span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">録</span><span style="font-size:10.5px;">記録</span></div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#6E6759;"><span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">典</span><span style="font-size:10.5px;">辞典</span></div>
+            <div style="flex:1; min-height:44px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#CCB182;"><span style="font-family:'Shippori Mincho B1',serif; font-size:17px;">設</span><span style="font-size:10.5px;">設定</span></div>
+          </div>
+        </div>
+      </x-import>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">08 設定・アカウント</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">iOS標準のグループドリスト。課金状態は残回数まで明示し、AI課金がアプリの主役に見えないよう最上段に留める。</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; width:836px;">
+      <div style="border-radius:24px; padding:32px; background:#101014; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:28px;">
+        <div>
+          <p style="margin:0 0 6px; font-size:11px; letter-spacing:0.26em; color:#CCB182;">DESIGN SYSTEM</p>
+          <h3 style="margin:0; font-family:'Shippori Mincho B1',serif; font-size:26px; font-weight:600; color:#F6EFE2;">墨・金・五行</h3>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <span style="font-size:12px; letter-spacing:0.16em; color:#8C8375;">COLOR</span>
+          <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:10px;">
+            <div style="display:flex; flex-direction:column; gap:6px;"><span style="height:56px; border-radius:12px; background:#08080A; border:1px solid rgba(255,255,255,0.1);"></span><span style="font-size:11px; color:#EFE6D6;">墨 ink</span><span style="font-size:10.5px; color:#6E6759;">#08080A</span></div>
+            <div style="display:flex; flex-direction:column; gap:6px;"><span style="height:56px; border-radius:12px; background:#14141A; border:1px solid rgba(255,255,255,0.1);"></span><span style="font-size:11px; color:#EFE6D6;">面 surface</span><span style="font-size:10.5px; color:#6E6759;">#14141A</span></div>
+            <div style="display:flex; flex-direction:column; gap:6px;"><span style="height:56px; border-radius:12px; background:#CCB182;"></span><span style="font-size:11px; color:#EFE6D6;">金 gold</span><span style="font-size:10.5px; color:#6E6759;">#CCB182</span></div>
+            <div style="display:flex; flex-direction:column; gap:6px;"><span style="height:56px; border-radius:12px; background:#9F6652;"></span><span style="font-size:11px; color:#EFE6D6;">朱 accent</span><span style="font-size:10.5px; color:#6E6759;">#9F6652</span></div>
+            <div style="display:flex; flex-direction:column; gap:6px;"><span style="height:56px; border-radius:12px; background:#EFE6D6;"></span><span style="font-size:11px; color:#EFE6D6;">紙 paper</span><span style="font-size:10.5px; color:#6E6759;">#EFE6D6</span></div>
+            <div style="display:flex; flex-direction:column; gap:6px;"><span style="height:56px; border-radius:12px; background:#B77142;"></span><span style="font-size:11px; color:#EFE6D6;">警 warning</span><span style="font-size:10.5px; color:#6E6759;">#B77142</span></div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; background:rgba(47,158,68,0.12);"><span style="width:14px; height:14px; border-radius:7px; background:#2F9E44;"></span><span style="font-size:12px; color:#EFE6D6;">木 #2F9E44</span></div>
+            <div style="display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; background:rgba(216,59,59,0.12);"><span style="width:14px; height:14px; border-radius:7px; background:#D83B3B;"></span><span style="font-size:12px; color:#EFE6D6;">火 #D83B3B</span></div>
+            <div style="display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; background:rgba(138,90,54,0.16);"><span style="width:14px; height:14px; border-radius:7px; background:#8A5A36;"></span><span style="font-size:12px; color:#EFE6D6;">土 #8A5A36</span></div>
+            <div style="display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; background:rgba(242,201,76,0.12);"><span style="width:14px; height:14px; border-radius:7px; background:#F2C94C;"></span><span style="font-size:12px; color:#EFE6D6;">金 #F2C94C</span></div>
+            <div style="display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; background:rgba(31,120,209,0.12);"><span style="width:14px; height:14px; border-radius:7px; background:#1F78D1;"></span><span style="font-size:12px; color:#EFE6D6;">水 #1F78D1</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <span style="font-size:12px; letter-spacing:0.16em; color:#8C8375;">TYPE</span>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="font-family:'Shippori Mincho B1',serif; font-size:26px; color:#F6EFE2;">Shippori Mincho B1 — 盤面・見出し</div>
+              <div style="font-family:'Shippori Mincho B1',serif; font-size:40px; color:#CCB182; letter-spacing:0.08em;">子丑寅卯辰巳</div>
+              <div style="font-size:11.5px; color:#6E6759;">干支・卦・要点文のみ。UI操作系には使わない。</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="font-size:22px; font-weight:700; color:#F6EFE2;">Zen Kaku Gothic New — UI</div>
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                <span style="font-size:17px; color:#EFE6D6;">17 / Body・リスト行</span>
+                <span style="font-size:15px; color:#EFE6D6;">15 / Secondary</span>
+                <span style="font-size:13px; color:#B0A692;">13 / Caption</span>
+                <span style="font-size:11.5px; color:#8C8375;">11.5 / Footnote（下限）</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <span style="font-size:12px; letter-spacing:0.16em; color:#8C8375;">COMPONENTS</span>
+          <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+            <button style="height:50px; padding:0 26px; border:none; border-radius:14px; background:#CCB182; color:#14100A; font-family:inherit; font-size:16px; font-weight:700;">Primary</button>
+            <button style="height:50px; padding:0 26px; border:1px solid rgba(204,177,130,0.5); border-radius:14px; background:transparent; color:#CCB182; font-family:inherit; font-size:16px; font-weight:700;">Secondary</button>
+            <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(204,177,130,0.18); border:1px solid rgba(204,177,130,0.5); color:#F6EFE2;">Chip / 選択中</span>
+            <span style="padding:9px 14px; border-radius:999px; font-size:13px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#B0A692;">Chip</span>
+            <span style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:700; background:rgba(47,158,68,0.18); border:1px solid rgba(47,158,68,0.45); color:#7BD293;">確度 高</span>
+            <span style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:700; background:rgba(183,113,66,0.18); border:1px solid rgba(183,113,66,0.45); color:#D3A184;">要検証</span>
+            <span style="display:flex; align-items:center; gap:6px; padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); font-size:13px; color:#EFE6D6;"><span style="width:4px; height:20px; border-radius:2px; background:#2F9E44;"></span>根拠行</span>
+            <span style="width:50px; height:30px; border-radius:15px; background:#CCB182; position:relative;"><span style="position:absolute; top:2px; right:2px; width:26px; height:26px; border-radius:13px; background:#fff;"></span></span>
+          </div>
+          <div style="font-size:11.5px; line-height:1.8; color:#6E6759;">角丸 10 / 14 / 18 / 28 ・ 余白 8 の倍数 ・ タップ領域 最小44pt ・ 本文下限 11.5pt ・ 罫線 rgba(255,255,255,0.07)</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:13px; font-weight:700; color:#F6EFE2;">09 デザインシステム</div>
+        <div style="font-size:12px; line-height:1.7; color:#8C8375;">既存 CSS 変数（gold / accent / paper / 五行5色）をそのまま継承。追加したのは確度バッジと根拠行の2コンポーネントのみ。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</x-dc>
+</body>
+</html>
