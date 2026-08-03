@@ -118,6 +118,68 @@
   filter: brightness(0.92);
 }
 
+.primary-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.secondary-button {
+  min-height: 50px;
+  width: 100%;
+  border: 1px solid var(--gold-border);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--gold);
+  font-family: var(--font-gothic);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary-button:active {
+  background: rgba(204, 177, 130, 0.08);
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+}
+
+.button-row .primary-button,
+.button-row .secondary-button {
+  flex: 1;
+}
+
+.ai-result-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+}
+
+.ai-result-overview {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--paper);
+}
+
+.ai-result-block {
+  display: grid;
+  gap: 6px;
+}
+
+.ai-result-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
 .chip-row {
   display: flex;
   flex-wrap: wrap;
