@@ -27,7 +27,7 @@ export function buildEvidenceRows(chart: LiurenChart): EvidenceRow[] {
 
   if (initial) {
     rows.push({
-      text: `初伝 ${initial.branch}（${initial.sixKin}）${initial.isVoid ? "。空亡のため実現は中伝以降にずれる" : ""}`,
+      text: `初伝 ${initial.branch}（${initial.sixKin}）${initial.isVoid ? " ・ 空亡のため中伝以降にずれ込み" : ""}`,
       source: `三伝 初伝 ・ 天将 ${initial.heavenlyGeneral}`,
       wuxing: BRANCH_WUXING[initial.branch],
     });
@@ -50,7 +50,7 @@ export function buildEvidenceRows(chart: LiurenChart): EvidenceRow[] {
   }
 
   rows.push({
-    text: `課式は ${chart.lessonType ?? "未確定"}。貴人 ${chart.basis.nobleBranch}（${chart.basis.nobleMode}貴・${chart.basis.generalOrder}行）`,
+    text: `課式は ${chart.lessonType ?? "未確定"} ・ 貴人 ${chart.basis.nobleBranch}（${chart.basis.nobleMode}貴・${chart.basis.generalOrder}行）`,
     source: `課式判定 ・ 月将 ${chart.basis.monthGeneral}`,
     wuxing: BRANCH_WUXING[chart.basis.nobleBranch],
   });
@@ -71,7 +71,7 @@ export function buildKeyPoint(chart: LiurenChart) {
     return paragraph.length > 90 ? `${paragraph.slice(0, 88)}…` : paragraph;
   }
 
-  return `${chart.lessonType ?? "未確定"}の局。三伝は${chart.threeTransmissions
+  return `${chart.lessonType ?? "未確定"}の局で、三伝は${chart.threeTransmissions
     .map((item) => item.branch)
     .join("・")}と推移します。`;
 }

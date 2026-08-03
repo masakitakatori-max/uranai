@@ -16,7 +16,7 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
     <div className="screen onboarding-screen">
       <header className="onboarding-header">
         <p className="eyebrow-label">はじめに</p>
-        <h1 className="mincho">何を知りたいですか</h1>
+        <h1 className="mincho">何を知りたいですか？</h1>
         <p className="screen-lead">術ではなく目的から選べます。あとから切り替えもできます。</p>
       </header>
       <div className="goal-list" role="radiogroup" aria-label="占う目的">

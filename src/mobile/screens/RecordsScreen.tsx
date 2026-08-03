@@ -83,7 +83,7 @@ export function RecordsScreen({ history, onOpenReading }: RecordsScreenProps) {
 
       {groups.length === 0 ? (
         <div className="empty-state">
-          <p>まだ記録がありません</p>
+          <p>まだ記録がありません。</p>
         </div>
       ) : (
         groups.map(([label, readings]) => (
