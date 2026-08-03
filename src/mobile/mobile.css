@@ -851,6 +851,39 @@
   color: var(--paper-strong);
 }
 
+.board-digest {
+  display: grid;
+  gap: 10px;
+}
+
+.board-digest-list {
+  display: grid;
+  gap: 10px;
+}
+
+.board-digest-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+}
+
+.board-digest-title {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.board-digest-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
 .evidence-block {
   display: grid;
   gap: 10px;

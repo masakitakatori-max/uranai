@@ -44,6 +44,10 @@ export function SummaryScreen({ reading, onBack, onOpenBoard }: SummaryScreenPro
   const evidence = useMemo(() => buildEvidenceRows(chart), [chart]);
   const keyPoint = useMemo(() => buildKeyPoint(chart), [chart]);
   const correctedLabel = chart.basis.correctedDateTime.replace(/^\d{4}-/, "").replace("-", "/");
+  const boardDigest = useMemo(
+    () => chart.explanationSections.filter((section) => section.key === "liuren-foundation" || section.key === "liuren-structure"),
+    [chart],
+  );
 
   const clientConfig = getAiFeedbackClientConfig();
   const context = useMemo(() => buildAiChartContext("liuren", chart), [chart]);
@@ -100,6 +104,24 @@ export function SummaryScreen({ reading, onBack, onOpenBoard }: SummaryScreenPro
           <span className="eyebrow-label">要点</span>
           <p className="keypoint-text mincho">{keyPoint}</p>
         </section>
+
+        {boardDigest.length ? (
+          <section className="board-digest" aria-label="盤の構成">
+            <p className="field-label">盤の構成</p>
+            <div className="board-digest-list">
+              {boardDigest.map((section) => (
+                <div key={section.key} className="board-digest-item">
+                  <span className="board-digest-title">{section.title}</span>
+                  {section.paragraphs.filter((paragraph) => paragraph.trim().length > 0).map((paragraph) => (
+                    <p key={paragraph} className="board-digest-text">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="evidence-block" aria-label="読みの根拠">
           <p className="field-label">読みの根拠</p>
