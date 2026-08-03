@@ -1,7 +1,14 @@
 import { SignJWT, importPKCS8 } from "jose";
 
+import { verifyAppleSignedPayload } from "../lib/appleJws.js";
 import { corsHeaders, jsonResponse } from "../lib/http.js";
-import { linkDevice, upsertAccountByAppleOriginalTransactionId, upsertAppleEntitlement } from "../lib/entitlements.js";
+import {
+  hasWebhookEventBeenProcessed,
+  linkDevice,
+  recordWebhookEvent,
+  upsertAccountByAppleOriginalTransactionId,
+  upsertAppleEntitlement,
+} from "../lib/entitlements.js";
 
 const APP_STORE_SERVER_API_HOSTS = {
   production: "https://api.storekit.itunes.apple.com",
@@ -52,17 +59,29 @@ function mapAppleStatus(status) {
   }
 }
 
+/** 検証済みのApple Transaction claimsからD1のentitlementsを更新する（account/entitlementのみ、device紐付けは呼び出し側）。 */
+async function upsertEntitlementFromAppleClaims(db, claims) {
+  const status = mapAppleStatus(claims.subscriptionStatus ?? claims.status);
+  const accountId = await upsertAccountByAppleOriginalTransactionId(db, claims.originalTransactionId);
+  await upsertAppleEntitlement(db, {
+    accountId,
+    originalTransactionId: claims.originalTransactionId,
+    productId: claims.productId || "",
+    status,
+    currentPeriodEnd: typeof claims.expiresDate === "number" ? claims.expiresDate : null,
+    rawPayload: JSON.stringify(claims),
+  });
+  return { accountId, status };
+}
+
 /**
  * POST /api/billing/apple/verify-transaction
  * StoreKit 購入直後に、クライアントが受け取った signedTransactionInfo(JWS) の
- * originalTransactionId を使って App Store Server API へ直接問い合わせ、
- * Appleから返る最新の権威あるステータスでD1を更新する。
- *
- * 注意（既知の未解決事項・plan参照）: Appleのレスポンス自体もJWS署名されているが、
- * ここではペイロードのbase64url decodeのみ行い、x5c証明書チェーンの署名検証は
- * 行っていない。信頼の根拠は「Appleの実サーバーへ直接HTTPS接続して得た応答」という
- * 点のみ（transport trust）。フル検証（pkijs等によるx5c chain-of-trust）は
- * 別途実装が必要 — 詳細はプロジェクトのbilling設計docを参照。
+ * transactionId を使って App Store Server API へ直接問い合わせ、Appleから返る
+ * 応答を x5c チェーン検証（verifyAppleSignedPayload、Apple Root CA - G3 を信頼点とする）
+ * した上でD1を更新する。クライアントから受け取った signedTransactionInfo 自体は
+ * 検索キー（どのtransactionIdを問い合わせるか）としてのみ使い、内容は信頼しない
+ * — 信頼の根拠は常に「Appleサーバーからの、署名検証済みの応答」のみ。
  */
 async function handleVerifyTransaction(request, env, origin) {
   if (!isAppleConfigured(env)) {
@@ -103,26 +122,17 @@ async function handleVerifyTransaction(request, env, origin) {
     }
 
     const { signedTransactionInfo: authoritativeJws } = await response.json();
-    const claims = decodeJwsPayload(authoritativeJws);
+    const claims = await verifyAppleSignedPayload(authoritativeJws);
     if (!claims?.originalTransactionId) {
-      return jsonResponse(502, { ok: false, error: "App Store Server API の応答を解析できませんでした。" }, origin);
+      return jsonResponse(502, { ok: false, error: "App Store Server API の応答の署名検証に失敗しました。" }, origin);
     }
 
     if (!env.DB) {
       return jsonResponse(503, { ok: false, error: "DB未設定です。" }, origin);
     }
 
-    const status = mapAppleStatus(claims.subscriptionStatus ?? claims.status);
-    const accountId = await upsertAccountByAppleOriginalTransactionId(env.DB, claims.originalTransactionId);
+    const { status, accountId } = await upsertEntitlementFromAppleClaims(env.DB, claims);
     await linkDevice(env.DB, deviceId, accountId, "ios");
-    await upsertAppleEntitlement(env.DB, {
-      accountId,
-      originalTransactionId: claims.originalTransactionId,
-      productId: claims.productId || "",
-      status,
-      currentPeriodEnd: typeof claims.expiresDate === "number" ? claims.expiresDate : null,
-      rawPayload: JSON.stringify(claims),
-    });
 
     return jsonResponse(200, {
       ok: true,
@@ -136,15 +146,54 @@ async function handleVerifyTransaction(request, env, origin) {
 
 /**
  * POST /api/billing/apple/notifications — App Store Server Notifications V2。
- * インターネットに公開された受信専用エンドポイントのため、なりすまし防止に
- * signedPayload のJWS(x5c chain)検証が必須。pkijs によるchain-of-trust検証が
- * 未実装のため、安全側に倒してここでは何も信頼せず501を返す。
+ * インターネットに公開された受信専用エンドポイントのため、signedPayload の
+ * JWS(x5c chain, Apple Root CA - G3を信頼点)検証を経てからのみ内容を信頼する
+ * （verifyAppleSignedPayload）。renewal/expiration/refund/revoke等の通知を
+ * 「再検証のトリガー」ではなく、通知自体の署名検証済みペイロードから直接D1を更新する
+ * （notificationのsignedTransactionInfoも別途JWS署名されているため、そちらも検証する）。
  */
 async function handleNotifications(request, env, origin) {
-  return jsonResponse(501, {
-    ok: false,
-    error: "Apple Server Notifications はJWS署名検証（pkijs実装）待ちのため未対応です。",
-  }, origin);
+  if (!env.DB) {
+    return jsonResponse(503, { ok: false, error: "DB未設定です。" }, origin);
+  }
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return jsonResponse(400, { ok: false, error: "リクエストボディが不正です。" }, origin);
+  }
+
+  const signedPayload = typeof payload?.signedPayload === "string" ? payload.signedPayload : "";
+  const notification = await verifyAppleSignedPayload(signedPayload);
+  if (!notification) {
+    // 署名検証に失敗した通知は完全に無視する（なりすましの可能性があるため200は返すが何もしない）。
+    return jsonResponse(200, { ok: false, error: "signedPayload の署名検証に失敗しました。" }, origin);
+  }
+
+  const notificationUUID = typeof notification.notificationUUID === "string" ? notification.notificationUUID : null;
+  if (notificationUUID) {
+    const alreadyProcessed = await hasWebhookEventBeenProcessed(env.DB, notificationUUID);
+    if (alreadyProcessed) {
+      return jsonResponse(200, { ok: true, received: true }, origin);
+    }
+    await recordWebhookEvent(env.DB, {
+      id: notificationUUID,
+      source: "apple",
+      eventType: notification.notificationType || "unknown",
+      payload: JSON.stringify(notification),
+    });
+  }
+
+  const signedTransactionInfo = notification.data?.signedTransactionInfo;
+  if (typeof signedTransactionInfo === "string") {
+    const transactionClaims = await verifyAppleSignedPayload(signedTransactionInfo);
+    if (transactionClaims?.originalTransactionId) {
+      await upsertEntitlementFromAppleClaims(env.DB, transactionClaims);
+    }
+  }
+
+  return jsonResponse(200, { ok: true, received: true }, origin);
 }
 
 export default {

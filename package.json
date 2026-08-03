@@ -22,8 +22,11 @@
     "@capacitor/core": "^8.5.0",
     "@capacitor/ios": "^8.5.0",
     "@capacitor/status-bar": "^8.0.3",
+    "asn1js": "^3.0.10",
     "jose": "^6.2.7",
     "lunar-typescript": "^1.8.6",
+    "pkijs": "^3.4.0",
+    "pvutils": "^1.1.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "stripe": "^22.4.0"
