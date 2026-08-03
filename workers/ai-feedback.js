@@ -1,28 +1,10 @@
+import { corsHeaders, jsonResponse } from "./lib/http.js";
+import { verifyEntitlementToken } from "./lib/entitlementToken.js";
+
 const DEFAULT_MAX_TOKENS = 8192;
 const SUPPORTED_MODES = new Set(["liuren", "qimen", "kingoketsu", "danneki", "taiitsu", "sansiki"]);
-
-const ALLOWED_ORIGIN = "https://uranai.mozule.co.jp";
 const SESSION_PAGE_SIZE = 20;
-
-function corsHeaders(origin) {
-  const allowed = origin === ALLOWED_ORIGIN || (origin && origin.startsWith("http://localhost")) || (origin && origin.startsWith("http://127.0.0.1"));
-  return {
-    "Access-Control-Allow-Origin": allowed ? origin : ALLOWED_ORIGIN,
-    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Credentials": "true",
-  };
-}
-
-function jsonResponse(statusCode, payload, origin) {
-  return new Response(JSON.stringify(payload), {
-    status: statusCode,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      ...corsHeaders(origin),
-    },
-  });
-}
+const ENTITLED_STATUSES = new Set(["active", "past_due", "grace_period"]);
 
 const fileTypeToken = [80, 68, 70].map((code) => String.fromCharCode(code)).join("");
 const quotedToken = [0x5f15, 0x7528].map((code) => String.fromCharCode(code)).join("");
@@ -294,16 +276,23 @@ export default {
     }
 
     if (gateMode === "paid") {
-      return jsonResponse(
-        402,
-        {
-          ok: false,
-          error: "AI フィードバックは有料プラン向けです。",
-          requiresPayment: true,
-          checkoutUrl: env.AI_FEEDBACK_CHECKOUT_URL || "",
-        },
-        origin,
-      );
+      const authHeader = request.headers.get("Authorization") || "";
+      const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+      const claims = token ? await verifyEntitlementToken(env, token) : null;
+
+      if (!claims || !ENTITLED_STATUSES.has(claims.status)) {
+        return jsonResponse(
+          402,
+          {
+            ok: false,
+            error: "AI フィードバックは有料プラン向けです。",
+            requiresPayment: true,
+            checkoutUrl: env.AI_FEEDBACK_CHECKOUT_URL || "",
+            appleProductId: env.APPLE_PRODUCT_ID || "",
+          },
+          origin,
+        );
+      }
     }
 
     let payload;

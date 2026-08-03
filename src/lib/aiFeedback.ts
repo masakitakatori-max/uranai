@@ -45,6 +45,7 @@ export interface AiFeedbackError {
   error: string;
   requiresPayment?: boolean;
   checkoutUrl?: string;
+  appleProductId?: string;
 }
 
 type AnyChart = LiurenChart | QimenChart | KingoketsuChart | DannekiChart | TaiitsuChart;
@@ -95,24 +96,85 @@ export function hasMinimumAiQuestionText(questionText: string) {
   return questionText.trim().length >= AI_QUESTION_MIN_LENGTH;
 }
 
-export async function saveAiMemberSession(passphrase: string) {
-  const response = await fetch(resolveAiApiUrl("/api/member-session"), {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({ passphrase }),
-  });
-  return response.json();
+const DEVICE_ID_KEY = "uranai.entitlement.deviceId.v1";
+const ENTITLEMENT_TOKEN_KEY = "uranai.entitlement.token.v1";
+
+interface StoredEntitlementToken {
+  token: string;
+  expiresAt: number;
 }
 
-export async function clearAiMemberSession() {
-  const response = await fetch(resolveAiApiUrl("/api/member-session"), {
-    method: "DELETE",
-    credentials: "include",
+function hasLocalStorage(): boolean {
+  return typeof window !== "undefined" && !!window.localStorage;
+}
+
+/** アプリの起局・課金と無関係な匿名識別子。ログイン/サインアップは作らない方針の代替。 */
+export function getOrCreateDeviceId(): string {
+  if (!hasLocalStorage()) {
+    return "";
+  }
+  const existing = window.localStorage.getItem(DEVICE_ID_KEY);
+  if (existing) {
+    return existing;
+  }
+  const next = crypto.randomUUID();
+  window.localStorage.setItem(DEVICE_ID_KEY, next);
+  return next;
+}
+
+function readStoredEntitlementToken(): StoredEntitlementToken | null {
+  if (!hasLocalStorage()) {
+    return null;
+  }
+  try {
+    const raw = window.localStorage.getItem(ENTITLEMENT_TOKEN_KEY);
+    return raw ? (JSON.parse(raw) as StoredEntitlementToken) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredEntitlementToken(value: StoredEntitlementToken | null) {
+  if (!hasLocalStorage()) {
+    return;
+  }
+  if (!value) {
+    window.localStorage.removeItem(ENTITLEMENT_TOKEN_KEY);
+    return;
+  }
+  window.localStorage.setItem(ENTITLEMENT_TOKEN_KEY, JSON.stringify(value));
+}
+
+/** サーバーに device_id を渡してエンタイトルメントトークンを新規取得する。 */
+export async function fetchEntitlementToken(): Promise<string | null> {
+  const deviceId = getOrCreateDeviceId();
+  if (!deviceId) {
+    return null;
+  }
+
+  const response = await fetch(resolveAiApiUrl("/api/entitlement/token"), {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ deviceId }),
   });
-  return response.json();
+  const payload = (await response.json()) as { ok: boolean; token?: string; expiresAt?: number };
+
+  if (!payload.ok || !payload.token) {
+    writeStoredEntitlementToken(null);
+    return null;
+  }
+
+  writeStoredEntitlementToken({ token: payload.token, expiresAt: payload.expiresAt ?? 0 });
+  return payload.token;
+}
+
+/** キャッシュされたトークンを返し、失効間近/未取得なら再取得する。 */
+export async function getEntitlementToken(): Promise<string | null> {
+  const stored = readStoredEntitlementToken();
+  if (stored && stored.expiresAt > Date.now() + 60_000) {
+    return stored.token;
+  }
+  return fetchEntitlementToken();
 }
 
 function truncateParagraphs(paragraphs: string[], limit = 2) {
@@ -424,12 +486,21 @@ export async function fetchAiSession(id: string): Promise<AiSessionDetail | null
 }
 
 export async function requestAiFeedback(context: AiChartContext) {
+  const deviceId = getOrCreateDeviceId();
+  const token = await getEntitlementToken();
+
+  const headers: Record<string, string> = { "content-type": "application/json" };
+  if (deviceId) {
+    headers["X-Device-Id"] = deviceId;
+  }
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const response = await fetch(resolveAiApiUrl("/api/ai-feedback"), {
     method: "POST",
     credentials: "include",
-    headers: {
-      "content-type": "application/json",
-    },
+    headers,
     body: JSON.stringify({
       mode: context.mode,
       modeLabel: context.modeLabel,
