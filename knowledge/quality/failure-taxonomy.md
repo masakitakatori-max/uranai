@@ -11,7 +11,7 @@ Pareto を測るには、まず失敗を同じ語彙で記録できるように�
 | `book_knowledge_gap` | 書籍 fixture や rule table の薄さ | 精度の上限を決める | `src/lib/data/dannekiRules.ts`, `src/lib/data/dannekiBookKnowledge.ts`, `knowledge/danneki/*`, `knowledge/kingoketsu/*` |
 | `contract_mismatch` | UI / API / env の契約ズレ | 「押せるのに失敗」を生む | `src/components/AiFeedbackPanel.tsx`, `api/ai-feedback.js`, `src/lib/aiContract.js` |
 | `missing_guard` | null / undefined / 空配列の防御不足 | 画面全体のクラッシュに直結 | `src/components/HelperPanel.tsx`, `src/components/DannekiHelperPanel.tsx`, `src/components/KingoketsuHelperPanel.tsx` |
-| `auth_boundary` | token / session / cookie の漏えい境界 | 課金・会員に直撃する | `src/lib/aiFeedback.ts`, `api/member-session.js`, `api/stripe-member-pass.js` |
+| `auth_boundary` | token / session / cookie の漏えい境界 | 課金・会員に直撃する | `src/lib/aiFeedback.ts`, `workers/lib/entitlementToken.js`, `workers/routes/entitlement.js`, `workers/routes/billingStripe.js` |
 | `performance` | 初回 bundle や重い同期計算 | UX と拡張性を削る | `src/App.tsx`, `src/components/workspaces/*`, `src/lib/engine.ts` |
 
 ## Measurement rule

@@ -3,12 +3,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   AI_QUESTION_MIN_LENGTH,
   buildAiChartContext,
-  clearAiMemberSession,
+  getOrCreateDeviceId,
   hasMinimumAiQuestionText,
   requestAiFeedback,
   resolveAiApiUrl,
   resolveAiFeedbackClientConfig,
-  saveAiMemberSession,
   sanitizeExternalAiText,
 } from "./aiFeedback";
 import { KINGOKETSU_FIXTURES, buildKingoketsuChart } from "./kingoketsu";
@@ -98,6 +97,63 @@ describe("aiFeedback helpers", () => {
   });
 
   it("requests AI feedback with credentials included", async () => {
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (String(url).includes("/api/entitlement/token")) {
+        return Promise.resolve({ ok: true, json: async () => ({ ok: false, pending: true }) });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          ok: true,
+          model: "claude-test",
+          feedback: {
+            overview: "overview",
+            keySignals: [],
+            cautions: [],
+            nextActions: [],
+            followUpQuestions: [],
+            confidence: "medium",
+            disclaimer: "disclaimer",
+          },
+        }),
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await requestAiFeedback({
+      mode: "liuren",
+      modeLabel: "六壬神課",
+      topic: "general",
+      questionText: "123456",
+      summary: "summary",
+      highlights: [],
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/ai-feedback",
+      expect.objectContaining({
+        credentials: "include",
+        method: "POST",
+        headers: expect.objectContaining({ "X-Device-Id": expect.any(String) }),
+      }),
+    );
+  });
+
+  it("persists an anonymous device id across calls", () => {
+    window.localStorage.clear();
+    const first = getOrCreateDeviceId();
+    const second = getOrCreateDeviceId();
+    expect(first).toBeTruthy();
+    expect(second).toBe(first);
+  });
+
+  it("attaches Authorization header when an entitlement token is cached", async () => {
+    window.localStorage.clear();
+    window.localStorage.setItem(
+      "uranai.entitlement.token.v1",
+      JSON.stringify({ token: "cached-jwt", expiresAt: Date.now() + 60 * 60 * 1000 }),
+    );
+
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -128,40 +184,10 @@ describe("aiFeedback helpers", () => {
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/ai-feedback",
       expect.objectContaining({
-        credentials: "include",
-        method: "POST",
+        headers: expect.objectContaining({ Authorization: "Bearer cached-jwt" }),
       }),
     );
-  });
 
-  it("uses secure session endpoints instead of localStorage persistence", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        ok: true,
-        sessionReady: true,
-      }),
-    });
-    vi.stubGlobal("fetch", fetchMock);
-
-    await saveAiMemberSession("legacy-pass");
-    await clearAiMemberSession();
-
-    expect(fetchMock).toHaveBeenNthCalledWith(
-      1,
-      "/api/member-session",
-      expect.objectContaining({
-        credentials: "include",
-        method: "POST",
-      }),
-    );
-    expect(fetchMock).toHaveBeenNthCalledWith(
-      2,
-      "/api/member-session",
-      expect.objectContaining({
-        credentials: "include",
-        method: "DELETE",
-      }),
-    );
+    window.localStorage.clear();
   });
 });
