@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   buildAiChartContext,
   getAiFeedbackClientConfig,
+  getEntitlementToken,
   hasMinimumAiQuestionText,
   requestAiFeedback,
 } from "../../lib/aiFeedback";
@@ -14,6 +15,8 @@ interface SummaryScreenProps {
   reading: SavedReading;
   onBack: () => void;
   onOpenBoard: () => void;
+  onOpenPaywall: () => void;
+  entitlementVersion: number;
 }
 
 type AiFeedbackResult = Awaited<ReturnType<typeof requestAiFeedback>>;
@@ -29,6 +32,10 @@ function getStringArray(value: unknown): string[] {
   return value.map((item) => getString(item)).filter((item) => item.length > 0);
 }
 
+function isRequiresPaymentError(error: unknown): boolean {
+  return Boolean(error && typeof error === "object" && (error as { requiresPayment?: unknown }).requiresPayment === true);
+}
+
 function extractErrorMessage(error: unknown): string {
   if (error && typeof error === "object" && "message" in error) {
     const message = (error as { message?: unknown }).message;
@@ -36,10 +43,16 @@ function extractErrorMessage(error: unknown): string {
       return message;
     }
   }
+  if (error && typeof error === "object" && "error" in error) {
+    const message = (error as { error?: unknown }).error;
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+  }
   return "AI解説の生成に失敗しました。";
 }
 
-export function SummaryScreen({ reading, onBack, onOpenBoard }: SummaryScreenProps) {
+export function SummaryScreen({ reading, onBack, onOpenBoard, onOpenPaywall, entitlementVersion }: SummaryScreenProps) {
   const chart = useMemo(() => buildLiurenChart(reading.input), [reading]);
   const evidence = useMemo(() => buildEvidenceRows(chart), [chart]);
   const keyPoint = useMemo(() => buildKeyPoint(chart), [chart]);
@@ -53,15 +66,37 @@ export function SummaryScreen({ reading, onBack, onOpenBoard }: SummaryScreenPro
   const context = useMemo(() => buildAiChartContext("liuren", chart), [chart]);
   const hasQuestionText = hasMinimumAiQuestionText(context.questionText);
   const isAiDisabled = clientConfig.gateMode === "disabled";
+  const requiresEntitlement = clientConfig.gateMode === "paid";
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiResult, setAiResult] = useState<AiFeedbackResult | null>(null);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [isEntitled, setIsEntitled] = useState<boolean | null>(null);
 
-  const canRequestAi = !isLoading && !isAiDisabled && hasQuestionText;
+  useEffect(() => {
+    if (!requiresEntitlement) {
+      return;
+    }
+    let cancelled = false;
+    getEntitlementToken().then((token) => {
+      if (!cancelled) {
+        setIsEntitled(Boolean(token));
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [requiresEntitlement, entitlementVersion]);
+
+  const needsPurchase = requiresEntitlement && isEntitled !== true;
+  const canRequestAi = !isLoading && !isAiDisabled && !needsPurchase && hasQuestionText;
   const feedback = aiResult ? (aiResult.feedback as unknown as Record<string, unknown>) : null;
 
   async function handleAiRequest() {
+    if (needsPurchase) {
+      onOpenPaywall();
+      return;
+    }
     if (!canRequestAi) {
       return;
     }
@@ -71,7 +106,12 @@ export function SummaryScreen({ reading, onBack, onOpenBoard }: SummaryScreenPro
       const next = await requestAiFeedback(context);
       setAiResult(next);
     } catch (caughtError) {
-      setAiError(extractErrorMessage(caughtError));
+      if (isRequiresPaymentError(caughtError)) {
+        setIsEntitled(false);
+        onOpenPaywall();
+      } else {
+        setAiError(extractErrorMessage(caughtError));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -195,8 +235,8 @@ export function SummaryScreen({ reading, onBack, onOpenBoard }: SummaryScreenPro
           <button type="button" className="secondary-button" onClick={onOpenBoard}>
             盤を見る
           </button>
-          <button type="button" className="primary-button" disabled={!canRequestAi} onClick={handleAiRequest}>
-            {isLoading ? "生成中…" : "AI解説"}
+          <button type="button" className="primary-button" disabled={isLoading || (!needsPurchase && !canRequestAi)} onClick={handleAiRequest}>
+            {isLoading ? "生成中…" : needsPurchase ? "AI解説を購入" : "AI解説"}
           </button>
         </div>
       </footer>

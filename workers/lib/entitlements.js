@@ -36,6 +36,23 @@ export async function upsertAccountByEmail(db, email) {
   return id;
 }
 
+export async function upsertAccountByAppleOriginalTransactionId(db, originalTransactionId) {
+  const existing = await db
+    .prepare(`SELECT id FROM entitlement_accounts WHERE apple_original_transaction_id = ?`)
+    .bind(originalTransactionId)
+    .first();
+  if (existing) {
+    return existing.id;
+  }
+  const id = crypto.randomUUID();
+  const ts = nowMs();
+  await db
+    .prepare(`INSERT INTO entitlement_accounts (id, apple_original_transaction_id, created_at, updated_at) VALUES (?, ?, ?, ?)`)
+    .bind(id, originalTransactionId, ts, ts)
+    .run();
+  return id;
+}
+
 export async function linkDevice(db, deviceId, accountId, platform) {
   const ts = nowMs();
   await db
@@ -73,6 +90,35 @@ export async function upsertStripeEntitlement(db, { accountId, subscriptionId, p
        VALUES (?, ?, 'stripe', ?, ?, ?, ?, NULL, ?, ?, ?, ?)`,
     )
     .bind(id, accountId, productId, subscriptionId, status, currentPeriodEnd, status, rawPayload, ts, ts)
+    .run();
+  return id;
+}
+
+export async function upsertAppleEntitlement(db, { accountId, originalTransactionId, productId, status, currentPeriodEnd, rawPayload }) {
+  const ts = nowMs();
+  const existing = await db
+    .prepare(`SELECT id FROM entitlements WHERE source = 'apple' AND external_subscription_id = ?`)
+    .bind(originalTransactionId)
+    .first();
+
+  if (existing) {
+    await db
+      .prepare(
+        `UPDATE entitlements SET status = ?, product_id = ?, current_period_end = ?, last_event = ?, raw_payload_json = ?, updated_at = ?
+         WHERE id = ?`,
+      )
+      .bind(status, productId, currentPeriodEnd, status, rawPayload, ts, existing.id)
+      .run();
+    return existing.id;
+  }
+
+  const id = crypto.randomUUID();
+  await db
+    .prepare(
+      `INSERT INTO entitlements (id, account_id, source, product_id, external_subscription_id, status, current_period_end, auto_renew_status, last_event, raw_payload_json, created_at, updated_at)
+       VALUES (?, ?, 'apple', ?, ?, ?, ?, NULL, ?, ?, ?, ?)`,
+    )
+    .bind(id, accountId, productId, originalTransactionId, status, currentPeriodEnd, status, rawPayload, ts, ts)
     .run();
   return id;
 }

@@ -1,15 +1,76 @@
+import { useEffect, useState } from "react";
+
+import { getAiFeedbackClientConfig, getEntitlementToken } from "../../lib/aiFeedback";
 import { LOCATION_OFFSETS } from "../../lib/engine";
+import { isIosNative } from "../platform";
+import { StoreKit } from "../storekit";
 import type { MobileDefaults } from "../storage";
 
 interface SettingsScreenProps {
   defaults: MobileDefaults;
   onUpdateDefaults: (next: MobileDefaults) => void;
+  onOpenPaywall: () => void;
+  entitlementVersion: number;
 }
 
-export function SettingsScreen({ defaults, onUpdateDefaults }: SettingsScreenProps) {
+export function SettingsScreen({ defaults, onUpdateDefaults, onOpenPaywall, entitlementVersion }: SettingsScreenProps) {
+  const clientConfig = getAiFeedbackClientConfig();
+  const requiresEntitlement = clientConfig.gateMode === "paid";
+  const [isEntitled, setIsEntitled] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!requiresEntitlement) {
+      return;
+    }
+    let cancelled = false;
+    getEntitlementToken().then((token) => {
+      if (!cancelled) {
+        setIsEntitled(Boolean(token));
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [requiresEntitlement, entitlementVersion]);
+
+  async function handleManageSubscriptions() {
+    try {
+      await StoreKit.manageSubscriptions();
+    } catch {
+      // ユーザー操作でのキャンセル等は無視する
+    }
+  }
+
   return (
     <div className="screen settings-screen">
       <h1 className="mincho screen-title">設定</h1>
+
+      {requiresEntitlement ? (
+        <section className="record-group" aria-label="AI解説パス">
+          <p className="record-group-label">AI解説パス</p>
+          <div className="settings-group">
+            <div className="sheet-row">
+              <span>状態</span>
+              <span className={isEntitled ? "pill pill-high" : "pill pill-neutral"}>
+                {isEntitled ? "有効" : "未購読"}
+              </span>
+            </div>
+            {isEntitled ? (
+              isIosNative() ? (
+                <button type="button" className="sheet-row sheet-link" onClick={handleManageSubscriptions}>
+                  <span>サブスクリプションを管理</span>
+                  <span className="reading-chevron">›</span>
+                </button>
+              ) : null
+            ) : (
+              <button type="button" className="sheet-row sheet-link" onClick={onOpenPaywall}>
+                <span>AI解説パスを購入</span>
+                <span className="reading-chevron">›</span>
+              </button>
+            )}
+          </div>
+        </section>
+      ) : null}
 
       <section className="record-group" aria-label="作盤の既定値">
         <p className="record-group-label">作盤の既定値</p>

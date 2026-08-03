@@ -152,12 +152,18 @@ export async function fetchEntitlementToken(): Promise<string | null> {
     return null;
   }
 
-  const response = await fetch(resolveAiApiUrl("/api/entitlement/token"), {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ deviceId }),
-  });
-  const payload = (await response.json()) as { ok: boolean; token?: string; expiresAt?: number };
+  let payload: { ok: boolean; token?: string; expiresAt?: number };
+  try {
+    const response = await fetch(resolveAiApiUrl("/api/entitlement/token"), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ deviceId }),
+    });
+    payload = (await response.json()) as { ok: boolean; token?: string; expiresAt?: number };
+  } catch {
+    // ネットワーク障害・バックエンド未接続時は「未エンタイトルメント」として扱う
+    return null;
+  }
 
   if (!payload.ok || !payload.token) {
     writeStoredEntitlementToken(null);
@@ -470,6 +476,42 @@ export interface AiSessionSummary {
 
 export interface AiSessionDetail extends AiSessionSummary {
   feedback: AiFeedbackPayload;
+}
+
+export interface AppleTransactionVerification {
+  ok: boolean;
+  status?: string;
+  originalTransactionId?: string;
+  error?: string;
+}
+
+/** StoreKit購入/復元直後、署名済みJWSをサーバーへ渡してエンタイトルメントをD1に反映する。 */
+export async function verifyAppleTransaction(signedTransactionInfo: string): Promise<AppleTransactionVerification> {
+  const deviceId = getOrCreateDeviceId();
+  const response = await fetch(resolveAiApiUrl("/api/billing/apple/verify-transaction"), {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ deviceId, signedTransactionInfo }),
+  });
+  return response.json() as Promise<AppleTransactionVerification>;
+}
+
+export interface StripeCheckoutSession {
+  ok: boolean;
+  checkoutUrl?: string;
+  sessionId?: string;
+  error?: string;
+}
+
+/** Web版のStripe購入導線。Checkout Sessionを作成しURLを返す（呼び出し側でredirectする）。 */
+export async function createStripeCheckoutSession(): Promise<StripeCheckoutSession> {
+  const deviceId = getOrCreateDeviceId();
+  const response = await fetch(resolveAiApiUrl("/api/billing/stripe/checkout-session"), {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ deviceId, successUrl: window.location.href, cancelUrl: window.location.href }),
+  });
+  return response.json() as Promise<StripeCheckoutSession>;
 }
 
 export async function fetchAiSessions(mode = "all", offset = 0): Promise<AiSessionSummary[]> {

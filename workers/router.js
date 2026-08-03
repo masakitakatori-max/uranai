@@ -1,4 +1,5 @@
 import aiFeedbackWorker from "./ai-feedback.js";
+import billingAppleWorker from "./routes/billingApple.js";
 import billingStripeWorker from "./routes/billingStripe.js";
 import entitlementWorker from "./routes/entitlement.js";
 import { corsHeaders } from "./lib/http.js";
@@ -18,6 +19,10 @@ export default {
 
     if (url.pathname.startsWith("/api/billing/stripe/")) {
       return billingStripeWorker.fetch(request, env, ctx);
+    }
+
+    if (url.pathname.startsWith("/api/billing/apple/")) {
+      return billingAppleWorker.fetch(request, env, ctx);
     }
 
     return aiFeedbackWorker.fetch(request, env, ctx);

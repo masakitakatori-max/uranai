@@ -1,0 +1,49 @@
+{
+  "identifier" : "5D5D5D5D-0000-0000-0000-000000000001",
+  "nonRenewingSubscriptions" : [],
+  "products" : [],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_editorMode" : true,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "ja_JP",
+    "_storefront" : "JPN",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "A0AAC0B9-2EC9-4ADA-AB9C-95F3BF3FE890",
+      "localizations" : [],
+      "name" : "AI解説パス",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "480",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "924F5D2D-C151-4D78-99DC-2AA76BF41CD9",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "AI解説を無制限に利用できます。",
+              "displayName" : "AI解説パス（月額）",
+              "locale" : "ja"
+            }
+          ],
+          "productID" : "jp.co.mozule.uranai.aicommentary.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "AI Commentary Monthly",
+          "subscriptionGroupID" : "A0AAC0B9-2EC9-4ADA-AB9C-95F3BF3FE890",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

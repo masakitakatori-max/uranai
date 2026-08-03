@@ -9,6 +9,7 @@ import { BoardScreen } from "./screens/BoardScreen";
 import { DictionaryScreen } from "./screens/DictionaryScreen";
 import { HomeScreen } from "./screens/HomeScreen";
 import { OnboardingScreen } from "./screens/OnboardingScreen";
+import { PaywallSheet } from "./screens/PaywallSheet";
 import { ConditionsSheet, QuestionScreen } from "./screens/QuestionScreen";
 import { RecordsScreen } from "./screens/RecordsScreen";
 import { SettingsScreen } from "./screens/SettingsScreen";
@@ -63,6 +64,8 @@ export function MobileApp() {
   const [question, setQuestion] = useState("");
   const [topicOverride, setTopicOverride] = useState<LiurenTopic | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [entitlementVersion, setEntitlementVersion] = useState(0);
   const [conditions, setConditions] = useState<ConditionsDraft>(() => ({
     mode: "now",
     date: toDateInputValue(new Date()),
@@ -188,6 +191,8 @@ export function MobileApp() {
           reading={flow.reading}
           onBack={() => setFlow(null)}
           onOpenBoard={() => setFlow({ screen: "board", reading: flow.reading })}
+          onOpenPaywall={() => setPaywallOpen(true)}
+          entitlementVersion={entitlementVersion}
         />
       );
     }
@@ -221,7 +226,14 @@ export function MobileApp() {
       case "dictionary":
         return <DictionaryScreen latestReading={latestReading} />;
       case "settings":
-        return <SettingsScreen defaults={defaults} onUpdateDefaults={handleUpdateDefaults} />;
+        return (
+          <SettingsScreen
+            defaults={defaults}
+            onUpdateDefaults={handleUpdateDefaults}
+            onOpenPaywall={() => setPaywallOpen(true)}
+            entitlementVersion={entitlementVersion}
+          />
+        );
     }
   };
 
@@ -247,6 +259,15 @@ export function MobileApp() {
           </nav>
         </>
       )}
+      {paywallOpen ? (
+        <PaywallSheet
+          onClose={() => setPaywallOpen(false)}
+          onEntitled={() => {
+            setPaywallOpen(false);
+            setEntitlementVersion((value) => value + 1);
+          }}
+        />
+      ) : null}
     </div>
   );
 }
