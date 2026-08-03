@@ -18,6 +18,10 @@ dist-ssr
 !.env.example
 *.local
 
+# Xcode local build artifacts / SPM workspace state
+ios/App/build
+ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
