@@ -32,6 +32,7 @@ async function buildAppStoreServerJwt(env) {
     .sign(privateKey);
 }
 
+/** クライアント提供JWSの中身は信頼しない。originalTransactionId等の“検索キー”を拾うためだけのデコード。 */
 function decodeJwsPayload(jws) {
   const parts = String(jws || "").split(".");
   if (parts.length !== 3) {
@@ -47,6 +48,7 @@ function decodeJwsPayload(jws) {
 
 function mapAppleStatus(status) {
   // 1=active, 2=expired, 3=in billing retry, 4=in grace period, 5=revoked
+  // (StatusResponse.data[].lastTransactions[].status — 数値。JWSTransactionDecodedPayload自体には無い)
   switch (status) {
     case 1:
       return "active";
@@ -59,9 +61,59 @@ function mapAppleStatus(status) {
   }
 }
 
-/** 検証済みのApple Transaction claimsからD1のentitlementsを更新する（account/entitlementのみ、device紐付けは呼び出し側）。 */
-async function upsertEntitlementFromAppleClaims(db, claims) {
-  const status = mapAppleStatus(claims.subscriptionStatus ?? claims.status);
+function findLastTransactionItem(statusResponse, originalTransactionId) {
+  const groups = Array.isArray(statusResponse?.data) ? statusResponse.data : [];
+  for (const group of groups) {
+    const items = Array.isArray(group?.lastTransactions) ? group.lastTransactions : [];
+    const match = items.find((item) => item?.originalTransactionId === originalTransactionId);
+    if (match) {
+      return match;
+    }
+    if (items[0]) {
+      return items[0];
+    }
+  }
+  return null;
+}
+
+/**
+ * originalTransactionId から Apple の権威ある購読ステータスを取得する。
+ * "Get All Subscription Statuses" (GET /inApps/v1/subscriptions/{id}) を使う理由:
+ * "Get Transaction Info" (GET /inApps/v1/transactions/{id}) が返す
+ * JWSTransactionDecodedPayload には status フィールドが存在しない
+ * （revocationDate/expiresDate等はあるが、1-5のstatus enumはこちらの
+ * lastTransactions[].status にしか無い）。verify-transaction・notifications
+ * 双方でこの1つの関数に統一し、ステータス判定ロジックを重複させない。
+ */
+async function fetchAuthoritativeSubscriptionStatus(env, originalTransactionId) {
+  const environment = env.APPLE_ENVIRONMENT === "production" ? "production" : "sandbox";
+  const host = APP_STORE_SERVER_API_HOSTS[environment];
+  const jwt = await buildAppStoreServerJwt(env);
+
+  const response = await fetch(`${host}/inApps/v1/subscriptions/${originalTransactionId}`, {
+    headers: { Authorization: `Bearer ${jwt}` },
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`App Store Server API の呼び出しに失敗しました: ${response.status} ${body}`);
+  }
+
+  const statusResponse = await response.json();
+  const lastTransactionItem = findLastTransactionItem(statusResponse, originalTransactionId);
+  if (!lastTransactionItem?.signedTransactionInfo) {
+    throw new Error("App Store Server API の応答に該当する購読情報がありません。");
+  }
+
+  const claims = await verifyAppleSignedPayload(lastTransactionItem.signedTransactionInfo);
+  if (!claims?.originalTransactionId) {
+    throw new Error("App Store Server API の応答の署名検証に失敗しました。");
+  }
+
+  return { claims, status: mapAppleStatus(lastTransactionItem.status) };
+}
+
+async function upsertEntitlementFromAppleStatus(db, { claims, status }) {
   const accountId = await upsertAccountByAppleOriginalTransactionId(db, claims.originalTransactionId);
   await upsertAppleEntitlement(db, {
     accountId,
@@ -69,19 +121,17 @@ async function upsertEntitlementFromAppleClaims(db, claims) {
     productId: claims.productId || "",
     status,
     currentPeriodEnd: typeof claims.expiresDate === "number" ? claims.expiresDate : null,
-    rawPayload: JSON.stringify(claims),
+    rawPayload: JSON.stringify({ claims, status }),
   });
-  return { accountId, status };
+  return accountId;
 }
 
 /**
  * POST /api/billing/apple/verify-transaction
- * StoreKit 購入直後に、クライアントが受け取った signedTransactionInfo(JWS) の
- * transactionId を使って App Store Server API へ直接問い合わせ、Appleから返る
- * 応答を x5c チェーン検証（verifyAppleSignedPayload、Apple Root CA - G3 を信頼点とする）
- * した上でD1を更新する。クライアントから受け取った signedTransactionInfo 自体は
- * 検索キー（どのtransactionIdを問い合わせるか）としてのみ使い、内容は信頼しない
- * — 信頼の根拠は常に「Appleサーバーからの、署名検証済みの応答」のみ。
+ * StoreKit 購入直後に、クライアントが受け取った signedTransactionInfo(JWS) から
+ * originalTransactionId だけを取り出し（検索キーとして。内容は信頼しない）、
+ * fetchAuthoritativeSubscriptionStatus でAppleの権威ある応答（署名検証済み）を
+ * 取得してD1を更新する。
  */
 async function handleVerifyTransaction(request, env, origin) {
   if (!isAppleConfigured(env)) {
@@ -102,43 +152,21 @@ async function handleVerifyTransaction(request, env, origin) {
   }
 
   const clientClaims = decodeJwsPayload(signedTransactionInfo);
-  const transactionId = clientClaims?.transactionId;
-  if (!transactionId) {
-    return jsonResponse(400, { ok: false, error: "signedTransactionInfo からtransactionIdを取得できませんでした。" }, origin);
+  const originalTransactionId = clientClaims?.originalTransactionId;
+  if (!originalTransactionId) {
+    return jsonResponse(400, { ok: false, error: "signedTransactionInfo からoriginalTransactionIdを取得できませんでした。" }, origin);
   }
 
-  const environment = env.APPLE_ENVIRONMENT === "production" ? "production" : "sandbox";
-  const host = APP_STORE_SERVER_API_HOSTS[environment];
+  if (!env.DB) {
+    return jsonResponse(503, { ok: false, error: "DB未設定です。" }, origin);
+  }
 
   try {
-    const jwt = await buildAppStoreServerJwt(env);
-    const response = await fetch(`${host}/inApps/v1/transactions/${transactionId}`, {
-      headers: { Authorization: `Bearer ${jwt}` },
-    });
-
-    if (!response.ok) {
-      const body = await response.text();
-      return jsonResponse(502, { ok: false, error: `App Store Server API の呼び出しに失敗しました: ${response.status} ${body}` }, origin);
-    }
-
-    const { signedTransactionInfo: authoritativeJws } = await response.json();
-    const claims = await verifyAppleSignedPayload(authoritativeJws);
-    if (!claims?.originalTransactionId) {
-      return jsonResponse(502, { ok: false, error: "App Store Server API の応答の署名検証に失敗しました。" }, origin);
-    }
-
-    if (!env.DB) {
-      return jsonResponse(503, { ok: false, error: "DB未設定です。" }, origin);
-    }
-
-    const { status, accountId } = await upsertEntitlementFromAppleClaims(env.DB, claims);
+    const { claims, status } = await fetchAuthoritativeSubscriptionStatus(env, originalTransactionId);
+    const accountId = await upsertEntitlementFromAppleStatus(env.DB, { claims, status });
     await linkDevice(env.DB, deviceId, accountId, "ios");
 
-    return jsonResponse(200, {
-      ok: true,
-      status,
-      originalTransactionId: claims.originalTransactionId,
-    }, origin);
+    return jsonResponse(200, { ok: true, status, originalTransactionId: claims.originalTransactionId }, origin);
   } catch (error) {
     return jsonResponse(500, { ok: false, error: error?.message || "検証処理に失敗しました。" }, origin);
   }
@@ -147,12 +175,16 @@ async function handleVerifyTransaction(request, env, origin) {
 /**
  * POST /api/billing/apple/notifications — App Store Server Notifications V2。
  * インターネットに公開された受信専用エンドポイントのため、signedPayload の
- * JWS(x5c chain, Apple Root CA - G3を信頼点)検証を経てからのみ内容を信頼する
- * （verifyAppleSignedPayload）。renewal/expiration/refund/revoke等の通知を
- * 「再検証のトリガー」ではなく、通知自体の署名検証済みペイロードから直接D1を更新する
- * （notificationのsignedTransactionInfoも別途JWS署名されているため、そちらも検証する）。
+ * JWS(x5c chain, Apple Root CA - G3を信頼点)検証を経てからのみ内容を信頼する。
+ * 通知の種類（notificationType）ごとの状態遷移を自前で解釈するのではなく、
+ * 「何かが起きた」というトリガーとしてのみ扱い、originalTransactionIdを取り出して
+ * fetchAuthoritativeSubscriptionStatus でAppleから最新状態を取り直す
+ * （verify-transactionと同じ関数・同じ信頼の根拠を使う）。
  */
 async function handleNotifications(request, env, origin) {
+  if (!isAppleConfigured(env)) {
+    return jsonResponse(503, { ok: false, error: "Apple IAP はまだ設定されていません。" }, origin);
+  }
   if (!env.DB) {
     return jsonResponse(503, { ok: false, error: "DB未設定です。" }, origin);
   }
@@ -185,11 +217,19 @@ async function handleNotifications(request, env, origin) {
     });
   }
 
-  const signedTransactionInfo = notification.data?.signedTransactionInfo;
-  if (typeof signedTransactionInfo === "string") {
-    const transactionClaims = await verifyAppleSignedPayload(signedTransactionInfo);
-    if (transactionClaims?.originalTransactionId) {
-      await upsertEntitlementFromAppleClaims(env.DB, transactionClaims);
+  // 通知に含まれる signedTransactionInfo は「何のoriginalTransactionIdか」を知るためだけに使う。
+  const embeddedTransactionInfo = notification.data?.signedTransactionInfo;
+  const triggerClaims =
+    typeof embeddedTransactionInfo === "string" ? await verifyAppleSignedPayload(embeddedTransactionInfo) : null;
+  const originalTransactionId = triggerClaims?.originalTransactionId;
+
+  if (originalTransactionId) {
+    try {
+      const authoritative = await fetchAuthoritativeSubscriptionStatus(env, originalTransactionId);
+      await upsertEntitlementFromAppleStatus(env.DB, authoritative);
+    } catch {
+      // Apple API側の一時的な失敗はここでは黙って諦める（次回の通知や定期再検証に委ねる）。
+      // 通知そのものへの応答は200のまま返し、Appleの不要なリトライストームを避ける。
     }
   }
 
