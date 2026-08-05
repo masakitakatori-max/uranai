@@ -10,10 +10,16 @@ npm install
 npm run dev
 ```
 
-API 単体をローカルで確認する場合:
+API 単体をローカルで確認する場合（Cloudflare Worker をローカル実行）:
 
 ```bash
 npm run api:dev
+```
+
+ローカルD1へのスキーマ適用:
+
+```bash
+npx wrangler d1 execute uranai-ai-sessions --local --file=workers/schema.sql
 ```
 
 ## Test / Build
@@ -90,21 +96,18 @@ Mac がない場合は Codemagic / Ionic Appflow などのクラウド Mac CI �
 - `VITE_AI_FEEDBACK_MODE`
 - `VITE_AI_CHECKOUT_URL`
 
-API 用:
+API 用（Cloudflare Worker の secrets/vars。`wrangler secret put <name>` で設定）:
 
-- `AI_FEEDBACK_MODE`
-- `AI_FEEDBACK_CHECKOUT_URL`
-- `AI_FEEDBACK_MEMBER_KEYS`
-- `AI_FEEDBACK_MEMBER_TOKEN_SECRET`
-- `AI_FEEDBACK_MEMBER_PASS_TTL_DAYS`
+- `AI_FEEDBACK_MODE`（`disabled` / `preview` / `paid`。`wrangler.toml` の `[vars]` で設定）
+- `AI_FEEDBACK_CHECKOUT_URL`（`paid` モードで未エンタイトルメント時にクライアントへ返す静的リンク）
+- `AI_FEEDBACK_MEMBER_TOKEN_SECRET`（エンタイトルメントJWTの署名鍵。32文字以上のランダム文字列を推奨）
 - `AI_FEEDBACK_MAX_TOKENS`
 - `ANTHROPIC_MODEL`
-- `ANTHROPIC_API_KEY` または `CLAUDE_API_KEY`
+- `ANTHROPIC_API_KEY`
 - `SITE_URL`
-- `ALLOWED_ORIGINS`
 - `STRIPE_SECRET_KEY`
 - `STRIPE_PRICE_ID`
-- `STRIPE_CHECKOUT_MODE`
+- `STRIPE_WEBHOOK_SECRET`（Stripe Dashboard の Webhook 設定画面で発行される署名検証用シークレット）
 
 ## GitHub Pages
 
@@ -118,32 +121,19 @@ Pages build は GitHub Actions Variables を使います。
 - `VITE_AI_FEEDBACK_MODE=paid`
 - `VITE_AI_CHECKOUT_URL=https://api.uranai.mozule.co.jp/api/create-checkout-session`
 
-## Paid API Gate
+## 課金エンタイトルメント（Stripe / Apple StoreKit 統合基盤）
 
-AI API は `paid` モード時に `x-ai-member-key` を必須にします。
+Web(Stripe) と iOS(Apple StoreKit) の両方を、Cloudflare D1 に持つ1つのエンタイトルメント状態に集約する設計です。詳細設計は `docs/design/mobile-redesign/README.md` に近い運用ドキュメントとして今後追記予定。現時点の実装状況:
 
-- 旧方式: `AI_FEEDBACK_MEMBER_KEYS`
-- 本命: Stripe Checkout 後に `/api/stripe-member-pass` で署名付き会員パスを発行
+- **D1スキーマ**: `entitlement_accounts` / `entitlement_devices` / `entitlements` / `billing_webhook_events`（`workers/schema.sql`）
+- **識別モデル**: クライアント生成の匿名 `deviceId`（`src/lib/aiFeedback.ts` の `getOrCreateDeviceId`）を起点に、決済成立時の恒久アンカー（Stripeの email、Apple の originalTransactionId）へ紐付ける。ログイン/サインアップは作らない。
+- **エンタイトルメントトークン**: `POST /api/entitlement/token`（`workers/routes/entitlement.js`）が deviceId から有効な entitlement を引き、24時間TTLの署名付きJWT（HS256、`jose`、`AI_FEEDBACK_MEMBER_TOKEN_SECRET`で署名）を発行。クライアントは `Authorization: Bearer <jwt>` を `/api/ai-feedback` に付けて送る（旧来の cookie ベース `/api/member-session` は廃止）。
+- **Stripe**: `POST /api/billing/stripe/checkout-session`（Checkout Session作成）、`POST /api/billing/stripe/webhook`（`checkout.session.completed` / `customer.subscription.updated` / `deleted` を処理、Stripe イベントIDで冪等性担保）。実装は `workers/routes/billingStripe.js`。
+- **`/api/ai-feedback` のゲート**: `paid` モード時、`Authorization` ヘッダのJWTを検証。無効/欠如なら従来通り402 + `checkoutUrl`（+ 新規 `appleProductId`）を返す。`disabled`/`preview` モードは無変更。
+- **Apple StoreKit / iOS ネイティブ購入UI**: 未実装（Phase 2）。App Store Connect でのサブスクリプション商品作成、Apple Developer Portal での App Store Server API 用キー発行など、ユーザー側の手動作業が前提となるため別途着手。
+- **既存の `AiFeedbackPanel.tsx` の「購入」導線**: 現状は `VITE_AI_CHECKOUT_URL` の静的リンクへ飛ぶのみで、`/api/billing/stripe/checkout-session` への動的な呼び出しはまだUIに配線されていない（フォローアップ）。
 
-`/api/ai-feedback` は会員パスを検証し、Stripe が設定されている場合は Stripe 側の支払い状態も再確認します。
-
-## Deployment
-
-### GCP Cloud Run
-
-Cloud Run 用の entrypoint と deploy 資材は以下です。
-
-- [server.mjs](./server.mjs)
-- [Dockerfile](./Dockerfile)
-- [deploy/gcp/deploy-cloud-run.ps1](./deploy/gcp/deploy-cloud-run.ps1)
-- [deploy/gcp/cloud-run.service.template.yaml](./deploy/gcp/cloud-run.service.template.yaml)
-- [knowledge/deployment/gcp.md](./knowledge/deployment/gcp.md)
-
-### お名前.com レンタルサーバ
-
-PHP 版 API は以下にあります。
-
-- [deploy/onamae/README.md](./deploy/onamae/README.md)
+ローカル検証: `npm run api:dev`（`wrangler dev`）でWorkerを起動し、`npx wrangler d1 execute uranai-ai-sessions --local --command "..."` で entitlement テーブルへ直接テストデータを入れることで、トークン発行〜ゲート通過まで確認できる。
 
 ## Legal
 

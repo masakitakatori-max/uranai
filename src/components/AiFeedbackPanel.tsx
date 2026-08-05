@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import {
   buildAiChartContext,
+  createStripeCheckoutSession,
   getAiFeedbackClientConfig,
   hasMinimumAiQuestionText,
   requestAiFeedback,
@@ -113,6 +114,7 @@ export function AiFeedbackPanel(props: AiFeedbackPanelProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AiFeedbackResult | null>(null);
   const [error, setError] = useState<NormalizedAiError | null>(null);
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 
   const context = useMemo(() => buildAiChartContext(mode, chart), [chart, mode]);
   const hasQuestionText = hasMinimumAiQuestionText(context.questionText);
@@ -151,6 +153,24 @@ export function AiFeedbackPanel(props: AiFeedbackPanelProps) {
       setError(normalizeAiError(caughtError));
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleCheckout() {
+    setIsCheckoutLoading(true);
+    try {
+      const session = await createStripeCheckoutSession();
+      if (session.ok && session.checkoutUrl) {
+        window.location.href = session.checkoutUrl;
+        return;
+      }
+    } catch {
+      // 動的セッション作成に失敗した場合は静的リンク（あれば）にフォールバックする
+    } finally {
+      setIsCheckoutLoading(false);
+    }
+    if (checkoutUrl) {
+      window.open(checkoutUrl, "_blank", "noreferrer");
     }
   }
 
@@ -217,15 +237,10 @@ export function AiFeedbackPanel(props: AiFeedbackPanelProps) {
 
       {clientConfig.gateMode === "paid" ? (
         <div className="paywall-note">
-          本番環境では有料利用として扱います。
-          {clientConfig.checkoutUrl ? (
-            <>
-              {" "}
-              <a href={clientConfig.checkoutUrl} rel="noreferrer" target="_blank">
-                利用手続きへ進む
-              </a>
-            </>
-          ) : null}
+          本番環境では有料利用として扱います。{" "}
+          <button type="button" disabled={isCheckoutLoading} onClick={handleCheckout}>
+            {isCheckoutLoading ? "手続き準備中..." : "利用手続きへ進む"}
+          </button>
         </div>
       ) : null}
 
@@ -238,10 +253,10 @@ export function AiFeedbackPanel(props: AiFeedbackPanelProps) {
       {error ? (
         <div className="ai-error-note" role="alert">
           <p>{error.message}</p>
-          {error.requiresPayment && checkoutUrl ? (
-            <a href={checkoutUrl} rel="noreferrer" target="_blank">
-              利用手続きへ進む
-            </a>
+          {error.requiresPayment ? (
+            <button type="button" disabled={isCheckoutLoading} onClick={handleCheckout}>
+              {isCheckoutLoading ? "手続き準備中..." : "利用手続きへ進む"}
+            </button>
           ) : null}
         </div>
       ) : null}

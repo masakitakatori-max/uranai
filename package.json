@@ -5,13 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "api:dev": "node server.mjs",
+    "api:dev": "wrangler dev",
     "build": "tsc -b && vite build && node scripts/postbuild-seo.mjs",
     "lint": "eslint .",
     "pareto:failures": "node scripts/failure-pareto-report.mjs",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:run": "vitest run",
+    "test": "NODE_OPTIONS=--no-experimental-webstorage vitest",
+    "test:run": "NODE_OPTIONS=--no-experimental-webstorage vitest run",
     "cap:sync": "npm run build && cap sync ios",
     "cap:open": "cap open ios",
     "ios": "npm run build && cap sync ios && cap open ios"
@@ -22,9 +22,14 @@
     "@capacitor/core": "^8.5.0",
     "@capacitor/ios": "^8.5.0",
     "@capacitor/status-bar": "^8.0.3",
+    "asn1js": "^3.0.10",
+    "jose": "^6.2.7",
     "lunar-typescript": "^1.8.6",
+    "pkijs": "^3.4.0",
+    "pvutils": "^1.1.5",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "stripe": "^22.4.0"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
