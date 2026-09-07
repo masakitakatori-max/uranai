@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { validateInterpretation, validateRequest } from './contract';
+import { buildBaziContext } from '../../src/lib/shichusuimei';
 import type { BaziInterpretation } from '../../src/lib/shichusuimeiInterpretation';
 
 const birth = { year: 1990, month: 5, day: 15, hour: 14, minute: 30, utcOffset: 9, sex: 'male' };
@@ -30,4 +31,17 @@ describe('interpretation boundary', () => {
     expect(() => validateInterpretation(bad, ['a-day-s'], ['qt-1'], false, false)).toThrow();
     expect(() => validateInterpretation(report(), ['a-day-s'], ['qt-1'], true, false)).toThrow();
   });
+  it('accepts verified cross-chart relation evidence and still rejects one-person-only compatibility', () => {
+    const context = buildBaziContext(validateRequest({ person: birth, partner: { ...birth, month: 1 }, focus: 'compatibility', question: '' }));
+    const relation = context.relations.find(r => r.scope === 'partner')!;
+    const pair = report();
+    pair.strengths.push({ ...pair.strengths[0], personId: 'b', evidenceIds: ['b-day-s'] });
+    pair.yongshen.push(...pair.yongshen.map(item => ({ ...item, personId: 'b' as const, evidenceIds: ['b-day-s'] })));
+    const direction = { summary: '二人の配置', helps: [], tensions: [], conditions: [], evidenceIds: [relation.id], sourceIds: ['qt-1'] };
+    pair.compatibility = { summary: '双方向', aToB: { ...direction }, bToA: { ...direction } };
+    expect(validateInterpretation(pair, context.factIds, ['qt-1'], true, false, context.relations)).toEqual(pair);
+    pair.compatibility.aToB.evidenceIds = ['a-day-s'];
+    expect(() => validateInterpretation(pair, context.factIds, ['qt-1'], true, false, context.relations)).toThrow('二人の命式');
+  });
+
 });

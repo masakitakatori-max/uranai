@@ -182,4 +182,6 @@ npx wrangler secret put SHICHUSUIMEI_ACCESS_TOKEN
 npx wrangler deploy
 ```
 
+GitHub Actionsの「Deploy Cloudflare Worker」で `action=verify_ai` を選ぶと、デプロイせずに架空の二人の命式で実SDKを検証します。API残高が必要です。
+
 SDKのJSONスキーマ変換は[公式のstructured outputs仕様](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)に従い、受信後も元のスキーマ・命式ID・資料IDを再検証します。参照資料の出所は [knowledge/shichusuimei/README.md](knowledge/shichusuimei/README.md) を参照してください。

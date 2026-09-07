@@ -16,7 +16,7 @@ export const runAgentSdk: ModelRunner = async task => {
       model, systemPrompt: task.system, outputFormat: { type: 'json_schema', schema: task.schema },
       tools: [], allowedTools: [], mcpServers: {}, strictMcpConfig: true, settingSources: [], persistSession: false,
       permissionMode: 'dontAsk', maxTurns: 3, maxBudgetUsd: 2, abortController,
-      thinking: { type: 'enabled', budgetTokens: 3000 }, effort: 'medium',
+      thinking: { type: 'disabled' }, effort: 'medium',
       ...(executable ? { pathToClaudeCodeExecutable: executable } : {}),
     } })) {
       if (message.type !== 'result') continue;

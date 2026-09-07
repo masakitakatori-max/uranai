@@ -41,6 +41,6 @@ export async function interpretBazi(input: unknown, runModel: ModelRunner, signa
     schema,
     prompt: JSON.stringify({ version: INTERPRETATION_VERSION, sourceVersion: SOURCE_VERSION, request: { focus: request.focus, question: request.question }, context, sources }),
   });
-  const interpretation = validateInterpretation(result.output, context.factIds, sources.map(s => s.id), !!context.partner, !!context.luck);
+  const interpretation = validateInterpretation(result.output, context.factIds, sources.map(s => s.id), !!context.partner, !!context.luck, context.relations);
   return { interpretation, sources, model: result.model, provider: result.provider, usage: result.usage, generatedAt: new Date().toISOString(), requestId: crypto.randomUUID() };
 }
