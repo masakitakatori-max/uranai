@@ -6,6 +6,7 @@ import type { InterpretationResponse } from '../../lib/shichusuimeiInterpretatio
 import { BirthEditor } from '../shichusuimei/BirthEditor';
 import { BaziChartView } from '../shichusuimei/BaziChartView';
 import { BaziLandscape } from '../shichusuimei/BaziLandscape';
+import { BaziLuckChanges } from '../shichusuimei/BaziLuckChanges';
 import { InterpretationView } from '../shichusuimei/InterpretationView';
 import '../shichusuimei/shichusuimei.css';
 
@@ -110,7 +111,8 @@ export function ShichusuimeiWorkspace() {
     {context && <>
       <div className="bazi-section-heading"><h2>{view === 'compatibility' ? '二つの命式は、どう関わり合うか。' : view === 'luck' ? '大運が加わると、何が変わるか。' : view === 'combination' ? '組み合わせで、働きは変わる。' : 'この命式には、何が必要か。'}</h2><span>日主 <b>{context.person.dayMaster}</b></span></div>
       {view === 'luck' && <div className="bazi-periods" aria-label="大運を選ぶ">{context.person.luck.map((p, i) => <button type="button" key={p.id} aria-pressed={i === luckIndex} onClick={() => { if (i !== luckIndex) { invalidate(); setLuckIndex(i); } }}><strong>{p.ganzhi}</strong><small>{p.startAge.toFixed(1)}〜{p.endAge.toFixed(1)}歳</small></button>)}</div>}
-      <div className={`bazi-scenes ${context.luck || context.partner ? 'is-pair' : ''}`}><BaziLandscape chart={context.person} title={context.partner ? '本人の景色' : '生まれ持った景色'} />{context.luck && <BaziLandscape chart={context.person} luck={context.luck} title={`${context.luck.ganzhi}運が加わると`} />}{context.partner && <BaziLandscape chart={context.partner} title="相手の景色" />}</div>
+      <div className={`bazi-scenes ${context.luck || context.partner ? 'is-pair' : ''}`}><BaziLandscape selected={selected} onSelect={evidence} chart={context.person} title={context.partner ? '本人の景色' : '生まれ持った景色'} />{context.luck && <BaziLandscape selected={selected} onSelect={evidence} chart={context.person} luck={context.luck} title={`${context.luck.ganzhi}運が加わると`} />}{context.partner && <BaziLandscape selected={selected} onSelect={evidence} chart={context.partner} title="相手の景色" />}</div>
+      {context.luck && <BaziLuckChanges chart={context.person} luck={context.luck} relations={context.relations} onSelect={evidence} />}
       <p className="bazi-caption">風景は季節・根・組み合わせを読むための象徴表現です。強さの増減と、必要な用神かどうかは分けて判断します。</p>
       <div ref={chartAnchor} className="bazi-evidence-box" aria-live="polite"><strong>命式のどこに表れているか</strong><p>{detail}</p></div>
       <div className={context.partner ? 'bazi-two-charts' : ''}><BaziChartView chart={context.person} luck={context.luck} title="本人" selected={selected} onSelect={evidence} />{context.partner && <BaziChartView chart={context.partner} title="相手" selected={selected} onSelect={evidence} />}</div>
