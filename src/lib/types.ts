@@ -3,7 +3,7 @@ export type Branch = "子" | "丑" | "寅" | "卯" | "辰" | "巳" | "午" | "�
 export type Ganzhi = `${Stem}${Branch}`;
 export type Wuxing = "木" | "火" | "土" | "金" | "水";
 export type SixKin = "兄弟" | "子孫" | "妻財" | "官鬼" | "父母";
-export type AppMode = "liuren" | "qimen" | "kingoketsu" | "danneki" | "taiitsu" | "sansiki";
+export type AppMode = "shichusuimei" | "liuren" | "qimen" | "kingoketsu" | "danneki" | "taiitsu" | "sansiki";
 export type YinYang = "陽" | "陰";
 export type HeavenlyGeneral =
   | "貴人"

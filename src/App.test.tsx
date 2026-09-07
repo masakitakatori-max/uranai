@@ -7,11 +7,6 @@ import App from "./App";
 const APP_TEST_TIMEOUT = 90_000;
 const WORKSPACE_WAIT_TIMEOUT = 60_000;
 
-function getModeButtons(container: HTMLElement) {
-  const modeSwitch = container.querySelector(".mode-switch");
-  return modeSwitch ? Array.from(modeSwitch.querySelectorAll<HTMLButtonElement>(".mode-button")) : [];
-}
-
 describe("App", () => {
   beforeEach(() => {
     window.history.replaceState({}, "", "/");
@@ -184,31 +179,29 @@ describe("App", () => {
   });
 
   it("updates the pathname when switching modes", { timeout: APP_TEST_TIMEOUT }, () => {
-    const { container } = render(<App />);
-    const buttons = getModeButtons(container);
+    render(<App />);
 
-    fireEvent.click(buttons[2]!);
+    fireEvent.click(screen.getByRole("button", { name: "金口訣", exact: true }));
     expect(window.location.pathname).toBe(getPathForMode("kingoketsu"));
-    expect(buttons[2]?.className).toContain("is-active");
+    expect(screen.getByRole("button", { name: "金口訣", exact: true }).className).toContain("is-active");
 
-    fireEvent.click(buttons[0]!);
+    fireEvent.click(screen.getByRole("button", { name: "六壬神課", exact: true }));
     expect(window.location.pathname).toBe(getPathForMode("liuren"));
-    expect(buttons[0]?.className).toContain("is-active");
+    expect(screen.getByRole("button", { name: "六壬神課", exact: true }).className).toContain("is-active");
 
-    fireEvent.click(buttons[4]!);
+    fireEvent.click(screen.getByRole("button", { name: "太乙神数", exact: true }));
     expect(window.location.pathname).toBe(getPathForMode("taiitsu"));
-    expect(buttons[4]?.className).toContain("is-active");
+    expect(screen.getByRole("button", { name: "太乙神数", exact: true }).className).toContain("is-active");
   });
 
   it("reacts to popstate navigation", { timeout: APP_TEST_TIMEOUT }, async () => {
-    const { container } = render(<App />);
+    render(<App />);
 
     window.history.pushState({}, "", getPathForMode("kingoketsu"));
     window.dispatchEvent(new PopStateEvent("popstate"));
 
     await waitFor(() => {
-      const buttons = getModeButtons(container);
-      expect(buttons[2]?.className).toContain("is-active");
+      expect(screen.getByRole("button", { name: "金口訣", exact: true }).className).toContain("is-active");
     });
   });
 });
