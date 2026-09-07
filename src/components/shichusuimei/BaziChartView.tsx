@@ -1,17 +1,20 @@
+import { rootAppearance } from './baziScene';
 import { rootsForStem } from '../../lib/shichusuimei';
 import type { BaziChart, BaziPillar, LuckPeriod } from '../../lib/shichusuimeiTypes';
 
 export function BaziChartView({ chart, luck, selected, onSelect, title }: { chart: BaziChart; luck?: LuckPeriod | null; selected: string[]; onSelect: (ids: string[], detail: string) => void; title: string }) {
   const renderPillar = (p: BaziPillar, day = false) => {
     const roots = rootsForStem(chart, p.stem, luck || undefined);
-    const grade = roots.some(r => r.main) ? 2 : roots.length ? 1 : 0;
+    const appearance = rootAppearance(roots);
+    const before = rootAppearance(rootsForStem(chart, p.stem));
+    const added = luck && !p.id.includes("-luck-") && appearance.branches > before.branches;
     const buttonClass = (id: string) => selected.includes(id) ? 'bazi-node is-evidence' : 'bazi-node';
     return <article className="bazi-pillar" key={p.id}>
       <h4>{p.label}{day ? '・日主' : ''}</h4>
       <button type="button" data-fact-id={`${p.id}-s`} className={`${buttonClass(p.id + '-s')} bazi-stem ${day ? 'is-day' : ''}`} onClick={() => onSelect([p.id + '-s', ...roots.map(r => r.id)], `${p.label}の${p.stem}。${roots.length ? '根は ' + roots.map(r => `${r.branch}中${r.stem}`).join('・') : '同五行の蔵干を確認できません'}。`)}>
-        <b style={{ fontSize: [30, 40, 51][grade], opacity: [.6, .82, 1][grade] }}>{p.stem}</b><span>{day ? chart.id === 'b' ? '相手の日主' : 'あなたの日主' : p.tenGod}</span>
+        <b style={{ fontSize: appearance.fontSize, opacity: appearance.opacity }}>{p.stem}</b><span>{day ? chart.id === 'b' ? '相手の日主' : 'あなたの日主' : p.tenGod}</span>
       </button>
-      <small className="bazi-root-note">{grade === 2 ? '本気に根' : grade === 1 ? '蔵干に根' : '同五行の根なし'}</small>
+      <small className="bazi-root-note">{added ? `根 ${before.branches} → ${appearance.branches}か所` : appearance.branches ? `根${appearance.branches}か所・本気${appearance.main}` : '同五行の根なし'}</small>
       <div className={`bazi-earth ${p.storage?.moisture === '湿土' ? 'is-wet' : ''}`}>
         <button type="button" data-fact-id={`${p.id}-b`} className={`${buttonClass(p.id + '-b')} bazi-branch`} onClick={() => onSelect([p.id + '-b', ...p.hidden.map(h => h.id)], `${p.branch}の蔵干：${p.hidden.map(h => h.stem).join('・')}。${p.storage ? p.storage.moisture + '、' + p.storage.element + 'の庫。庫の所属と、開庫の成否は別に判断します。' : p.stage + '。'}`)}>{p.branch}</button>
         <small>{p.storage ? `${p.storage.moisture}・${p.storage.element}の庫` : p.stage}</small>
