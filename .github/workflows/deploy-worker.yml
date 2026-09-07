@@ -2,9 +2,42 @@ name: Deploy Cloudflare Worker
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: Deploy Worker or verify the real AI SDK only
+        type: choice
+        default: deploy
+        options:
+          - deploy
+          - verify_ai
 
 jobs:
+  verify_ai:
+    if: inputs.action == 'verify_ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate two synthetic readings through the real SDK
+        run: node --import tsx scripts/smoke-shichusuimei.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shichusuimei-synthetic-readings
+          path: test-results/shichusuimei-live/
+          retention-days: 7
+          if-no-files-found: ignore
   deploy:
+    if: inputs.action != 'verify_ai'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
