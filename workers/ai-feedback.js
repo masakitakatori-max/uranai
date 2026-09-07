@@ -1,3 +1,5 @@
+import { handleShichusuimei } from './shichusuimei';
+
 const DEFAULT_MAX_TOKENS = 8192;
 const SUPPORTED_MODES = new Set(["liuren", "qimen", "kingoketsu", "danneki", "taiitsu", "sansiki"]);
 
@@ -246,6 +248,7 @@ async function getSession(db, id) {
 
 export default {
   async fetch(request, env) {
+    if (new URL(request.url).pathname.startsWith('/api/shichusuimei/')) return handleShichusuimei(request, env);
     const origin = request.headers.get("Origin") || "";
     const url = new URL(request.url);
 

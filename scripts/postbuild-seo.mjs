@@ -15,6 +15,7 @@ const DEFAULT_ROBOTS = "index,follow,max-image-preview:large,max-snippet:-1,max-
 const PREVIEW_ROBOTS = "noindex,nofollow,noarchive";
 
 const routes = {
+  shichusuimei: { path: "/shichusuimei/", title: "四柱推命・用神と相性 | Uranai", description: "四柱・蔵干・通根と大運を可視化し、古典に基づく用神論と二人の相性を読み解きます。", keywords: "四柱推命,用神,相性,大運", featureList: ["四柱と蔵干", "用神の解説", "二人の相性"] },
   liuren: {
     path: "/liuren/",
     title: "六壬神課盤を自動作成 | Divination Workspace",
@@ -259,6 +260,7 @@ await writeRoutePage(sourceHtml, routes.kingoketsu, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.danneki, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.taiitsu, siteUrl, robotsPolicy);
 await writeRoutePage(sourceHtml, routes.sansiki, siteUrl, robotsPolicy);
+await writeRoutePage(sourceHtml, routes.shichusuimei, siteUrl, robotsPolicy);
 await fs.writeFile(
   path.join(distDir, "robots.txt"),
   `User-agent: *\n${robotsPolicy.startsWith("noindex") ? "Disallow: /\n" : "Allow: /\n"}Sitemap: ${siteUrl}/sitemap.xml\n`,

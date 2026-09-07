@@ -37,6 +37,11 @@ const SynthesisWorkspace = lazy(async () => {
   return { default: module.SynthesisWorkspace };
 });
 
+const ShichusuimeiWorkspace = lazy(async () => {
+  const module = await import("./components/workspaces/ShichusuimeiWorkspace");
+  return { default: module.ShichusuimeiWorkspace };
+});
+
 const QIMEN_YEAR_RANGE = { start: 2015, end: 2030 } as const;
 
 function createDefaultLiurenInput(): LiurenInput {
@@ -149,6 +154,7 @@ function createDefaultSynthesisInput(): SynthesisInput {
 }
 
 const MODE_TITLES: Record<AppMode, string> = {
+  shichusuimei: "四柱推命・用神と相性",
   liuren: "六壬神課盤 自動作成",
   qimen: "奇門遁甲 四盤作成ツール",
   kingoketsu: "金口訣盤 自動作成",
@@ -158,6 +164,7 @@ const MODE_TITLES: Record<AppMode, string> = {
 };
 
 const MODE_LEADS: Record<AppMode, string> = {
+  shichusuimei: "生まれ持った命式の組み合わせから、必要な用神と、大運・二人の関わりを読み解きます。",
   liuren: "地方時差、中気基準の月将、四課、三伝、十二天将、六親を同時に確認するための静的Webアプリです。",
   qimen: "手直し済み原稿の活盤式を土台に、年盤・月盤・日盤・時盤と八方位の吉凶を同時に確認する作盤モードです。",
   kingoketsu: "真太陽時補正、節入り基準の四柱、月将、貴神、将神、人元、用爻を一画面で組み立てるための金口訣モードです。",
@@ -267,6 +274,7 @@ function App() {
         </div>
         <p className="lead">{MODE_LEADS[mode]}</p>
         <div className="mode-switch" role="tablist" aria-label="作盤モード">
+          <button className={mode === "shichusuimei" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("shichusuimei")} type="button">四柱推命</button>
           <button className={mode === "liuren" ? "mode-button is-active" : "mode-button"} onClick={() => handleModeChange("liuren")} type="button">
             六壬神課
           </button>
@@ -321,6 +329,7 @@ function App() {
       </header>
 
       <main className="workspace-grid">
+        {mode === "shichusuimei" && <Suspense fallback={<WorkspaceLoadingFallback />}><RenderErrorBoundary modeLabel="四柱推命"><ShichusuimeiWorkspace /></RenderErrorBoundary></Suspense>}
         {mode === "qimen" ? (
           <Suspense fallback={<WorkspaceLoadingFallback />}>
             <RenderErrorBoundary modeLabel="Qimen">

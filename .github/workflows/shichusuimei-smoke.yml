@@ -1,0 +1,27 @@
+name: Verify Shichusuimei AI
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sdk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate two synthetic readings through the real SDK
+        run: node --import tsx scripts/smoke-shichusuimei.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shichusuimei-synthetic-readings
+          path: test-results/shichusuimei-live/
+          retention-days: 7
+          if-no-files-found: ignore

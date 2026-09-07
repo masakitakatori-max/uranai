@@ -17,6 +17,7 @@ type ModeSeo = {
 export const DEFAULT_KEYWORDS_SANSIKI = `${DEFAULT_KEYWORDS},三式,六壬神課,奇門遁甲,太乙神数,金口訣,断易,統合占術`;
 
 export const MODE_SEO: Record<AppMode, ModeSeo> = {
+  shichusuimei: { path: "/shichusuimei/", title: "四柱推命・用神と相性 | Uranai", description: "四柱・蔵干・通根と大運を可視化し、古典に基づく用神論と二人の命式の相性を読み解きます。", keywords: "四柱推命,用神,相性,蔵干,大運", featureList: ["四柱と蔵干の自動算出", "用神の目的別解説", "大運と二人の命式の相性"] },
   liuren: {
     path: "/liuren/",
     title: "六壬神課盤を自動作成 | Divination Workspace",
@@ -83,6 +84,7 @@ export function normalizePath(pathname: string) {
 
 export function getModeFromPath(pathname: string): AppMode {
   const normalized = normalizePath(pathname);
+  if (normalized === MODE_SEO.shichusuimei.path) return "shichusuimei";
 
   if (normalized === MODE_SEO.liuren.path) {
     return "liuren";

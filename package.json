@@ -14,9 +14,12 @@
     "test:run": "vitest run",
     "cap:sync": "npm run build && cap sync ios",
     "cap:open": "cap open ios",
-    "ios": "npm run build && cap sync ios && cap open ios"
+    "ios": "npm run build && cap sync ios && cap open ios",
+    "api:shichusuimei": "node --env-file-if-exists=.env --import tsx server/shichusuimei/local.ts"
   },
   "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "0.3.263",
+    "@anthropic-ai/sdk": "0.124.0",
     "@capacitor/app": "^8.1.1",
     "@capacitor/cli": "^8.5.0",
     "@capacitor/core": "^8.5.0",
@@ -24,7 +27,9 @@
     "@capacitor/status-bar": "^8.0.3",
     "lunar-typescript": "^1.8.6",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "tsx": "4.23.13",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
