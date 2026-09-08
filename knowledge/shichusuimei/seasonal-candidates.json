@@ -1,0 +1,1649 @@
+[
+  {
+    "sourceId": "qt-46",
+    "stem": "甲",
+    "months": [
+      "寅"
+    ],
+    "targets": [
+      "丙",
+      "癸"
+    ],
+    "reason": "余寒を暖め、木を潤す候補。",
+    "book": "窮通宝鑑",
+    "title": "三春甲木",
+    "lineStart": 46
+  },
+  {
+    "sourceId": "qt-46",
+    "stem": "甲",
+    "months": [
+      "卯"
+    ],
+    "targets": [
+      "庚"
+    ],
+    "reason": "旺じる木を整える候補。財の助けなど成立条件を要する。",
+    "book": "窮通宝鑑",
+    "title": "三春甲木",
+    "lineStart": 46
+  },
+  {
+    "sourceId": "qt-46",
+    "stem": "甲",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "庚",
+      "壬"
+    ],
+    "reason": "木を整える庚と、水の助けを検討する。",
+    "book": "窮通宝鑑",
+    "title": "三春甲木",
+    "lineStart": 46
+  },
+  {
+    "sourceId": "qt-76",
+    "stem": "甲",
+    "months": [
+      "午"
+    ],
+    "targets": [
+      "癸",
+      "丁",
+      "庚"
+    ],
+    "reason": "夏木の潤いと、火・金の配合を検討する。木と金の多寡で優先が変わる。",
+    "book": "窮通宝鑑",
+    "title": "三夏甲木",
+    "lineStart": 76
+  },
+  {
+    "sourceId": "qt-76",
+    "stem": "甲",
+    "months": [
+      "未"
+    ],
+    "targets": [
+      "丁",
+      "庚"
+    ],
+    "reason": "丁と庚の配合を検討する。木と金の多寡で優先が変わる。",
+    "book": "窮通宝鑑",
+    "title": "三夏甲木",
+    "lineStart": 76
+  },
+  {
+    "sourceId": "qt-76",
+    "stem": "甲",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "癸",
+      "丁"
+    ],
+    "reason": "気が退く夏木に、まず潤いを検討する。",
+    "book": "窮通宝鑑",
+    "title": "三夏甲木",
+    "lineStart": 76
+  },
+  {
+    "sourceId": "qt-120",
+    "stem": "甲",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "丁",
+      "庚"
+    ],
+    "reason": "丁と庚の組み合わせで木を整える候補。",
+    "book": "窮通宝鑑",
+    "title": "三秋甲木",
+    "lineStart": 120
+  },
+  {
+    "sourceId": "qt-120",
+    "stem": "甲",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "丁",
+      "丙",
+      "庚"
+    ],
+    "reason": "金の旺じる時期に、火と金の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三秋甲木",
+    "lineStart": 120
+  },
+  {
+    "sourceId": "qt-120",
+    "stem": "甲",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "丁",
+      "癸"
+    ],
+    "reason": "凋落する木に、火と潤いを検討する。",
+    "book": "窮通宝鑑",
+    "title": "三秋甲木",
+    "lineStart": 120
+  },
+  {
+    "sourceId": "qt-146",
+    "stem": "甲",
+    "months": [
+      "亥",
+      "子"
+    ],
+    "targets": [
+      "庚",
+      "丁",
+      "丙"
+    ],
+    "reason": "庚と丁の組み合わせに、丙の暖める働きを検討する。",
+    "book": "窮通宝鑑",
+    "title": "三冬甲木",
+    "lineStart": 146
+  },
+  {
+    "sourceId": "qt-146",
+    "stem": "甲",
+    "months": [
+      "丑"
+    ],
+    "targets": [
+      "庚",
+      "丁"
+    ],
+    "reason": "寒木に、庚で甲を劈き丁を引く組み合わせを検討する。",
+    "book": "窮通宝鑑",
+    "title": "三冬甲木",
+    "lineStart": 146
+  },
+  {
+    "sourceId": "qt-180",
+    "stem": "乙",
+    "months": [
+      "寅",
+      "卯"
+    ],
+    "targets": [
+      "丙",
+      "癸"
+    ],
+    "reason": "暖める丙と、潤す癸の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三春乙木",
+    "lineStart": 180
+  },
+  {
+    "sourceId": "qt-180",
+    "stem": "乙",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "癸",
+      "丙"
+    ],
+    "reason": "陽気の増す木に、潤いと日照を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三春乙木",
+    "lineStart": 180
+  },
+  {
+    "sourceId": "qt-216",
+    "stem": "乙",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "癸",
+      "辛"
+    ],
+    "reason": "乾く木を癸で潤し、辛を水源の候補とする。",
+    "book": "窮通宝鑑",
+    "title": "三夏乙木",
+    "lineStart": 216
+  },
+  {
+    "sourceId": "qt-216",
+    "stem": "乙",
+    "months": [
+      "午",
+      "未"
+    ],
+    "targets": [
+      "癸",
+      "丙"
+    ],
+    "reason": "潤いと日照の配合を検討する。節気や金水の量で優先が変わる。",
+    "book": "窮通宝鑑",
+    "title": "三夏乙木",
+    "lineStart": 216
+  },
+  {
+    "sourceId": "qt-248",
+    "stem": "乙",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "丙",
+      "癸",
+      "己"
+    ],
+    "reason": "旺じる金への対応を検討する。丙癸の有無により己も候補となる。",
+    "book": "窮通宝鑑",
+    "title": "三秋乙木",
+    "lineStart": 248
+  },
+  {
+    "sourceId": "qt-248",
+    "stem": "乙",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "丙",
+      "癸"
+    ],
+    "reason": "日照と潤いを検討する。白露後と秋分後で優先が変わる。",
+    "book": "窮通宝鑑",
+    "title": "三秋乙木",
+    "lineStart": 248
+  },
+  {
+    "sourceId": "qt-248",
+    "stem": "乙",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "癸",
+      "辛"
+    ],
+    "reason": "枯れる木を潤し、水源を確かめる。",
+    "book": "窮通宝鑑",
+    "title": "三秋乙木",
+    "lineStart": 248
+  },
+  {
+    "sourceId": "qt-280",
+    "stem": "乙",
+    "months": [
+      "亥"
+    ],
+    "targets": [
+      "丙",
+      "戊"
+    ],
+    "reason": "暖める火と、旺じる水を制する土を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三冬乙木",
+    "lineStart": 280
+  },
+  {
+    "sourceId": "qt-280",
+    "stem": "乙",
+    "months": [
+      "子",
+      "丑"
+    ],
+    "targets": [
+      "丙"
+    ],
+    "reason": "凍える花木を暖める候補。",
+    "book": "窮通宝鑑",
+    "title": "三冬乙木",
+    "lineStart": 280
+  },
+  {
+    "sourceId": "qt-312",
+    "stem": "丙",
+    "months": [
+      "寅"
+    ],
+    "targets": [
+      "壬",
+      "庚"
+    ],
+    "reason": "壬の水と、それを助ける金を検討する。",
+    "book": "窮通宝鑑",
+    "title": "正月丙火",
+    "lineStart": 312
+  },
+  {
+    "sourceId": "qt-330",
+    "stem": "丙",
+    "months": [
+      "卯"
+    ],
+    "targets": [
+      "壬"
+    ],
+    "reason": "昇る陽気に、壬の水の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "二月丙火",
+    "lineStart": 330
+  },
+  {
+    "sourceId": "qt-344",
+    "stem": "丙",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "壬",
+      "甲"
+    ],
+    "reason": "壬の水と、重い土を疏す甲を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三月丙火",
+    "lineStart": 344
+  },
+  {
+    "sourceId": "qt-352",
+    "stem": "丙",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "壬",
+      "庚"
+    ],
+    "reason": "炎威を和らげる壬と、水源の庚を検討する。",
+    "book": "窮通宝鑑",
+    "title": "四月丙火",
+    "lineStart": 352
+  },
+  {
+    "sourceId": "qt-360",
+    "stem": "丙",
+    "months": [
+      "午"
+    ],
+    "targets": [
+      "壬",
+      "庚"
+    ],
+    "reason": "強まる火に、水とその水源を検討する。",
+    "book": "窮通宝鑑",
+    "title": "五月丙火",
+    "lineStart": 360
+  },
+  {
+    "sourceId": "qt-368",
+    "stem": "丙",
+    "months": [
+      "未"
+    ],
+    "targets": [
+      "壬",
+      "庚"
+    ],
+    "reason": "退き始める火に、壬と庚の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "六月丙火",
+    "lineStart": 368
+  },
+  {
+    "sourceId": "qt-378",
+    "stem": "丙",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "壬",
+      "戊"
+    ],
+    "reason": "壬で光を映す候補。水が多い場合は戊の制も検討する。",
+    "book": "窮通宝鑑",
+    "title": "七月丙火",
+    "lineStart": 378
+  },
+  {
+    "sourceId": "qt-384",
+    "stem": "丙",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "壬"
+    ],
+    "reason": "衰える光を水に映す組み合わせを検討する。",
+    "book": "窮通宝鑑",
+    "title": "八月丙火",
+    "lineStart": 384
+  },
+  {
+    "sourceId": "qt-392",
+    "stem": "丙",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "甲",
+      "壬"
+    ],
+    "reason": "光を覆う土を甲で疏し、壬の水を検討する。",
+    "book": "窮通宝鑑",
+    "title": "九月丙火",
+    "lineStart": 392
+  },
+  {
+    "sourceId": "qt-402",
+    "stem": "丙",
+    "months": [
+      "亥"
+    ],
+    "targets": [
+      "甲",
+      "戊",
+      "庚"
+    ],
+    "reason": "令を失う火に、木・土・金の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十月丙火",
+    "lineStart": 402
+  },
+  {
+    "sourceId": "qt-406",
+    "stem": "丙",
+    "months": [
+      "子"
+    ],
+    "targets": [
+      "壬",
+      "戊"
+    ],
+    "reason": "壬の水と、それを制する戊の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十一月丙火",
+    "lineStart": 406
+  },
+  {
+    "sourceId": "qt-412",
+    "stem": "丙",
+    "months": [
+      "丑"
+    ],
+    "targets": [
+      "壬",
+      "甲"
+    ],
+    "reason": "壬の水と、多い土を疏す甲を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十二月丙火",
+    "lineStart": 412
+  },
+  {
+    "sourceId": "qt-424",
+    "stem": "丁",
+    "months": [
+      "寅"
+    ],
+    "targets": [
+      "庚"
+    ],
+    "reason": "旺じる甲を劈き、丁を引く金を検討する。",
+    "book": "窮通宝鑑",
+    "title": "正月丁火",
+    "lineStart": 424
+  },
+  {
+    "sourceId": "qt-428",
+    "stem": "丁",
+    "months": [
+      "卯"
+    ],
+    "targets": [
+      "庚",
+      "甲"
+    ],
+    "reason": "湿った乙への対応と、丁を引く甲を検討する。",
+    "book": "窮通宝鑑",
+    "title": "二月丁火",
+    "lineStart": 428
+  },
+  {
+    "sourceId": "qt-432",
+    "stem": "丁",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "甲",
+      "庚"
+    ],
+    "reason": "甲で丁を引き、土を制する組み合わせを検討する。",
+    "book": "窮通宝鑑",
+    "title": "三月丁火",
+    "lineStart": 432
+  },
+  {
+    "sourceId": "qt-438",
+    "stem": "丁",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "甲",
+      "庚"
+    ],
+    "reason": "甲を庚で劈いて丁を引く組み合わせを検討する。",
+    "book": "窮通宝鑑",
+    "title": "四月丁火",
+    "lineStart": 438
+  },
+  {
+    "sourceId": "qt-442",
+    "stem": "丁",
+    "months": [
+      "午"
+    ],
+    "targets": [
+      "壬"
+    ],
+    "reason": "壬との配合を検討する。位置と合の条件に注意する。",
+    "book": "窮通宝鑑",
+    "title": "五月丁火",
+    "lineStart": 442
+  },
+  {
+    "sourceId": "qt-446",
+    "stem": "丁",
+    "months": [
+      "未"
+    ],
+    "targets": [
+      "甲",
+      "壬"
+    ],
+    "reason": "退く丁に、甲と壬の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "六月丁火",
+    "lineStart": 446
+  },
+  {
+    "sourceId": "qt-452",
+    "stem": "丁",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "甲",
+      "庚"
+    ],
+    "reason": "柔弱な丁を引く甲と、甲を劈く庚を検討する。",
+    "book": "窮通宝鑑",
+    "title": "七月丁火",
+    "lineStart": 452
+  },
+  {
+    "sourceId": "qt-456",
+    "stem": "丁",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "甲",
+      "庚"
+    ],
+    "reason": "甲と庚が検討候補。ただし従財や傷官傷尽などの格局で採否が変わる。",
+    "book": "窮通宝鑑",
+    "title": "八九月丁火",
+    "lineStart": 456
+  },
+  {
+    "sourceId": "qt-466",
+    "stem": "丁",
+    "months": [
+      "子",
+      "丑"
+    ],
+    "targets": [
+      "甲",
+      "庚"
+    ],
+    "reason": "丁を引く甲と庚を検討する。水や火の偏りによって別の配合を要する。",
+    "book": "窮通宝鑑",
+    "title": "十一・十二月丁火",
+    "lineStart": 466
+  },
+  {
+    "sourceId": "qt-462",
+    "stem": "丁",
+    "months": [
+      "亥"
+    ],
+    "targets": [
+      "庚",
+      "甲"
+    ],
+    "reason": "微寒の丁を引く、庚と甲の組み合わせを検討する。",
+    "book": "窮通宝鑑",
+    "title": "十月丁火",
+    "lineStart": 462
+  },
+  {
+    "sourceId": "qt-486",
+    "stem": "戊",
+    "months": [
+      "寅",
+      "卯"
+    ],
+    "targets": [
+      "丙",
+      "癸",
+      "甲"
+    ],
+    "reason": "丙で暖め、癸で潤し、甲で土を疏す配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三春戊土総論",
+    "lineStart": 486
+  },
+  {
+    "sourceId": "qt-486",
+    "stem": "戊",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "甲",
+      "丙",
+      "癸"
+    ],
+    "reason": "甲で土を疏すことを起点に、暖かさと潤いを検討する。",
+    "book": "窮通宝鑑",
+    "title": "三春戊土総論",
+    "lineStart": 486
+  },
+  {
+    "sourceId": "qt-498",
+    "stem": "戊",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "甲",
+      "丙",
+      "癸"
+    ],
+    "reason": "甲で土を疏し、暖かさと潤いの配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "四月戊土",
+    "lineStart": 498
+  },
+  {
+    "sourceId": "qt-502",
+    "stem": "戊",
+    "months": [
+      "午"
+    ],
+    "targets": [
+      "壬",
+      "甲"
+    ],
+    "reason": "炎暑の土に、壬の水と甲の疏土を検討する。",
+    "book": "窮通宝鑑",
+    "title": "五月戊土",
+    "lineStart": 502
+  },
+  {
+    "sourceId": "qt-506",
+    "stem": "戊",
+    "months": [
+      "未"
+    ],
+    "targets": [
+      "癸",
+      "丙",
+      "甲"
+    ],
+    "reason": "乾いた土を潤し、火と木の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "六月戊土",
+    "lineStart": 506
+  },
+  {
+    "sourceId": "qt-510",
+    "stem": "戊",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "丙",
+      "癸",
+      "甲"
+    ],
+    "reason": "寒気が増す土に、暖かさ・潤い・疏土を検討する。",
+    "book": "窮通宝鑑",
+    "title": "七月戊土",
+    "lineStart": 510
+  },
+  {
+    "sourceId": "qt-514",
+    "stem": "戊",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "丙",
+      "癸"
+    ],
+    "reason": "金に泄れて寒い土を、暖め潤す候補。",
+    "book": "窮通宝鑑",
+    "title": "八月戊土",
+    "lineStart": 514
+  },
+  {
+    "sourceId": "qt-518",
+    "stem": "戊",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "甲",
+      "癸"
+    ],
+    "reason": "厚い土を疏し、潤す候補。金の有無で配合が変わる。",
+    "book": "窮通宝鑑",
+    "title": "九月戊土",
+    "lineStart": 518
+  },
+  {
+    "sourceId": "qt-522",
+    "stem": "戊",
+    "months": [
+      "亥"
+    ],
+    "targets": [
+      "甲",
+      "丙"
+    ],
+    "reason": "土を疏す甲と、暖める丙を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十月戊土",
+    "lineStart": 522
+  },
+  {
+    "sourceId": "qt-526",
+    "stem": "戊",
+    "months": [
+      "子",
+      "丑"
+    ],
+    "targets": [
+      "丙",
+      "甲"
+    ],
+    "reason": "凍る土を暖め、甲で疏す組み合わせを検討する。",
+    "book": "窮通宝鑑",
+    "title": "十一・十二月戊土",
+    "lineStart": 526
+  },
+  {
+    "sourceId": "qt-538",
+    "stem": "己",
+    "months": [
+      "寅"
+    ],
+    "targets": [
+      "丙"
+    ],
+    "reason": "凍った田園を暖める候補。",
+    "book": "窮通宝鑑",
+    "title": "正月己土",
+    "lineStart": 538
+  },
+  {
+    "sourceId": "qt-542",
+    "stem": "己",
+    "months": [
+      "卯"
+    ],
+    "targets": [
+      "甲",
+      "癸"
+    ],
+    "reason": "田園を疏し、潤す候補。甲との合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "二月己土",
+    "lineStart": 542
+  },
+  {
+    "sourceId": "qt-546",
+    "stem": "己",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "丙",
+      "癸",
+      "甲"
+    ],
+    "reason": "栽培の土に、暖かさ・潤い・疏土を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三月己土",
+    "lineStart": 546
+  },
+  {
+    "sourceId": "qt-550",
+    "stem": "己",
+    "months": [
+      "巳",
+      "午",
+      "未"
+    ],
+    "targets": [
+      "癸",
+      "丙"
+    ],
+    "reason": "田園を潤す癸と、育てる日照の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三夏己土総論",
+    "lineStart": 550
+  },
+  {
+    "sourceId": "qt-554",
+    "stem": "己",
+    "months": [
+      "申",
+      "酉"
+    ],
+    "targets": [
+      "丙",
+      "癸"
+    ],
+    "reason": "寒気が増す田園を暖め、潤す候補。",
+    "book": "窮通宝鑑",
+    "title": "三秋己土総論",
+    "lineStart": 554
+  },
+  {
+    "sourceId": "qt-558",
+    "stem": "己",
+    "months": [
+      "亥",
+      "子",
+      "丑"
+    ],
+    "targets": [
+      "丙",
+      "甲"
+    ],
+    "reason": "凍る湿土を暖め、甲の働きを参酌する。",
+    "book": "窮通宝鑑",
+    "title": "三冬己土総論",
+    "lineStart": 558
+  },
+  {
+    "sourceId": "qt-574",
+    "stem": "庚",
+    "months": [
+      "寅"
+    ],
+    "targets": [
+      "丙",
+      "甲"
+    ],
+    "reason": "金を暖め、厚い土による埋没を疏す候補。",
+    "book": "窮通宝鑑",
+    "title": "正月庚金",
+    "lineStart": 574
+  },
+  {
+    "sourceId": "qt-578",
+    "stem": "庚",
+    "months": [
+      "卯"
+    ],
+    "targets": [
+      "丁",
+      "甲"
+    ],
+    "reason": "丁で金を錬り、甲で丁を引く配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "二月庚金",
+    "lineStart": 578
+  },
+  {
+    "sourceId": "qt-582",
+    "stem": "庚",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "甲",
+      "丁"
+    ],
+    "reason": "厚い土を疏し、頑金を錬る配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三月庚金",
+    "lineStart": 582
+  },
+  {
+    "sourceId": "qt-590",
+    "stem": "庚",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "壬",
+      "丙",
+      "戊"
+    ],
+    "reason": "壬で中和を図り、丙と戊の配合を検討する。先後は命式の病に応じて変わる。",
+    "book": "窮通宝鑑",
+    "title": "四月庚金",
+    "lineStart": 590
+  },
+  {
+    "sourceId": "qt-594",
+    "stem": "庚",
+    "months": [
+      "午"
+    ],
+    "targets": [
+      "壬",
+      "癸"
+    ],
+    "reason": "旺烈な火に、水の調整を検討する。",
+    "book": "窮通宝鑑",
+    "title": "五月庚金",
+    "lineStart": 594
+  },
+  {
+    "sourceId": "qt-598",
+    "stem": "庚",
+    "months": [
+      "未"
+    ],
+    "targets": [
+      "丁",
+      "甲"
+    ],
+    "reason": "頑鈍な金を錬る丁と、丁を引く甲を検討する。",
+    "book": "窮通宝鑑",
+    "title": "六月庚金",
+    "lineStart": 598
+  },
+  {
+    "sourceId": "qt-606",
+    "stem": "庚",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "丁",
+      "甲"
+    ],
+    "reason": "剛鋭な金を錬り、火を引く木を検討する。",
+    "book": "窮通宝鑑",
+    "title": "七月庚金",
+    "lineStart": 606
+  },
+  {
+    "sourceId": "qt-610",
+    "stem": "庚",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "丁",
+      "甲",
+      "丙"
+    ],
+    "reason": "金を錬る丁、助ける甲と丙の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "八月庚金",
+    "lineStart": 610
+  },
+  {
+    "sourceId": "qt-614",
+    "stem": "庚",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "甲",
+      "壬"
+    ],
+    "reason": "金を埋める厚い土を疏し、水で洗う候補。",
+    "book": "窮通宝鑑",
+    "title": "九月庚金",
+    "lineStart": 614
+  },
+  {
+    "sourceId": "qt-622",
+    "stem": "庚",
+    "months": [
+      "亥"
+    ],
+    "targets": [
+      "丁",
+      "丙",
+      "甲"
+    ],
+    "reason": "金を錬る丁と、暖める丙、火を引く甲を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十月庚金",
+    "lineStart": 622
+  },
+  {
+    "sourceId": "qt-626",
+    "stem": "庚",
+    "months": [
+      "子"
+    ],
+    "targets": [
+      "丁",
+      "甲",
+      "丙"
+    ],
+    "reason": "丁と甲の配合に、丙の照暖を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十一月庚金",
+    "lineStart": 626
+  },
+  {
+    "sourceId": "qt-630",
+    "stem": "庚",
+    "months": [
+      "丑"
+    ],
+    "targets": [
+      "丙",
+      "丁",
+      "甲"
+    ],
+    "reason": "まず凍りを解き、金を錬る火と木の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十二月庚金",
+    "lineStart": 630
+  },
+  {
+    "sourceId": "qt-640",
+    "stem": "辛",
+    "months": [
+      "寅"
+    ],
+    "targets": [
+      "己",
+      "壬"
+    ],
+    "reason": "己で辛を支え、壬の配合を検討する。己を湿らせる条件も確かめる。",
+    "book": "窮通宝鑑",
+    "title": "正月辛金",
+    "lineStart": 640
+  },
+  {
+    "sourceId": "qt-644",
+    "stem": "辛",
+    "months": [
+      "卯"
+    ],
+    "targets": [
+      "壬",
+      "甲"
+    ],
+    "reason": "壬の水を用い、土が病となる場合は甲で制する候補。",
+    "book": "窮通宝鑑",
+    "title": "二月辛金",
+    "lineStart": 644
+  },
+  {
+    "sourceId": "qt-648",
+    "stem": "辛",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "壬",
+      "甲"
+    ],
+    "reason": "水による洗淘と、厚い土への対応を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三月辛金",
+    "lineStart": 648
+  },
+  {
+    "sourceId": "qt-652",
+    "stem": "辛",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "壬"
+    ],
+    "reason": "燥烈な火に対し、水で洗う候補。",
+    "book": "窮通宝鑑",
+    "title": "四月辛金",
+    "lineStart": 652
+  },
+  {
+    "sourceId": "qt-656",
+    "stem": "辛",
+    "months": [
+      "午"
+    ],
+    "targets": [
+      "己",
+      "壬"
+    ],
+    "reason": "己と壬を合わせ、湿った土で辛を支える配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "五月辛金",
+    "lineStart": 656
+  },
+  {
+    "sourceId": "qt-660",
+    "stem": "辛",
+    "months": [
+      "未"
+    ],
+    "targets": [
+      "壬",
+      "庚"
+    ],
+    "reason": "光を覆う土に対し、壬と庚の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "六月辛金",
+    "lineStart": 660
+  },
+  {
+    "sourceId": "qt-664",
+    "stem": "辛",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "壬"
+    ],
+    "reason": "旺じる金に、壬の水の働きを検討する。",
+    "book": "窮通宝鑑",
+    "title": "七月辛金",
+    "lineStart": 664
+  },
+  {
+    "sourceId": "qt-668",
+    "stem": "辛",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "壬"
+    ],
+    "reason": "旺じる金を水で洗い、流通させる候補。",
+    "book": "窮通宝鑑",
+    "title": "八月辛金",
+    "lineStart": 668
+  },
+  {
+    "sourceId": "qt-672",
+    "stem": "辛",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "壬",
+      "甲"
+    ],
+    "reason": "旺じる金を泄らし、土を疏す配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "九月辛金",
+    "lineStart": 672
+  },
+  {
+    "sourceId": "qt-676",
+    "stem": "辛",
+    "months": [
+      "亥"
+    ],
+    "targets": [
+      "壬",
+      "丙"
+    ],
+    "reason": "水と暖かさの配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十月辛金",
+    "lineStart": 676
+  },
+  {
+    "sourceId": "qt-680",
+    "stem": "辛",
+    "months": [
+      "子"
+    ],
+    "targets": [
+      "壬",
+      "丙"
+    ],
+    "reason": "寒い金に、水と火の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十一月辛金",
+    "lineStart": 680
+  },
+  {
+    "sourceId": "qt-684",
+    "stem": "辛",
+    "months": [
+      "丑"
+    ],
+    "targets": [
+      "丙",
+      "壬"
+    ],
+    "reason": "凍りを解く丙と、洗う壬を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十二月辛金",
+    "lineStart": 684
+  },
+  {
+    "sourceId": "qt-702",
+    "stem": "壬",
+    "months": [
+      "寅"
+    ],
+    "targets": [
+      "庚",
+      "丙",
+      "戊"
+    ],
+    "reason": "水源の金に、火と土の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "正月壬水",
+    "lineStart": 702
+  },
+  {
+    "sourceId": "qt-706",
+    "stem": "壬",
+    "months": [
+      "卯"
+    ],
+    "targets": [
+      "戊",
+      "辛"
+    ],
+    "reason": "流れを制する土と、水源の金を検討する。",
+    "book": "窮通宝鑑",
+    "title": "二月壬水",
+    "lineStart": 706
+  },
+  {
+    "sourceId": "qt-710",
+    "stem": "壬",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "甲",
+      "庚"
+    ],
+    "reason": "水を塞ぐ土を疏し、金の水源を検討する。",
+    "book": "窮通宝鑑",
+    "title": "三月壬水",
+    "lineStart": 710
+  },
+  {
+    "sourceId": "qt-718",
+    "stem": "壬",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "壬",
+      "辛",
+      "庚"
+    ],
+    "reason": "弱る水を助け、水源を確かめる。",
+    "book": "窮通宝鑑",
+    "title": "四月壬水",
+    "lineStart": 718
+  },
+  {
+    "sourceId": "qt-722",
+    "stem": "壬",
+    "months": [
+      "午"
+    ],
+    "targets": [
+      "癸",
+      "庚"
+    ],
+    "reason": "弱る壬を水と金で助ける配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "五月壬水",
+    "lineStart": 722
+  },
+  {
+    "sourceId": "qt-726",
+    "stem": "壬",
+    "months": [
+      "未"
+    ],
+    "targets": [
+      "辛",
+      "甲",
+      "癸"
+    ],
+    "reason": "水源を確かめ、土を疏し、水の助けを検討する。",
+    "book": "窮通宝鑑",
+    "title": "六月壬水",
+    "lineStart": 726
+  },
+  {
+    "sourceId": "qt-734",
+    "stem": "壬",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "戊",
+      "丁"
+    ],
+    "reason": "強まる水を戊で制し、丁の配合を検討する。戊の所在にも条件がある。",
+    "book": "窮通宝鑑",
+    "title": "七月壬水",
+    "lineStart": 734
+  },
+  {
+    "sourceId": "qt-738",
+    "stem": "壬",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "甲"
+    ],
+    "reason": "水を濁す土への対応として、甲を検討する。",
+    "book": "窮通宝鑑",
+    "title": "八月壬水",
+    "lineStart": 738
+  },
+  {
+    "sourceId": "qt-742",
+    "stem": "壬",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "甲",
+      "丙",
+      "戊"
+    ],
+    "reason": "水と土の偏りに応じ、甲・丙・戊の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "九月壬水",
+    "lineStart": 742
+  },
+  {
+    "sourceId": "qt-750",
+    "stem": "壬",
+    "months": [
+      "亥"
+    ],
+    "targets": [
+      "戊",
+      "丙",
+      "庚"
+    ],
+    "reason": "旺じる水を戊で制し、丙と庚の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十月壬水",
+    "lineStart": 750
+  },
+  {
+    "sourceId": "qt-754",
+    "stem": "壬",
+    "months": [
+      "子"
+    ],
+    "targets": [
+      "戊",
+      "丙"
+    ],
+    "reason": "旺じる水を制し、暖める配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十一月壬水",
+    "lineStart": 754
+  },
+  {
+    "sourceId": "qt-758",
+    "stem": "壬",
+    "months": [
+      "丑"
+    ],
+    "targets": [
+      "丙",
+      "甲"
+    ],
+    "reason": "水の凍りを解き、甲の助けを検討する。",
+    "book": "窮通宝鑑",
+    "title": "十二月壬水",
+    "lineStart": 758
+  },
+  {
+    "sourceId": "qt-768",
+    "stem": "癸",
+    "months": [
+      "寅"
+    ],
+    "targets": [
+      "辛",
+      "丙"
+    ],
+    "reason": "水源を生じ、照らし暖める配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "正月癸水",
+    "lineStart": 768
+  },
+  {
+    "sourceId": "qt-772",
+    "stem": "癸",
+    "months": [
+      "卯"
+    ],
+    "targets": [
+      "庚",
+      "辛"
+    ],
+    "reason": "泄れる水を金の水源で助ける候補。",
+    "book": "窮通宝鑑",
+    "title": "二月癸水",
+    "lineStart": 772
+  },
+  {
+    "sourceId": "qt-776",
+    "stem": "癸",
+    "months": [
+      "辰"
+    ],
+    "targets": [
+      "丙",
+      "辛",
+      "甲"
+    ],
+    "reason": "暖かさと水源を検討する。清明後と谷雨後で配合が変わる。",
+    "book": "窮通宝鑑",
+    "title": "三月癸水",
+    "lineStart": 776
+  },
+  {
+    "sourceId": "qt-780",
+    "stem": "癸",
+    "months": [
+      "巳"
+    ],
+    "targets": [
+      "辛",
+      "庚"
+    ],
+    "reason": "水源の金を検討する。辛がない場合は庚を参酌する。",
+    "book": "窮通宝鑑",
+    "title": "四月癸水",
+    "lineStart": 780
+  },
+  {
+    "sourceId": "qt-784",
+    "stem": "癸",
+    "months": [
+      "午"
+    ],
+    "targets": [
+      "庚",
+      "辛",
+      "壬"
+    ],
+    "reason": "弱る水を、金の水源と水の助けで支える候補。",
+    "book": "窮通宝鑑",
+    "title": "五月癸水",
+    "lineStart": 784
+  },
+  {
+    "sourceId": "qt-788",
+    "stem": "癸",
+    "months": [
+      "未"
+    ],
+    "targets": [
+      "庚",
+      "辛"
+    ],
+    "reason": "金の水源を検討する。月の前半・後半で金の状態が異なる。",
+    "book": "窮通宝鑑",
+    "title": "六月癸水",
+    "lineStart": 788
+  },
+  {
+    "sourceId": "qt-792",
+    "stem": "癸",
+    "months": [
+      "申"
+    ],
+    "targets": [
+      "丁",
+      "甲"
+    ],
+    "reason": "旺じる庚への丁の作用と、火を引く甲を検討する。",
+    "book": "窮通宝鑑",
+    "title": "七月癸水",
+    "lineStart": 792
+  },
+  {
+    "sourceId": "qt-796",
+    "stem": "癸",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "辛",
+      "丙"
+    ],
+    "reason": "水源の辛と、暖める丙の配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "八月癸水",
+    "lineStart": 796
+  },
+  {
+    "sourceId": "qt-800",
+    "stem": "癸",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "辛",
+      "甲"
+    ],
+    "reason": "水源を確かめ、克制する土を疏す配合を検討する。",
+    "book": "窮通宝鑑",
+    "title": "九月癸水",
+    "lineStart": 800
+  },
+  {
+    "sourceId": "qt-804",
+    "stem": "癸",
+    "months": [
+      "亥"
+    ],
+    "targets": [
+      "庚",
+      "辛"
+    ],
+    "reason": "木に泄れる水に、金の水源を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十月癸水",
+    "lineStart": 804
+  },
+  {
+    "sourceId": "qt-808",
+    "stem": "癸",
+    "months": [
+      "子"
+    ],
+    "targets": [
+      "丙",
+      "辛"
+    ],
+    "reason": "凍りを解き、水源を助ける組み合わせを検討する。",
+    "book": "窮通宝鑑",
+    "title": "十一月癸水",
+    "lineStart": 808
+  },
+  {
+    "sourceId": "qt-812",
+    "stem": "癸",
+    "months": [
+      "丑"
+    ],
+    "targets": [
+      "丙"
+    ],
+    "reason": "極まる寒さに、解凍する火を検討する。",
+    "book": "窮通宝鑑",
+    "title": "十二月癸水",
+    "lineStart": 812
+  },
+  {
+    "sourceId": "qt-452",
+    "stem": "丁",
+    "months": [
+      "酉"
+    ],
+    "targets": [
+      "甲",
+      "丙",
+      "庚"
+    ],
+    "reason": "甲・丙・庚の配合を検討する。金に従う格局など、命式全体で採否が変わる。",
+    "book": "窮通宝鑑",
+    "title": "七月丁火",
+    "lineStart": 452,
+    "referenceQuote": "八月は甲丙庚をみな用いる"
+  },
+  {
+    "sourceId": "qt-554",
+    "stem": "己",
+    "months": [
+      "戌"
+    ],
+    "targets": [
+      "丙",
+      "癸",
+      "甲"
+    ],
+    "reason": "秋土の暖かさと潤いに加え、盛んな土を甲で疏す候補。",
+    "book": "窮通宝鑑",
+    "title": "三秋己土総論",
+    "lineStart": 554,
+    "referenceQuote": "九月は土が盛んであり、甲木で疏するのが宜しい"
+  }
+]
