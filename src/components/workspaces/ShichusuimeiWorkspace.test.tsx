@@ -57,4 +57,24 @@ describe('四柱推命 workspace', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: '用神をAIで読む' })).toBeDisabled());
   });
 
+  it('places the AI answer beside the question and clears it immediately for a different chart', async () => {
+    const interpretation = {
+      summary: 'まず壬を用いるという今回の判断。',
+      strengths: [{ personId: 'a', assessment: '判定例', reason: '根を確認', evidenceIds: ['a-day-s'], sourceIds: ['qt-590'] }],
+      yongshen: ['格局', '扶抑', '調候', '病薬', '通関'].map(method => ({ personId: 'a', method, status: '条件付き', choice: '壬を検討', targets: ['壬'], reason: '配合を確認', conditions: ['水が働く条件'], obstacles: [], evidenceIds: ['a-day-s'], sourceIds: ['qt-590'] })),
+      compatibility: null, luck: null, uncertainties: [],
+    };
+    const fetcher = vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/status') ? { ready: true } : { interpretation, sources: [], model: 'fixture', generatedAt: '2026-09-08T00:00:00Z' } }));
+    vi.stubGlobal('fetch', fetcher);
+    const { container } = render(<ShichusuimeiWorkspace />);
+    await waitFor(() => expect(screen.getByRole('button', { name: '用神をAIで読む' })).toBeEnabled());
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole('button', { name: '用神をAIで読む' }));
+    await waitFor(() => expect(container.querySelector('.bazi-answer-heading')).toHaveTextContent(interpretation.summary));
+    fireEvent.change(screen.getByLabelText('本人の生年月日'), { target: { value: '1990-01-15' } });
+    expect(container.querySelector('.bazi-answer-heading')).not.toHaveTextContent(interpretation.summary);
+    expect(container.querySelector('.bazi-answer-heading')).toHaveTextContent('丙・丁・甲');
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
 });
