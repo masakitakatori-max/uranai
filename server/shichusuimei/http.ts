@@ -1,5 +1,7 @@
 import { ZodError } from 'zod';
 import { interpretBazi, type ModelRunner } from './service';
+import type { ClassicsCorpus } from './classics/corpus';
+import { CircuitValidationError, runYongshenCircuit, type StageRunner } from './circuit/pipeline';
 
 export function isAllowedOrigin(origin: string) {
   if (!origin) return true;
@@ -10,7 +12,7 @@ export function isAllowedOrigin(origin: string) {
   } catch { return false; }
 }
 
-export function createBaziHandler(run: ModelRunner, options: { accessToken?: string; local?: boolean; ready?: boolean } = {}) {
+export function createBaziHandler(run: ModelRunner, options: { accessToken?: string; local?: boolean; ready?: boolean; circuit?: { run: StageRunner; corpus: ClassicsCorpus } } = {}) {
   let active = 0;
   return async (request: Request): Promise<Response> => {
     const origin = request.headers.get('origin') || '';
@@ -21,10 +23,11 @@ export function createBaziHandler(run: ModelRunner, options: { accessToken?: str
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { ...headers, 'access-control-allow-methods': 'GET, POST, OPTIONS', 'access-control-allow-headers': 'Content-Type, Authorization' } });
     const ready = options.ready !== false && (!!options.local || !!options.accessToken);
     const path = new URL(request.url).pathname;
-    if (request.method === 'GET' && path === '/api/shichusuimei/status') return reply(200, { ready, requiresAccessCode: !options.local });
-    if (path !== '/api/shichusuimei/interpret') return reply(404, { error: '見つかりません' });
+    if (request.method === 'GET' && path === '/api/shichusuimei/status') return reply(200, { ready, requiresAccessCode: !options.local, circuit: ready && options.circuit ? { corpus: options.circuit.corpus.origin, books: options.circuit.corpus.books } : null });
+    const circuit = path === '/api/shichusuimei/yongshen';
+    if (path !== '/api/shichusuimei/interpret' && !circuit) return reply(404, { error: '見つかりません' });
     if (request.method !== 'POST') return reply(405, { error: 'POSTで送信してください' });
-    if (!ready) return reply(503, { error: 'AI解説の接続準備中です。命式と組み合わせは利用できます。' });
+    if (!ready || circuit && !options.circuit) return reply(503, { error: 'AI解説の接続準備中です。命式と組み合わせは利用できます。' });
     if (!options.local && request.headers.get('authorization') !== `Bearer ${options.accessToken}`) return reply(401, { error: 'AI解説のアクセスコードを確認してください' });
     if (!request.headers.get('content-type')?.startsWith('application/json')) return reply(415, { error: 'JSON形式で送信してください' });
     if (active >= 2) return reply(429, { error: 'AI解説が混み合っています。少し待って再度お試しください。' });
@@ -44,10 +47,15 @@ export function createBaziHandler(run: ModelRunner, options: { accessToken?: str
       }
       let input: unknown;
       try { input = JSON.parse(raw); } catch { return reply(400, { error: '入力の形式を確認してください' }); }
+      if (circuit) {
+        const person = input && typeof input === 'object' ? (input as { person?: unknown }).person : undefined;
+        return reply(200, await runYongshenCircuit(person, { run: options.circuit!.run, corpus: options.circuit!.corpus, signal: request.signal }));
+      }
       const result = await interpretBazi(input, run, request.signal);
       return reply(200, result);
     } catch (error) {
       if (error instanceof ZodError) return reply(422, { error: '入力またはAIの回答形式を検証できませんでした。生年月日時を確認してください。' });
+      if (error instanceof CircuitValidationError) return reply(502, { error: '用神判定の根拠を古典・命式と照合できませんでした。', stage: error.stage, issues: error.issues });
       if (request.signal.aborted) return reply(408, { error: 'AI解説を中止しました' });
       console.error('shichusuimei interpretation failed', error instanceof Error ? error.name : 'unknown');
       return reply(502, { error: 'AIの解説を検証できませんでした。入力を確認して再度お試しください。' });
