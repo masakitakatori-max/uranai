@@ -111,7 +111,7 @@ export function tenGod(day: Stem, stem: Stem): string {
   return samePolarity ? "偏印" : "正印";
 }
 
-function stageOf(stem: Stem, branch: Branch): string {
+export function stageOf(stem: Stem, branch: Branch): string {
   const stemIdx = stemIndex(stem);
   const branchIdx = branchIndex(branch);
   const isYang = stemIdx % 2 === 0;
@@ -205,6 +205,22 @@ function lichunJd(year: number): number {
 
 function daysFromAnchor(year: number, month: number, day: number): number {
   return Math.round((Date.UTC(year, month - 1, day) - Date.UTC(2000, 0, 1)) / 86400000);
+}
+
+function termWindow(birthJd: number, monthNodeIndex: number): { previousJd: number; nextJd: number } {
+  const thisNode = modulo(315 + 30 * monthNodeIndex, 360);
+  const nextNode = modulo(315 + 30 * (monthNodeIndex + 1), 360);
+  let previousJd = findTermCrossing(thisNode, birthJd);
+  if (previousJd > birthJd) previousJd = findTermCrossing(thisNode, birthJd - 40);
+  let nextJd = findTermCrossing(nextNode, birthJd);
+  if (nextJd < birthJd) nextJd = findTermCrossing(nextNode, birthJd + 40);
+  return { previousJd, nextJd };
+}
+
+/** 暦日の日干支。日界は0時で、出生日柱のような晩子時の繰り上げはしない。 */
+export function dayGanzhi(year: number, month: number, day: number): { stem: Stem; branch: Branch } {
+  const cycle = modulo(54 + daysFromAnchor(year, month, day), 60);
+  return { stem: STEMS[cycle % 10]!, branch: BRANCHES[cycle % 12]! };
 }
 
 function pillarStorage(branch: Branch): { moisture: "湿土" | "燥土"; element: Element } | null {
@@ -635,12 +651,7 @@ function calendarParts(input: BirthInput): {
 
 function buildWarnings(input: BirthInput, birthJd: number, monthNodeIndex: number): string[] {
   const warnings: string[] = [];
-  const thisNode = modulo(315 + 30 * monthNodeIndex, 360);
-  const nextNode = modulo(315 + 30 * (monthNodeIndex + 1), 360);
-  let previousJd = findTermCrossing(thisNode, birthJd);
-  if (previousJd > birthJd) previousJd = findTermCrossing(thisNode, birthJd - 40);
-  let nextJd = findTermCrossing(nextNode, birthJd);
-  if (nextJd < birthJd) nextJd = findTermCrossing(nextNode, birthJd + 40);
+  const { previousJd, nextJd } = termWindow(birthJd, monthNodeIndex);
   if (Math.min(birthJd - previousJd, nextJd - birthJd) <= 1 / 24) {
     warnings.push("節入りの前後1時間以内。近似太陽黄経の誤差で月柱または年柱が変わる可能性がある。");
   }
@@ -663,13 +674,8 @@ function luckPeriods(
   monthNodeIndex: number,
   forward: boolean,
 ): LuckPeriod[] {
-  const currentNode = modulo(315 + 30 * monthNodeIndex, 360);
-  const nextNode = modulo(315 + 30 * (monthNodeIndex + 1), 360);
-  let currentNodeJd = findTermCrossing(currentNode, birthJd);
-  if (currentNodeJd > birthJd) currentNodeJd = findTermCrossing(currentNode, birthJd - 40);
-  let nextNodeJd = findTermCrossing(nextNode, birthJd);
-  if (nextNodeJd < birthJd) nextNodeJd = findTermCrossing(nextNode, birthJd + 40);
-  const initialAge = (forward ? nextNodeJd - birthJd : birthJd - currentNodeJd) / 3;
+  const { previousJd, nextJd } = termWindow(birthJd, monthNodeIndex);
+  const initialAge = (forward ? nextJd - birthJd : birthJd - previousJd) / 3;
   const monthStemIdx = stemIndex(monthPillar.stem);
   const monthBranchIdx = branchIndex(monthPillar.branch);
 
@@ -681,6 +687,20 @@ function luckPeriods(
     const pillar = makePillar(`${id}-luck-${index}`, `第${index + 1}大運`, stem, branch, dayMaster);
     return { ...pillar, index, startAge, endAge: Math.round((startAge + 10) * 1000) / 1000 };
   });
+}
+
+/** 指定時点の年・月・日・時の干支（buildBaziChart と同じ節切り・日界の規約）。 */
+export function ganzhiAt(input: BirthInput): { stems: readonly [Stem, Stem, Stem, Stem]; branches: readonly [Branch, Branch, Branch, Branch] } {
+  validateInput(input);
+  const { stems, branches } = calendarParts(input);
+  return { stems, branches };
+}
+
+/** その月の節入りから指定時点までの経過日数（小数）。蔵干の司令など日数で決める規約に使う。 */
+export function daysSinceMonthTerm(input: BirthInput): number {
+  validateInput(input);
+  const { birthJd, monthNodeIndex } = calendarParts(input);
+  return birthJd - termWindow(birthJd, monthNodeIndex).previousJd;
 }
 
 export function buildBaziChart(input: BirthInput, id: PersonId = "a"): BaziChart {

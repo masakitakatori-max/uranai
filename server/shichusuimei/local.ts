@@ -3,9 +3,15 @@ import { Readable } from 'node:stream';
 import { createBaziHandler } from './http';
 import { runAgentSdk } from './agent';
 import { createAnthropicRunner } from './anthropic';
+import { loadClassicsCorpus } from './classics/load';
+import { createAgentSdkStageRunner, createApiStageRunner } from './circuit/runners';
 
 const key = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
-const handler = createBaziHandler(key ? createAnthropicRunner(key, process.env.SHICHUSUIMEI_MODEL) : runAgentSdk, { local: true });
+const corpus = loadClassicsCorpus();
+const circuitModel = process.env.SHICHUSUIMEI_CIRCUIT_MODEL;
+const circuitEffort = process.env.SHICHUSUIMEI_CIRCUIT_EFFORT as 'low' | 'medium' | 'high' | 'xhigh' | 'max' | undefined;
+const stageRunner = key ? createApiStageRunner({ apiKey: key, model: circuitModel, effort: circuitEffort }) : createAgentSdkStageRunner({ model: circuitModel, effort: circuitEffort });
+const handler = createBaziHandler(key ? createAnthropicRunner(key, process.env.SHICHUSUIMEI_MODEL) : runAgentSdk, { local: true, circuit: { run: stageRunner, corpus } });
 const port = Number(process.env.SHICHUSUIMEI_PORT || 8788);
 const server = createServer(async (req, res) => {
   const controller = new AbortController();
@@ -23,4 +29,4 @@ const server = createServer(async (req, res) => {
     res.end(await response.text());
   } catch { if (!res.headersSent) res.writeHead(500, { 'content-type': 'application/json' }); res.end('{"error":"AI接続でエラーが発生しました"}'); }
 });
-server.listen(port, '127.0.0.1', () => console.log(`四柱推命 API: http://127.0.0.1:${port} (${key ? 'Anthropic SDK' : 'Claude Agent SDK'})`));
+server.listen(port, '127.0.0.1', () => console.log(`四柱推命 API: http://127.0.0.1:${port} (${key ? 'Anthropic SDK' : 'Claude Agent SDK'}) / 用神回路の古典: ${corpus.origin} ${JSON.stringify(corpus.books)}`));
